@@ -608,8 +608,8 @@ function IntegratedFilePage({ files = [], sessionId, onNavigateToPayment }) {
       let x = e.clientX - canvasRect.left
       let y = e.clientY - canvasRect.top
       const dimensions = await getImageDimensions(draggingFile)
-      x = Math.max(0, Math.min(x, 595 - dimensions.width))
-      y = Math.max(0, Math.min(y, 842 - dimensions.height))
+      x = Math.max(0, Math.min(x, 788 - dimensions.width))
+      y = Math.max(0, Math.min(y, 1086 - dimensions.height))
 
       setPages(
         pages.map((page) => {
@@ -640,8 +640,8 @@ function IntegratedFilePage({ files = [], sessionId, onNavigateToPayment }) {
     } else if (draggingItem) {
       let x = e.clientX - canvasRect.left - dragOffset.x
       let y = e.clientY - canvasRect.top - dragOffset.y
-      x = Math.max(0, Math.min(x, 595 - draggingItem.width))
-      y = Math.max(0, Math.min(y, 842 - draggingItem.height))
+      x = Math.max(0, Math.min(x, 788 - draggingItem.width))
+      y = Math.max(0, Math.min(y, 1086 - draggingItem.height))
 
       setPages(
         pages.map((page) => {
@@ -1144,6 +1144,48 @@ function IntegratedFilePage({ files = [], sessionId, onNavigateToPayment }) {
     "Dramatic / Moody": ["Drama", "Noir", "Edge", "Fade", "Mono", "Grayscale"],
     "Summer / Vivid": ["Summer", "Pop", "Vivid", "Colorpop", "Boost"],
     "Other Popular": ["Selfie", "Streetlight", "Glow", "Afterglow", "Cinematic", "Duotone"],
+  }
+
+  // Renderer-side: request main to convert file paths to base64, inline styles and send HTML for saving.
+
+  async function exportCanvasToHtml(canvasEl) {
+    // collect image srcs to convert
+    const imgs = Array.from(canvasEl.querySelectorAll('img'));
+    const srcs = imgs.map(i => i.getAttribute('src'));
+
+    // ask main to return data URLs for these srcs
+    const dataMap = await window.electronAPI.readFilesAsDataURL(srcs); // implement in preload/main
+
+    // clone and inline computed styles
+    const clone = canvasEl.cloneNode(true);
+    inlineComputedStylesRecursive(clone);
+
+    // replace img src with data URLs
+    clone.querySelectorAll('img').forEach(img => {
+      const original = img.getAttribute('src');
+      if (dataMap[original]) img.setAttribute('src', dataMap[original]);
+    });
+
+    const html = `
+    <!doctype html>
+    <html><head><meta charset="utf-8"><style>body{margin:0}</style></head>
+    <body>${clone.outerHTML}</body></html>`;
+
+    // send HTML to main to write file (or show print preview)
+    await window.electronAPI.saveExportHtml(html);
+  }
+
+  function inlineComputedStylesRecursive(el) {
+    const children = [el, ...el.querySelectorAll('*')];
+    children.forEach(node => {
+      const cs = window.getComputedStyle(node);
+      const style = [];
+      // pick properties you need; you can also iterate all cs keys
+      ['position','left','top','width','height','transform','transform-origin','object-fit','z-index','display','margin','padding'].forEach(p=>{
+        if (cs.getPropertyValue(p)) style.push(`${p}: ${cs.getPropertyValue(p)};`);
+      });
+      node.setAttribute('style', style.join(' ') + (node.getAttribute('style')||''));
+    });
   }
 
   return (

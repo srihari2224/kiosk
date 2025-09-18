@@ -714,40 +714,94 @@ ipcMain.handle("print-canvas", async (event, canvasData) => {
     // Build HTML content with items (like Python version)
     const buildItemsHtml = () => {
       try {
+        if (!Array.isArray(pageData.items)) return ""
         return pageData.items
-          .map((item) => {
-            let imgSrc = ""
-            if (item.dataUrl && typeof item.dataUrl === "string" && item.dataUrl.startsWith("data:")) {
-              imgSrc = item.dataUrl
-            } else if (item.file?.localPath && pathExists(item.file.localPath)) {
-              const buf = fs.readFileSync(item.file.localPath)
-              imgSrc = `data:image/jpeg;base64,${buf.toString("base64")}`
-            } else {
-              logPrint(`⚠️ No dataUrl/localPath for item ${item.id}`)
+          .map((item, idx) => {
+            try {
+              // Resolve image source (prefer dataUrl, fallback to local file)
+              let imgSrc = ""
+              if (item && item.dataUrl && typeof item.dataUrl === "string" && item.dataUrl.startsWith("data:")) {
+                imgSrc = item.dataUrl
+              } else if (item && item.file && item.file.localPath && pathExists(item.file.localPath)) {
+                const buf = fs.readFileSync(item.file.localPath)
+                const ext = path.extname(item.file.localPath).replace(".", "").toLowerCase() || "jpg"
+                let mime = "image/jpeg"
+                if (["png"].includes(ext)) mime = "image/png"
+                else if (["gif"].includes(ext)) mime = "image/gif"
+                else if (["bmp"].includes(ext)) mime = "image/bmp"
+                else if (["webp"].includes(ext)) mime = "image/webp"
+                imgSrc = `data:${mime};base64,${buf.toString("base64")}`
+              } else {
+                logPrint(`⚠️ [buildItemsHtml] missing src for item index ${idx} id=${item && item.id}`)
+                return ""
+              }
+
+              // numeric safety
+              const left = Number(item.x) || 0
+              const top = Number(item.y) || 0
+              const width = Number(item.width) || 100
+              const height = Number(item.height) || 100
+              const rotation = Number(item.rotation) || 0
+
+              // container style
+              const containerStyle = [
+                "position: absolute",
+                `left: ${left}px`,
+                `top: ${top}px`,
+                `width: ${width}px`,
+                `height: ${height}px`,
+                `transform: rotate(${rotation}deg)`,
+                "transform-origin: center center",
+                "overflow: hidden",
+                "display: block",
+              ].join("; ")
+
+              // inner image transforms (scale/rotate) if editor stores them
+              const imgTransforms = []
+              if (typeof item.scaleX === "number" || typeof item.scaleY === "number") {
+                const sx = typeof item.scaleX === "number" ? item.scaleX : 1
+                const sy = typeof item.scaleY === "number" ? item.scaleY : sx
+                imgTransforms.push(`scale(${sx}, ${sy})`)
+              }
+              if (typeof item.imgRotation === "number" && item.imgRotation !== 0) {
+                imgTransforms.push(`rotate(${item.imgRotation}deg)`)
+              }
+              const imgTransformCss = imgTransforms.length ? `transform: ${imgTransforms.join(" ")}; transform-origin: center center;` : ""
+
+              // object-fit / position - default to 'cover' to match editor crop/zoom behaviour
+              const objectFit = item.objectFit || "cover"
+              const objectPosition = item.objectPosition || "center center"
+              const bwFilter = colorMode === "bw" ? "filter: grayscale(100%);" : ""
+
+              // escape alt
+              const rawAlt = (item.file && item.file.name) || `image-${idx}`
+              const alt = String(rawAlt).replace(/'/g, "&#39;").replace(/"/g, "&quot;")
+
+              const imgStyle = [
+                "width: 100%",
+                "height: 100%",
+                `object-fit: ${objectFit}`,
+                `object-position: ${objectPosition}`,
+                "display: block",
+                imgTransformCss,
+                bwFilter,
+              ]
+                .filter(Boolean)
+                .join("; ")
+
+              return (
+                `<div class="canvas-item" style='${containerStyle}'>` +
+                `<img src='${imgSrc}' alt='${alt}' style='${imgStyle}' />` +
+                `</div>`
+              )
+            } catch (inner) {
+              logPrint(`❌ [buildItemsHtml] error rendering item ${idx}: ${inner && inner.message}`)
               return ""
             }
-
-            return `
-              <div class="canvas-item" style="
-                position: absolute;
-                left: ${item.x}px; 
-                top: ${item.y}px; 
-                width: ${item.width}px; 
-                height: ${item.height}px;
-                transform: rotate(${item.rotation || 0}deg);
-              ">
-                <img src="${imgSrc}" alt="${(item.file && item.file.name) || "image"}" style="
-                  width: 100%; 
-                  height: 100%; 
-                  object-fit: contain;
-                  ${colorMode === "bw" ? "filter: grayscale(100%);" : ""}
-                " />
-              </div>
-            `
           })
           .join("")
       } catch (e) {
-        logPrint(`❌ Error building items HTML: ${e.message}`)
+        logPrint(`❌ Error building items HTML: ${e && e.message}`)
         return ""
       }
     }
@@ -779,14 +833,23 @@ ipcMain.handle("print-canvas", async (event, canvasData) => {
             background: white;
           }
           .canvas-container { 
-            width: 595px; 
-            height: 842px; 
+            width: 788px; 
+            height: 1086px; 
             position: relative; 
             background: white;
             ${colorMode === "bw" ? "filter: grayscale(100%);" : ""}
           }
           .canvas-item { 
-            position: absolute; 
+            position: absolute;
+            overflow: hidden;
+            -webkit-backface-visibility: hidden;
+          }
+          .canvas-item img {
+            display: block;
+            width: 100%;
+            height: 100%;
+            object-fit: cover; /* default fallback */
+            object-position: center center;
           }
         </style>
       </head>
@@ -918,3 +981,6 @@ ipcMain.handle("print-canvas", async (event, canvasData) => {
     }
   }
 })
+
+
+

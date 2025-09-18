@@ -618,8 +618,8 @@
 
 /* A4 Canvas - Scaled down for 75% layout */
 .integrated-files-page .a4-canvas {
-  width: 595px;
-  height: 842px;
+  width: 788px;
+  height: 1086px;
   background-color: #ffffff;
   box-shadow: 0 8px 32px rgba(0, 0, 0, 0.12);
   margin: 30px auto;
@@ -627,6 +627,7 @@
   z-index: 1;
   border-radius: 8px;
   border: 1px solid rgba(0, 0, 0, 0.05);
+  margin-top: 10px;
 }
 
 .integrated-files-page .a4-canvas.bw {
