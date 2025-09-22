@@ -1,6 +1,6 @@
 .file-transfer-page {
   min-height: 100vh;
-  background: #000000;
+  background: #111111;
   padding: 0;
   position: relative;
   margin: 0;
@@ -11,7 +11,7 @@
 
 /* Navigation Bar */
 .file-transfer-page .navbar {
-  background: black;
+  background: #111111;
   color: white;
   padding: 20px 2rem;
   box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
@@ -107,10 +107,12 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  height: 100%;
+  height: 140%;
   color: #7f8c8d;
   font-size: 1.2rem;
   font-weight: 500;
+  margin-top:30px;
+
 }
 
 /* Nav Content */
@@ -742,12 +744,12 @@
 .file-transfer-page .product-cards-container {
   display: flex;
   flex-direction: column;
-  gap: 1.5rem;
+  gap: 2rem;
   padding: 0rem 1.5rem;
   height: 100%;
   overflow-y: auto;
   max-height: calc(100vh - 200px);
-  margin-top: 50px;
+  margin-top: 100px;
 }
 
 .file-transfer-page .product-cards-container::-webkit-scrollbar {
@@ -777,14 +779,13 @@
   position: relative;
   cursor: pointer;
   /* Increased minimum height from 280px to 380px for better proportions */
-  min-height: 550px;
+  min-height: 480px;
   border-color: #e8e3e3;
   border-width: 0.01px;
   border-style: solid;
 }
 
 .file-transfer-page .product-card:hover {
-  transform: translateY(-3px);
   box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
 }
 
@@ -805,6 +806,7 @@
 
 .file-transfer-page .product-tilt {
   overflow: hidden;
+  height:300px;
 }
 
 .file-transfer-page .product-img {
@@ -829,13 +831,13 @@
 .file-transfer-page .product-info {
   /* Increased padding for better spacing with taller cards */
   padding: 1.5rem;
+  height: 200px;
 }
 
-.file-transfer-page .product-cat {
+file-transfer-page .product-cat {
   font-size: 10px;
   font-weight: 600;
-  letter-spacing: 1px;
-  text-transform: uppercase;
+  letter-spacing: 1px; text-transform: uppercase;
   color: #71717a;
   margin-bottom: 6px;
 }
@@ -2711,51 +2713,56 @@
 /* Paper Shop Styles */
 .file-transfer-page .paper-shop-content {
   margin-top: 3rem;
-  padding: 2rem 0;
+  height:531px;
+
+
+  background-color: #111111;
+  margin-top:50px;
+
 }
 
 .file-transfer-page .product-cards-container {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
   gap: 2rem;
-  max-width: 1200px;
+  max-width: 2200px;
   margin: 0 auto;
-  padding: 0 1rem;
+  padding: 13 1rem;
+  margin-bottom:100px;
 }
 
 .file-transfer-page .product-card {
   background: rgba(255, 255, 255, 0.05);
-  border-radius: 20px;
+  border-radius: 40px;
   overflow: hidden;
   transition: all 0.3s ease;
   border: 1px solid rgba(255, 255, 255, 0.1);
   backdrop-filter: blur(10px);
+  width: 493px;
+  margin-top:40px;
 }
 
 .file-transfer-page .product-card:hover {
-  transform: translateY(-8px);
   border-color: rgba(102, 126, 234, 0.3);
   box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
 }
 
 .file-transfer-page .product-tilt {
-  padding: 2rem 2rem 0;
   display: flex;
   justify-content: center;
+  height:290px;
 }
 
 .file-transfer-page .product-img {
-  width: 120px;
-  height: 120px;
+  width: 520px;
+  height: 420px;
   border-radius: 15px;
   overflow: hidden;
   box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
   transition: transform 0.3s ease;
 }
 
-.file-transfer-page .product-card:hover .product-img {
-  transform: scale(1.05);
-}
+
 
 .file-transfer-page .product-img img {
   width: 100%;
@@ -2765,6 +2772,8 @@
 
 .file-transfer-page .product-info {
   padding: 1.5rem 2rem 2rem;
+  background-color: #353738;
+  border-radius: 0px 0px 40px 40px;
 }
 
 .file-transfer-page .product-cat {

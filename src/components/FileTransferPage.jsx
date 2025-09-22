@@ -29,6 +29,7 @@ import logo2 from "../assets/logo2.png"
 import Navbar from "./Navbar"
 import HeroSection from "./HeroSection"
 import ProjectCards from "./ProjectCards"
+import margin from "../assets/margin.png"
 
 const FileTransferPage = () => {
   const videoSources = [videoAdSrc, videoAdsec2, videoAdsec3]
@@ -88,17 +89,17 @@ const FileTransferPage = () => {
       pdfPath: import.meta.env.VITE_GRAPH || "C:\\Users\\msrih\\Downloads\\eastIT\\extras\\graph_A4.pdf",
       printSettings: { colorMode: "color", doubleSided: false },
     },
-    // {
-    //   id: 3,
-    //   name: "MARGIN LINED PAPER",
-    //   category: "Stay inside the lines",
-    //   price: 1.49,
-    //   originalPrice: 4,
-    //   image: margin,
-    //   inStock: true,
-    //   pdfPath: import.meta.env.VITE_MARGIN || "C:\\Users\\msrih\\Downloads\\eastIT\\extras\\lined_A4.pdf",
-    //   printSettings: { colorMode: "blackwhite", doubleSided: true },
-    // },
+    {
+      id: 3,
+      name: "MARGIN LINED PAPER",
+      category: "Stay inside the lines",
+      price: 1.49,
+      originalPrice: 4,
+      image: margin,
+      inStock: true,
+      pdfPath: import.meta.env.VITE_MARGIN || "C:\\Users\\msrih\\Downloads\\eastIT\\extras\\lined_A4.pdf",
+      printSettings: { colorMode: "blackwhite", doubleSided: true },
+    },
   ]
 
   const addToCart = (product) => {
@@ -262,8 +263,8 @@ const FileTransferPage = () => {
       width: 250,
       margin: 2,
       color: {
-        dark: "#19a8a6ff",
-        light: "#b62c2cff",
+        dark: "#000000",
+        light: "#FFFFFF",
       },
     })
       .then((url) => {
@@ -697,50 +698,7 @@ const FileTransferPage = () => {
 
       <ProjectCards />
 
-      <div className="container">
-        {/* <div className="starting-section" style={{ display: "none" }}>
-          <button
-            className="start-btn"
-            onClick={async () => {
-              await fetchSessionFiles(sessionId)
-              handleNext()
-            }}
-          >
-            click
-          </button>
-
-          <div className="qr-section">
-            <h2>Scan QR Code to Upload Files</h2>
-            <div className="qr-container">
-              {qrCodeUrl ? (
-                <img src={qrCodeUrl || "/placeholder.svg"} alt="QR Code for file upload" className="qr-code" />
-              ) : (
-                <div className="qr-placeholder">Generating QR Code...</div>
-              )}
-            </div>
-            <div className="session-info" style={{ display: "flex", alignItems: "center", gap: "8px" }}>
-              <img src={sessionIcon || "/placeholder.svg"} alt="Session" className="session-icon" />
-              <span className="session-id">{sessionId}</span>
-              <button
-                onClick={() => window.location.reload()}
-                style={{
-                  background: "#28a745",
-                  color: "white",
-                  border: "none",
-                  borderRadius: "4px",
-                  padding: "4px 14px",
-                  fontWeight: 600,
-                  fontSize: "14px",
-                  cursor: "pointer",
-                }}
-              >
-                Refresh
-              </button>
-            </div>
-          </div>
-        </div> */}
-
-        {/* <div className="floating-cart-container">
+      <div className="floating-cart-container">
           <button className="floating-cart-btn" onClick={() => setShowCart(!showCart)}>
             <img
               src={shop || "/placeholder.svg"}
@@ -752,49 +710,48 @@ const FileTransferPage = () => {
           </button>
         </div>
 
-        // <div className="paper-shop-content">
-        //   <div className="product-cards-container">
-        //     {products.map((product) => (
-        //       <div key={product.id} className="product-card">
-        //         <div className="product-tilt">
-        //           <div className="product-img">
-        //             <img src={product.image || "/placeholder.svg"} alt={product.name} />
-        //           </div>
-        //         </div>
-        //         <div className="product-info">
-        //           <div className="product-cat">{product.category}</div>
-        //           <h2 className="product-title">{product.name}</h2>
-        //           <div className="product-bottom">
-        //             <div className="product-price">
-        //               <span className="price-old">₹{product.originalPrice}</span>
-        //               <span className="price-new">₹{product.price}</span>
-        //             </div>
-        //             <button className="product-btn" onClick={() => addToCart(product)} disabled={!product.inStock}>
-        //               <span>Add to Cart</span>
-        //               <svg
-        //                 className="cart-icon"
-        //                 width="19"
-        //                 height="19"
-        //                 viewBox="0 0 24 24"
-        //                 fill="none"
-        //                 stroke="currentColor"
-        //                 strokeWidth="2"
-        //               >
-        //                 <path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4" />
-        //                 <line x1="3" y1="6" x2="21" y2="6" />
-        //                 <path d="M16 10a4 4 0 01-8 0" />
-        //               </svg>
-        //             </button>
-        //           </div>
-        //           <div className="product-meta">
-        //             <div className="product-stock">{product.inStock ? "In Stock" : "Out of Stock"}</div>
-        //           </div>
-        //         </div>
-        //       </div>
-        //     ))}
-        //   </div>
-        // </div> */}
-      </div>
+        <div className="paper-shop-content">
+          <div className="product-cards-container">
+            {products.map((product) => (
+              <div key={product.id} className="product-card">
+                <div className="product-tilt">
+                  <div className="product-img">
+                    <img src={product.image || "/placeholder.svg"} alt={product.name} />
+                  </div>
+                </div>
+                <div className="product-info">
+                  <div className="product-cat">{product.category}</div>
+                  <h2 className="product-title">{product.name}</h2>
+                  <div className="product-bottom">
+                    <div className="product-price">
+                      <span className="price-old">₹{product.originalPrice}</span>
+                      <span className="price-new">₹{product.price}</span>
+                    </div>
+                    <button className="product-btn" onClick={() => addToCart(product)} disabled={!product.inStock}>
+                      <span>Add to Cart</span>
+                      <svg
+                        className="cart-icon"
+                        width="19"
+                        height="19"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        strokeWidth="2"
+                      >
+                        <path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4" />
+                        <line x1="3" y1="6" x2="21" y2="6" />
+                        <path d="M16 10a4 4 0 01-8 0" />
+                      </svg>
+                    </button>
+                  </div>
+                  <div className="product-meta">
+                    <div className="product-stock">{product.inStock ? "In Stock" : "Out of Stock"}</div>
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
 
       {showCart && (
         <div className="cart-overlay" onClick={() => setShowCart(false)}>
@@ -871,7 +828,7 @@ const FileTransferPage = () => {
                             />
                           </svg>
                         )}
-                        {/* {item.name === "MARGIN LINED PAPER" && (
+                        {item.name === "MARGIN LINED PAPER" && (
                           <svg
                             fill="none"
                             viewBox="0 0 60 60"
@@ -888,7 +845,7 @@ const FileTransferPage = () => {
                               d="M10 20h40M10 25h40M10 30h40M10 35h40M10 40h40M10 45h40"
                             ></path>
                           </svg>
-                        )} */}
+                        )}
                       </div>
                       <div className="item-details">
                         <div className="item-name">{item.name}</div>
