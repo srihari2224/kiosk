@@ -1,7 +1,7 @@
 "use client"
 
 import { useState, useEffect } from "react"
-import QRCode from "qrcode"
+import QRCodeLib from "qrcode"
 import "./HeroSection.css"
 
 const HeroSection = ({ sessionId, onGetStarted }) => {
@@ -16,7 +16,7 @@ const HeroSection = ({ sessionId, onGetStarted }) => {
   const generateQRCode = (sessionId) => {
     const qrUrl = `https://innvera.vercel.app/?session=${sessionId}`
 
-    QRCode.toDataURL(qrUrl, {
+    QRCodeLib.toDataURL(qrUrl, {
       width: 300,
       margin: 2,
       color: {
@@ -47,24 +47,28 @@ const HeroSection = ({ sessionId, onGetStarted }) => {
               <span className="title-main">Print-IT</span>
               <span className="title-gradient">Self Service</span>
               <span className="title-main">kiosk</span>
-
             </h1>
             <p className="hero-description">
+              We build high-
               We build high-quality, scalable platforms—client portals, marketplaces, AI automations, and SaaS—using the
               best tools for the job, no shortcuts.
             </p>
             <button className="hero-button" onClick={handleGetStarted}>
               Get Started
             </button>
+            <div className="session-info">
+              <span>Session</span>
+              <span>{sessionId}</span>
+              <button>Refresh</button>
+            </div>
           </div>
           <div className="hero-visual">
-            <div className="qr-code-container">
+            <div className="relative flex w-full items-center justify-center max-w-60 aspect-square">
+              {/* Render generated QR image (fallback text while generating) */}
               {qrCodeUrl ? (
-                <img src={qrCodeUrl || "/placeholder.svg"} alt="QR Code for file upload" className="qr-code-image" />
+                <img src={qrCodeUrl} alt="session qr" className="qr-image" />
               ) : (
-                <div className="qr-placeholder">
-                  <div className="qr-skeleton"></div>
-                </div>
+                <div className="qr-placeholder">Generating QR...</div>
               )}
             </div>
           </div>
