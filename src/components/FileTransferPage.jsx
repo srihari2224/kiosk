@@ -1,14 +1,9 @@
-import pdf from "../assets/pdf.svg"
-import image from "../assets/img.svg"
-;("use client")
-
+"use client"
 import { useState, useEffect } from "react"
 import { useNavigate } from "react-router-dom"
 import QRCode from "qrcode"
 import "./FileTransferPage.css"
 import sessionIcon from "../assets/session.svg"
-import wifiIcon from "../assets/wifi.svg"
-import IntegratedFilePage from "./IntegratedFilePage"
 
 import videoAdSrc from "../assets/1_video_1.mp4"
 import videoAdsec2 from "../assets/1_video_2.mp4"
@@ -26,16 +21,14 @@ import imgAd7 from "../assets/ad/3.1.png"
 import imgAd8 from "../assets/ad/3.2.png"
 import imgAd9 from "../assets/ad/3.3.png"
 
-import navimoto from "../assets/moto.png"
-
 import graph from "../assets/graph.png"
 import plane from "../assets/plane.png"
-import margin from "../assets/margin.png"
 
 import shop from "../assets/shop.svg"
-import logo from "../assets/logo.png"
 import logo2 from "../assets/logo2.png"
-
+import Navbar from "./Navbar"
+import HeroSection from "./HeroSection"
+import ProjectCards from "./ProjectCards"
 
 const FileTransferPage = () => {
   const videoSources = [videoAdSrc, videoAdsec2, videoAdsec3]
@@ -57,8 +50,6 @@ const FileTransferPage = () => {
   const [isOnline, setIsOnline] = useState(navigator.onLine)
   const [clockTime, setClockTime] = useState("")
   const [showFiles, setShowFiles] = useState(false)
-  const [showIntegratedView, setShowIntegratedView] = useState(false)
-  const [activeSection, setActiveSection] = useState("session")
 
   const [cartItems, setCartItems] = useState([])
   const [showCart, setShowCart] = useState(false)
@@ -263,7 +254,7 @@ const FileTransferPage = () => {
     setCouponImageIndices(imageIndices)
     setCouponFound(false)
 
-  const qrUrl = `https://innvera.vercel.app/?session=${newSessionId}`;
+    const qrUrl = `https://innvera.vercel.app/?session=${newSessionId}`
 
     console.log("QR Code URL:", qrUrl)
 
@@ -271,8 +262,8 @@ const FileTransferPage = () => {
       width: 250,
       margin: 2,
       color: {
-        dark: "#000000",
-        light: "#FFFFFF",
+        dark: "#19a8a6ff",
+        light: "#b62c2cff",
       },
     })
       .then((url) => {
@@ -450,16 +441,13 @@ const FileTransferPage = () => {
     if (files.length > 0) {
       console.log("🔄 Processing all files for integrated view...")
       console.log("📁 All files:", files)
-      setShowIntegratedView(true)
+      navigate("/integrated-files", {
+        state: {
+          files: files,
+          sessionId: sessionId,
+        },
+      })
     }
-  }
-
-  const handleBackToSelection = () => {
-    setShowIntegratedView(false)
-  }
-
-  const handleNavigateToPayment = (paymentData) => {
-    navigate("/payment", { state: paymentData })
   }
 
   const validateMobileNumber = (number) => {
@@ -692,59 +680,35 @@ const FileTransferPage = () => {
     }
   }
 
+  const handleGetStarted = async () => {
+    try {
+      await fetchSessionFiles(sessionId)
+      handleNext()
+    } catch (error) {
+      console.error("Error in handleGetStarted:", error)
+    }
+  }
+
   return (
     <div className="file-transfer-page">
-      {/* <div className="navbar">
-        <div className="nav-content">
-          <div class="logo">
-            <div class="logo-icon">
-              <img src={logo} alt="Logo" className="app-logo" />  
-            </div>
-            
-          </div>
-          <div className="nav-status">
-            <div
-              className="nav-logo"
-              style={{ display: "flex", alignItems: "center", height: "48px", padding: "0 8px" }}
-            >
-              <img
-                src={navimoto || "/placeholder.svg"}
-                alt="Logo"
-                className="navi-moto"
-                style={{ height: "40px", width: "auto", maxWidth: "120px", objectFit: "contain", display: "block" }}
-              />
-            </div>
+      <Navbar />
 
-            <div className="wifi-status">
-              <img src={wifiIcon || "/placeholder.svg"} alt="WiFi" className="wifi-icon" />
-              <span className={`status-text ${isOnline ? "online" : "offline"}`}>
-                {isOnline ? "Online" : "Offline"}
-              </span>
-            </div>
-            <div id="clock" className="nav-clock">
-              <p className="time">{clockTime}</p>
-            </div>
-          </div>
-        </div>
-      </div> */}
+      <HeroSection sessionId={sessionId} onGetStarted={handleGetStarted} />
 
-      <div className="section-toggle" style={{ display: "flex", alignItems: "center", gap: "10px" }}>
-        <button
-          className={`toggle-btn ${activeSection === "session" ? "active" : ""}`}
-          onClick={() => setActiveSection("session")}
-        >
-          Session
-        </button>
-        <button
-          className={`toggle-btn ${activeSection === "papershop" ? "active" : ""}`}
-          onClick={() => setActiveSection("papershop")}
-        >
-          Paper shop
-        </button>
-      </div>
+      <ProjectCards />
 
-      {activeSection === "session" ? (
-        <div className="container">
+      <div className="container">
+        {/* <div className="starting-section" style={{ display: "none" }}>
+          <button
+            className="start-btn"
+            onClick={async () => {
+              await fetchSessionFiles(sessionId)
+              handleNext()
+            }}
+          >
+            click
+          </button>
+
           <div className="qr-section">
             <h2>Scan QR Code to Upload Files</h2>
             <div className="qr-container">
@@ -774,199 +738,71 @@ const FileTransferPage = () => {
               </button>
             </div>
           </div>
+        </div> */}
 
-          <div className="storage-section">
-            <div className={`storage-box ${showFiles ? "files-mode" : ""}`} onClick={handleStorageBoxClick}>
-              {!showFiles ? (
-                <div className="storage-box-blur">
-                  <section className="relative group flex flex-col items-center justify-center w-full h-full">
-                    <div className="file relative w-60 h-40 cursor-pointer origin-bottom [perspective:1500px] z-50">
-                      <div className="work-5 bg-amber-600 w-full h-full origin-top rounded-2xl rounded-tl-none group-hover:shadow-[0_20px_40px_rgba(0,0,0,.2)] transition-all ease duration-300 relative after:absolute after:content-[''] after:bottom-[99%] after:left-0 after:w-20 after:h-4 after:bg-amber-600 after:rounded-t-2xl before:absolute before:content-[''] before:-top-[15px] before:left-[75.5px] before:w-4 before:h-4 before:bg-amber-600 before:[clip-path:polygon(0_35%,0%_100%,50%_100%);]"></div>
-                      <div className="work-4 absolute inset-1 bg-zinc-400 rounded-2xl transition-all ease duration-300 origin-bottom select-none group-hover:[transform:rotateX(-20deg)]"></div>
-                      <div className="work-3 absolute inset-1 bg-zinc-300 rounded-2xl transition-all ease duration-300 origin-bottom group-hover:[transform:rotateX(-30deg)]"></div>
-                      <div className="work-2 absolute inset-1 bg-zinc-200 rounded-2xl transition-all ease duration-300 origin-bottom group-hover:[transform:rotateX(-38deg)]"></div>
-                      <div className="work-1 absolute bottom-0 bg-gradient-to-t from-amber-500 to-amber-400 w-full h-[156px] rounded-2xl rounded-tr-none after:absolute after:content-[''] after:bottom-[99%] after:right-0 after:w-[146px] after:h-[16px] after:bg-amber-400 after:rounded-t-2xl before:absolute before:content-[''] before:-top-[10px] before:right-[142px] before:size-3 before:bg-amber-400 before:[clip-path:polygon(100%_14%,50%_100%,100%_100%);] transition-all ease duration-300 origin-bottom flex items-end group-hover:shadow-[inset_0_20px_40px_#fbbf24,_inset_0_-20px_40px_#d97706] group-hover:[transform:rotateX(-46deg)_translateY(1px)]"></div>
-                    </div>
-                    <p className="text-3xl pt-4 opacity-20" style={{ color: "black" }}>UPLOADED FILES</p>
-                    <p className="text-3xl pt-4 opacity-20" style={{ color: "red" }}>CLICK HERE ONLY AFTER UPLODING FILES</p>
-
-                  </section>
-                </div>
-              ) : (
-                <div className="files-display" onClick={(e) => e.stopPropagation()}>
-                  <div className="files-header">
-                    <h3 className="files-title">Files</h3>
-                    <button
-                      className="refresh-btn"
-                      onClick={(e) => {
-                        e.stopPropagation()
-                        fetchSessionFiles(sessionId)
-                      }}
-                      disabled={loading}
-                    >
-                      <svg className="refresh-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor">
-                        <polyline points="23 4 23 10 17 10"></polyline>
-                        <polyline points="1 20 1 14 7 14"></polyline>
-                        <path d="m3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"></path>
-                      </svg>
-                    </button>
-                  </div>
-
-                  {loading ? (
-                    <div className="loading-animation-card">
-                      <div className="text-loader">
-                        <p>loading</p>
-                        <div className="rotating-words">
-                          <span className="animated-word">buttons</span>
-                          <span className="animated-word">forms</span>
-                          <span className="animated-word">switches</span>
-                          <span className="animated-word">cards</span>
-                          <span className="animated-word">buttons</span>
-                        </div>
-                      </div>
-                    </div>
-                  ) : files.length === 0 ? (
-                    <div className="empty-state"> Click REFRESH to start new SESSION | NO files found</div>
-                  ) : (
-                    <>
-                      <div className="modern-files-list">
-                        {files.map((file, index) => {
-                          const isPdf = file.type === "pdf" || file.name.toLowerCase().endsWith(".pdf")
-                          const isImage =
-                            file.type === "image" || file.name.toLowerCase().match(/\.(jpg|jpeg|png|gif|bmp|webp)$/i)
-
-                          return (
-                            <div key={index} className="modern-file-card">
-                              <div className="file-icon-container">
-                                {isPdf ? (
-                                  <div className="pdf-icon">
-                                    <img
-                                      src={pdf || "/placeholder.svg"}
-                                      alt="PDF"
-                                      style={{ width: 32, height: 32, objectFit: "contain", display: "block" }}
-                                    />
-                                  </div>
-                                ) : (
-                                  <div className="image-icon">
-                                    <img
-                                      src={image || "/placeholder.svg"}
-                                      alt="Image"
-                                      style={{ width: 24, height: 24, objectFit: "contain", display: "block" }}
-                                    />
-                                  </div>
-                                )}
-                              </div>
-                              <div className="file-details">
-                                <h4 className="file-name" title={file.name}>
-                                  {file.name}
-                                </h4>
-                              </div>
-                            </div>
-                          )
-                        })}
-                      </div>
-
-                      <div className="">
-                        <button class="Btn-Container" onClick={handleNext} disabled={files.length === 0}>
-                          <span class="text">let's go!</span>
-                          <span class="icon-Container">
-                            <svg
-                              width="16"
-                              height="19"
-                              viewBox="0 0 16 19"
-                              fill="nones"
-                              xmlns="http://www.w3.org/2000/svg"
-                            >
-                              <circle cx="1.61321" cy="1.61321" r="1.5" fill="black"></circle>
-                              <circle cx="5.73583" cy="1.61321" r="1.5" fill="black"></circle>
-                              <circle cx="5.73583" cy="5.5566" r="1.5" fill="black"></circle>
-                              <circle cx="9.85851" cy="5.5566" r="1.5" fill="black"></circle>
-                              <circle cx="9.85851" cy="9.5" r="1.5" fill="black"></circle>
-                              <circle cx="13.9811" cy="9.5" r="1.5" fill="black"></circle>
-                              <circle cx="5.73583" cy="13.4434" r="1.5" fill="black"></circle>
-                              <circle cx="9.85851" cy="13.4434" r="1.5" fill="black"></circle>
-                              <circle cx="1.61321" cy="17.3868" r="1.5" fill="black"></circle>
-                              <circle cx="5.73583" cy="17.3868" r="1.5" fill="black"></circle>
-                            </svg>
-                          </span>
-                        </button>
-                      </div>
-                    </>
-                  )}
-                </div>
-              )}
-            </div>
-          </div>
+        {/* <div className="floating-cart-container">
+          <button className="floating-cart-btn" onClick={() => setShowCart(!showCart)}>
+            <img
+              src={shop || "/placeholder.svg"}
+              alt="Cart"
+              className="basket-icon"
+              style={{ width: 32, height: 32, objectFit: "contain" }}
+            />
+            {getTotalItems() > 0 && <span className="floating-cart-counter">{getTotalItems()}</span>}
+          </button>
         </div>
-      ) : (
-        <div className="container">
-          {activeSection === "papershop" && (
-            <div className="floating-cart-container">
-              <button className="floating-cart-btn" onClick={() => setShowCart(!showCart)}>
-                <img
-                  src={shop || "/placeholder.svg"}
-                  alt="Cart"
-                  className="basket-icon"
-                  style={{ width: 32, height: 32, objectFit: "contain" }}
-                />
-                {getTotalItems() > 0 && <span className="floating-cart-counter">{getTotalItems()}</span>}
-              </button>
-            </div>
-          )}
 
-          <div className="paper-shop-content">
-            <div className="product-cards-container">
-              {products.map((product) => (
-                <div key={product.id} className="product-card">
-                  <div className="product-tilt">
-                    <div className="product-img">
-                      <img src={product.image || "/placeholder.svg"} alt={product.name} />
-                    </div>
-                  </div>
-                  <div className="product-info">
-                    <div className="product-cat">{product.category}</div>
-                    <h2 className="product-title">{product.name}</h2>
-                    <div className="product-bottom">
-                      <div className="product-price">
-                        <span className="price-old">₹{product.originalPrice}</span>
-                        <span className="price-new">₹{product.price}</span>
-                      </div>
-                      <button className="product-btn" onClick={() => addToCart(product)} disabled={!product.inStock}>
-                        <span>Add to Cart</span>
-                        <svg
-                          className="cart-icon"
-                          width="19"
-                          height="19"
-                          viewBox="0 0 24 24"
-                          fill="none"
-                          stroke="currentColor"
-                          strokeWidth="2"
-                        >
-                          <path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4" />
-                          <line x1="3" y1="6" x2="21" y2="6" />
-                          <path d="M16 10a4 4 0 01-8 0" />
-                        </svg>
-                      </button>
-                    </div>
-                    <div className="product-meta">
-                      <div className="product-stock">{product.inStock ? "In Stock" : "Out of Stock"}</div>
-                    </div>
-                  </div>
-                </div>
-              ))}
-            </div>
-          </div>
-        </div>
-      )}
+        // <div className="paper-shop-content">
+        //   <div className="product-cards-container">
+        //     {products.map((product) => (
+        //       <div key={product.id} className="product-card">
+        //         <div className="product-tilt">
+        //           <div className="product-img">
+        //             <img src={product.image || "/placeholder.svg"} alt={product.name} />
+        //           </div>
+        //         </div>
+        //         <div className="product-info">
+        //           <div className="product-cat">{product.category}</div>
+        //           <h2 className="product-title">{product.name}</h2>
+        //           <div className="product-bottom">
+        //             <div className="product-price">
+        //               <span className="price-old">₹{product.originalPrice}</span>
+        //               <span className="price-new">₹{product.price}</span>
+        //             </div>
+        //             <button className="product-btn" onClick={() => addToCart(product)} disabled={!product.inStock}>
+        //               <span>Add to Cart</span>
+        //               <svg
+        //                 className="cart-icon"
+        //                 width="19"
+        //                 height="19"
+        //                 viewBox="0 0 24 24"
+        //                 fill="none"
+        //                 stroke="currentColor"
+        //                 strokeWidth="2"
+        //               >
+        //                 <path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4" />
+        //                 <line x1="3" y1="6" x2="21" y2="6" />
+        //                 <path d="M16 10a4 4 0 01-8 0" />
+        //               </svg>
+        //             </button>
+        //           </div>
+        //           <div className="product-meta">
+        //             <div className="product-stock">{product.inStock ? "In Stock" : "Out of Stock"}</div>
+        //           </div>
+        //         </div>
+        //       </div>
+        //     ))}
+        //   </div>
+        // </div> */}
+      </div>
 
-      {showCart && activeSection === "papershop" && (
+      {showCart && (
         <div className="cart-overlay" onClick={() => setShowCart(false)}>
           <div className="modern-cart-container" onClick={(e) => e.stopPropagation()}>
             <div className="unified-cart">
               <div className="cart-header-modern">
                 <div>
-                  <img class="cart-logo"src={logo2}></img>
-
+                  <img class="cart-logo" src={logo2 || "/placeholder.svg"}></img>
                 </div>
                 <label className="cart-title">Your cart</label>
                 <button className="cart-close-btn-modern" onClick={() => setShowCart(false)}>
@@ -1172,61 +1008,6 @@ const FileTransferPage = () => {
               )}
             </div>
           </div>
-        </div>
-      )}
-
-      {/* <div className="video_ad">
-        <div class="video_container">
-          <video
-            className="video_ad_player"
-            src={videoSources[currentVideoIdx]}
-            autoPlay
-            muted
-            playsInline
-            onEnded={handleVideoEnd}
-            key={currentVideoIdx}
-          ></video>
-        </div>
-
-        <div class="img_container">
-          {imageGroups[currentImageSet].map((imgSrc, index) => (
-            <img
-              key={index}
-              src={imgSrc || "/placeholder.svg"}
-              className="img_ad"
-              alt={`Ad ${currentImageSet + 1}.${index + 1}`}
-              onMouseEnter={() => handleImageHover(index)}
-              onMouseLeave={handleImageLeave}
-            />
-          ))}
-        </div>
-
-        {showCouponCard && (
-          <div className="coupon-overlay" onClick={handleCloseCouponCard}>
-            <div className="coupon-card">
-              <div className="close-btn" onClick={handleCloseCouponCard}>
-                ×
-              </div>
-              <div className="innvera-logo">INNVERA</div>
-              <div className="offer-text">10% flat off valid only on pdf/canvas prints only</div>
-              <div className="promo-codes">
-                <div className="promo-code">{generateSessionCouponCode(sessionId)}</div>
-                <div
-                  className="promo-code copy-btn"
-                  onClick={() => navigator.clipboard.writeText(generateSessionCouponCode(sessionId))}
-                >
-                  COPY
-                </div>
-              </div>
-              <div className="validity">Valid Till: only for this session</div>
-            </div>
-          </div>
-        )}
-      </div> */}
-
-      {showIntegratedView && activeSection === "session" && (
-        <div className="integrated-files-section">
-          <IntegratedFilePage files={files} sessionId={sessionId} onNavigateToPayment={handleNavigateToPayment} />
         </div>
       )}
     </div>

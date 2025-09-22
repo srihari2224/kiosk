@@ -1,14 +1,17 @@
 "use client"
 
-import React from "react"
-
-import { useState, useRef, useEffect } from "react"
-import { Plus, Trash, ImageIcon, FileText, X } from "lucide-react"
+import React, { useState, useEffect, useRef } from "react"
+import { useLocation, useNavigate } from "react-router-dom"
+import { Plus, Trash, ImageIcon, FileText, X, ArrowLeft } from "lucide-react"
 import "./IntegratedFilePage.css"
 import india from "../assets/india-flag-icon.svg"
 
-function IntegratedFilePage({ files = [], sessionId, onNavigateToPayment }) {
+function IntegratedFilePage() {
   const canvasRef = useRef(null)
+  const location = useLocation()
+  const navigate = useNavigate()
+
+  const { files = [], sessionId = "" } = location.state || {}
 
   // Pages and canvas editing
   const [pages, setPages] = useState([{ id: 1, items: [], colorMode: "color" }])
@@ -1150,46 +1153,70 @@ function IntegratedFilePage({ files = [], sessionId, onNavigateToPayment }) {
 
   async function exportCanvasToHtml(canvasEl) {
     // collect image srcs to convert
-    const imgs = Array.from(canvasEl.querySelectorAll('img'));
-    const srcs = imgs.map(i => i.getAttribute('src'));
+    const imgs = Array.from(canvasEl.querySelectorAll("img"))
+    const srcs = imgs.map((i) => i.getAttribute("src"))
 
     // ask main to return data URLs for these srcs
-    const dataMap = await window.electronAPI.readFilesAsDataURL(srcs); // implement in preload/main
+    const dataMap = await window.electronAPI.readFilesAsDataURL(srcs) // implement in preload/main
 
     // clone and inline computed styles
-    const clone = canvasEl.cloneNode(true);
-    inlineComputedStylesRecursive(clone);
+    const clone = canvasEl.cloneNode(true)
+    inlineComputedStylesRecursive(clone)
 
     // replace img src with data URLs
-    clone.querySelectorAll('img').forEach(img => {
-      const original = img.getAttribute('src');
-      if (dataMap[original]) img.setAttribute('src', dataMap[original]);
-    });
+    clone.querySelectorAll("img").forEach((img) => {
+      const original = img.getAttribute("src")
+      if (dataMap[original]) img.setAttribute("src", dataMap[original])
+    })
 
     const html = `
     <!doctype html>
     <html><head><meta charset="utf-8"><style>body{margin:0}</style></head>
-    <body>${clone.outerHTML}</body></html>`;
+    <body>${clone.outerHTML}</body></html>`
 
     // send HTML to main to write file (or show print preview)
-    await window.electronAPI.saveExportHtml(html);
+    await window.electronAPI.saveExportHtml(html)
   }
 
   function inlineComputedStylesRecursive(el) {
-    const children = [el, ...el.querySelectorAll('*')];
-    children.forEach(node => {
-      const cs = window.getComputedStyle(node);
-      const style = [];
+    const children = [el, ...el.querySelectorAll("*")]
+    children.forEach((node) => {
+      const cs = window.getComputedStyle(node)
+      const style = []
       // pick properties you need; you can also iterate all cs keys
-      ['position','left','top','width','height','transform','transform-origin','object-fit','z-index','display','margin','padding'].forEach(p=>{
-        if (cs.getPropertyValue(p)) style.push(`${p}: ${cs.getPropertyValue(p)};`);
-      });
-      node.setAttribute('style', style.join(' ') + (node.getAttribute('style')||''));
-    });
+      ;[
+        "position",
+        "left",
+        "top",
+        "width",
+        "height",
+        "transform",
+        "transform-origin",
+        "object-fit",
+        "z-index",
+        "display",
+        "margin",
+        "padding",
+      ].forEach((p) => {
+        if (cs.getPropertyValue(p)) style.push(`${p}: ${cs.getPropertyValue(p)};`)
+      })
+      node.setAttribute("style", style.join(" ") + (node.getAttribute("style") || ""))
+    })
+  }
+
+  const handleBackToFileTransfer = () => {
+    navigate("/file-transfer")
   }
 
   return (
     <div className="integrated-files-page">
+      <div className="page-header">
+        <button className="back-button" onClick={handleBackToFileTransfer}>
+          <ArrowLeft size={20} />
+          Back to File Transfer
+        </button>
+      </div>
+
       <div className="main-content">
         {/* Left Sidebar: Files and Queue */}
         <div className="sidebar">
@@ -1470,57 +1497,81 @@ function IntegratedFilePage({ files = [], sessionId, onNavigateToPayment }) {
                         }
                       }}
                     >
-              <div className="canvas-image-container">
-                <div
-                  className="canvas-image"
-                  data-scale="1"
-                  style={{
-                    transform: `rotate(${item.rotation || 0}deg) ${item.flipX ? "scaleX(-1)" : ""} ${
-                      item.flipY ? "scaleY(-1)" : ""
-                    }`,
-                    transformOrigin: "center center",
-                  }}
-                >
-                  <img
-                    src={getFileUrl(item.file) || "/placeholder.svg"}
-                    alt={item.file.name}
-                    className={`canvas-image-inner ${item.filter ? `filter-${item.filter}` : ""}`}
-                    style={{
-                      opacity: item.opacity || 1,
-                      width: "100%",
-                      height: "100%",
-                      objectFit: "cover",
-                    }}
-                    onError={(e) => {
-                      e.target.src = "/placeholder.svg"
-                    }}
-                  />
-                  {selectedItem && selectedItem.id === item.id && !item.locked && (
-                    <>
-                      <div
-                        className="resize-handles"
-                        style={{ outline: `2px solid #8b5cf6`, borderRadius: "6px" }}
-                      >
-                        {/* Corner handles */}
-                        <div className="resize-handle nw" onMouseDown={(e) => handleResizeStart(e, "nw", item)}></div>
-                        <div className="resize-handle ne" onMouseDown={(e) => handleResizeStart(e, "ne", item)}></div>
-                        <div className="resize-handle sw" onMouseDown={(e) => handleResizeStart(e, "sw", item)}></div>
-                        <div className="resize-handle se" onMouseDown={(e) => handleResizeStart(e, "se", item)}></div>
-                        {/* Side handles */}
-                        <div className="resize-handle n" onMouseDown={(e) => handleResizeStart(e, "n", item)}></div>
-                        <div className="resize-handle s" onMouseDown={(e) => handleResizeStart(e, "s", item)}></div>
-                        <div className="resize-handle w" onMouseDown={(e) => handleResizeStart(e, "w", item)}></div>
-                        <div className="resize-handle e" onMouseDown={(e) => handleResizeStart(e, "e", item)}></div>
-                      </div>
-                      {/* <div className="rotation-handle" onClick={() => rotateItem90(item)} title="Rotate 90°">
+                      <div className="canvas-image-container">
+                        <div
+                          className="canvas-image"
+                          data-scale="1"
+                          style={{
+                            transform: `rotate(${item.rotation || 0}deg) ${item.flipX ? "scaleX(-1)" : ""} ${
+                              item.flipY ? "scaleY(-1)" : ""
+                            }`,
+                            transformOrigin: "center center",
+                          }}
+                        >
+                          <img
+                            src={getFileUrl(item.file) || "/placeholder.svg"}
+                            alt={item.file.name}
+                            className={`canvas-image-inner ${item.filter ? `filter-${item.filter}` : ""}`}
+                            style={{
+                              opacity: item.opacity || 1,
+                              width: "100%",
+                              height: "100%",
+                              objectFit: "cover",
+                            }}
+                            onError={(e) => {
+                              e.target.src = "/placeholder.svg"
+                            }}
+                          />
+                          {selectedItem && selectedItem.id === item.id && !item.locked && (
+                            <>
+                              <div
+                                className="resize-handles"
+                                style={{ outline: `2px solid #8b5cf6`, borderRadius: "6px" }}
+                              >
+                                {/* Corner handles */}
+                                <div
+                                  className="resize-handle nw"
+                                  onMouseDown={(e) => handleResizeStart(e, "nw", item)}
+                                ></div>
+                                <div
+                                  className="resize-handle ne"
+                                  onMouseDown={(e) => handleResizeStart(e, "ne", item)}
+                                ></div>
+                                <div
+                                  className="resize-handle sw"
+                                  onMouseDown={(e) => handleResizeStart(e, "sw", item)}
+                                ></div>
+                                <div
+                                  className="resize-handle se"
+                                  onMouseDown={(e) => handleResizeStart(e, "se", item)}
+                                ></div>
+                                {/* Side handles */}
+                                <div
+                                  className="resize-handle n"
+                                  onMouseDown={(e) => handleResizeStart(e, "n", item)}
+                                ></div>
+                                <div
+                                  className="resize-handle s"
+                                  onMouseDown={(e) => handleResizeStart(e, "s", item)}
+                                ></div>
+                                <div
+                                  className="resize-handle w"
+                                  onMouseDown={(e) => handleResizeStart(e, "w", item)}
+                                ></div>
+                                <div
+                                  className="resize-handle e"
+                                  onMouseDown={(e) => handleResizeStart(e, "e", item)}
+                                ></div>
+                              </div>
+                              {/* <div className="rotation-handle" onClick={() => rotateItem90(item)} title="Rotate 90°">
                         <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
                           <path d="M12 6v3l4-4-4-4v3c-4.42 0-8 3.58-8 8 0 1.57.46 3.03 1.24 4.26L6.7 14.8c-.45-.83-.7-1.79-.7-2.8 0-3.31 2.69-6 6-6zm6.76 1.74L17.3 9.2c.44.84.7 1.79.7 2.8 0 3.31-2.69 6-6 6v-3l-4 4 4 4v-3c4.42 0 8-3.58 8-8 0-1.57-.46-3.03-1.24-4.26z" />
                         </svg>
                       </div> */}
-                    </>
-                  )}
-                </div>
-              </div>
+                            </>
+                          )}
+                        </div>
+                      </div>
 
                       {selectedItem && selectedItem.id === item.id && !item.locked && (
                         <>

@@ -1,0 +1,135 @@
+/* Updated navbar to match modern design from screenshots */
+.navbar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 1000;
+  background: transparent;
+  backdrop-filter: blur(20px);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  height: 100px;
+}
+
+.navbar-container {
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 0 3rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  height: 100%;
+}
+
+.navbar-brand {
+  display: flex;
+  align-items: center;
+}
+
+.brand-logo {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+/* Updated logo circle to match purple gradient from screenshots */
+.logo-circle {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #8b5cf6, #a855f7, #7c3aed);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  box-shadow: 0 2px 8px rgba(139, 92, 246, 0.3);
+}
+
+.logo-inner {
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.4);
+}
+
+.brand-text {
+  font-size: 1.375rem;
+  font-weight: 700;
+  color: white;
+  letter-spacing: 0.02em;
+}
+
+.navbar-menu {
+  display: flex;
+  align-items: center;
+  gap: 2.5rem;
+}
+
+/* Updated navbar items to match screenshot styling */
+.navbar-item {
+  color: rgba(255, 255, 255, 0.85);
+  font-weight: 500;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  gap: 0.375rem;
+  padding: 0.5rem 0;
+}
+
+.navbar-item:hover {
+  color: white;
+}
+
+.dropdown svg {
+  opacity: 0.7;
+  transition: opacity 0.2s ease;
+}
+
+.dropdown:hover svg {
+  opacity: 1;
+}
+
+/* Removed theme toggle to match screenshot */
+.theme-toggle {
+  display: none;
+}
+
+@media (max-width: 1024px) {
+  .navbar-container {
+    padding: 0 2rem;
+  }
+
+  .navbar-menu {
+    gap: 2rem;
+  }
+}
+
+@media (max-width: 768px) {
+  .navbar-container {
+    padding: 0 1.5rem;
+  }
+
+  .navbar-menu {
+    gap: 1.5rem;
+  }
+
+  .navbar-item {
+    font-size: 0.9rem;
+  }
+
+  .brand-text {
+    font-size: 1.25rem;
+  }
+
+  .logo-circle {
+    width: 32px;
+    height: 32px;
+  }
+
+  .logo-inner {
+    width: 12px;
+    height: 12px;
+  }
+}
