@@ -694,7 +694,7 @@ const FileTransferPage = () => {
 
   return (
     <div className="file-transfer-page">
-      <div className="navbar">
+      {/* <div className="navbar">
         <div className="nav-content">
           <div class="logo">
             <div class="logo-icon">
@@ -726,7 +726,7 @@ const FileTransferPage = () => {
             </div>
           </div>
         </div>
-      </div>
+      </div> */}
 
       <div className="section-toggle" style={{ display: "flex", alignItems: "center", gap: "10px" }}>
         <button
@@ -1175,7 +1175,7 @@ const FileTransferPage = () => {
         </div>
       )}
 
-      <div className="video_ad">
+      {/* <div className="video_ad">
         <div class="video_container">
           <video
             className="video_ad_player"
@@ -1222,7 +1222,7 @@ const FileTransferPage = () => {
             </div>
           </div>
         )}
-      </div>
+      </div> */}
 
       {showIntegratedView && activeSection === "session" && (
         <div className="integrated-files-section">
