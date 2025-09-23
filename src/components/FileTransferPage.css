@@ -71,7 +71,7 @@
 /* Container - 25% width - FIXED GAPS */
 .file-transfer-page .container {
   width: 2060px;
-  
+
   background: rgba(255, 255, 255, 0.95);
   backdrop-filter: blur(10px);
 
@@ -111,8 +111,7 @@
   color: #7f8c8d;
   font-size: 1.2rem;
   font-weight: 500;
-  margin-top:30px;
-
+  margin-top: 30px;
 }
 
 /* Nav Content */
@@ -258,235 +257,6 @@
   font-weight: 600;
 }
 
-.file-transfer-page .session-info {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 0.5rem;
-  background: #3b3b3b;
-  color: #ffffff;
-  padding: 0.5rem 1rem;
-  border-radius: 8px;
-  font-size: 1rem;
-  font-weight: 600;
-}
-
-.file-transfer-page .session-icon {
-  width: 25px;
-  height: 25px;
-  filter: brightness(1) invert(100);
-}
-
-.file-transfer-page .session-id {
-  font-family: jersey, monospace;
-}
-
-.file-transfer-page .start-btn {
-  width: 100px;
-  height: 100px;
-  border-radius: 50%;
-  background-color: #3498db;
-}
-
-/* Storage Section - Below QR code */
-.file-transfer-page .storage-section {
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-}
-
-.file-transfer-page .storage-box {
-  border: 2px solid #e0e0e0;
-  border-radius: 12px;
-  min-height: 200px;
-  background: white;
-  cursor: pointer;
-  transition: all 0.3s ease;
-  display: flex;
-  flex-direction: column;
-  flex: 1;
-}
-
-.file-transfer-page .storage-box.files-mode {
-  cursor: default;
-}
-
-.file-transfer-page .storage-box:not(.files-mode):hover {
-  border-color: #ffffff;
-  box-shadow: 0 8px 15px rgba(36, 147, 222, 0.2);
-}
-
-/* Storage Box Blur State */
-.file-transfer-page .storage-box-blur {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  height: 100%;
-  min-height: 200px;
-  backdrop-filter: blur(5px);
-  background: rgba(248, 249, 250, 0.8);
-  border-radius: 10px;
-  margin: 2px;
-  transition: all 0.3s ease;
-}
-
-.file-transfer-page .storage-box-blur:hover {
-  backdrop-filter: blur(3px);
-  background: rgba(248, 249, 250, 0.9);
-}
-
-.file-transfer-page .storage-text {
-  font-size: 1.2rem;
-  font-weight: 600;
-  color: #2c3e50;
-  text-align: center;
-}
-
-/* Files Display */
-.file-transfer-page .files-display {
-  padding: 1rem;
-  height: 100%;
-  overflow-y: auto;
-}
-
-.file-transfer-page .files-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 1rem;
-  padding-bottom: 0.5rem;
-  border-bottom: 2px solid #e0e0e0;
-}
-
-.file-transfer-page .files-title {
-  font-size: 1.2rem;
-  font-weight: 600;
-  color: #2c3e50;
-  margin: 0;
-}
-
-.file-transfer-page .refresh-btn {
-  background: #000000;
-  color: white;
-  border: none;
-  padding: 0.5rem;
-  border-radius: 6px;
-  cursor: pointer;
-  transition: all 0.3s ease;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.file-transfer-page .refresh-btn:hover {
-  background: #000000;
-  transform: translateY(-1px);
-}
-
-.file-transfer-page .refresh-btn:disabled {
-  opacity: 0.6;
-  cursor: not-allowed;
-  transform: none;
-}
-
-.file-transfer-page .refresh-icon {
-  width: 16px;
-  height: 16px;
-}
-
-.file-transfer-page .loading-state,
-.file-transfer-page .empty-state {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  height: 150px;
-  color: #7f8c8d;
-  font-weight: 500;
-}
-
-.file-transfer-page .files-list {
-  display: flex;
-  flex-direction: column;
-  gap: 0.75rem;
-}
-
-/* Updated file-item styles for download buttons */
-.file-transfer-page .file-item {
-  background: #f8f9fa;
-  border: 1px solid #e9ecef;
-  border-radius: 8px;
-  padding: 0.75rem;
-  transition: all 0.3s ease;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
-
-.file-transfer-page .file-item:hover {
-  background: #e3f2fd;
-  border-color: #3498db;
-  transform: translateY(-1px);
-}
-
-.file-transfer-page .file-info {
-  flex: 1;
-}
-
-.file-transfer-page .file-info h4 {
-  color: #2c3e50;
-  font-weight: 600;
-  margin: 0 0 0.25rem 0;
-  font-size: 0.9rem;
-  word-break: break-word;
-}
-
-.file-transfer-page .file-info p {
-  color: #7f8c8d;
-  margin: 0.1rem 0;
-  font-size: 0.8rem;
-}
-
-.file-transfer-page .file-actions {
-  margin-left: 16px;
-}
-
-.file-transfer-page .download-btn {
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  padding: 8px 16px;
-  background-color: #007bff;
-  color: white;
-  border: none;
-  border-radius: 6px;
-  cursor: pointer;
-  font-size: 12px;
-  font-weight: 500;
-  transition: all 0.2s ease;
-  min-width: 100px;
-  justify-content: center;
-}
-
-.file-transfer-page .download-btn:hover:not(:disabled) {
-  background-color: #0056b3;
-  transform: translateY(-1px);
-}
-
-.file-transfer-page .download-btn:disabled {
-  background-color: #6c757d;
-  cursor: not-allowed;
-  transform: none;
-}
-
-.file-transfer-page .download-icon {
-  width: 16px;
-  height: 16px;
-  stroke-width: 2;
-}
-
-.file-transfer-page .download-icon.spinning {
-  animation: spin 1s linear infinite;
-}
 
 @keyframes spin {
   from {
@@ -496,6 +266,9 @@
     transform: rotate(360deg);
   }
 }
+
+
+
 
 /* PDF File Styles */
 .file-transfer-page .file-item.pdf-file {
@@ -806,7 +579,7 @@
 
 .file-transfer-page .product-tilt {
   overflow: hidden;
-  height:300px;
+  height: 300px;
 }
 
 .file-transfer-page .product-img {
@@ -837,7 +610,8 @@
 file-transfer-page .product-cat {
   font-size: 10px;
   font-weight: 600;
-  letter-spacing: 1px; text-transform: uppercase;
+  letter-spacing: 1px;
+  text-transform: uppercase;
   color: #71717a;
   margin-bottom: 6px;
 }
@@ -1557,6 +1331,7 @@ file-transfer-page .product-cat {
   padding: 0 20px;
   max-height: 300px;
   overflow-y: auto;
+  background-color: #111111;
 }
 
 .file-transfer-page .cart-item {
@@ -1670,7 +1445,7 @@ file-transfer-page .product-cat {
 .file-transfer-page .printing-progress-section {
   padding: 15px 20px;
   border-top: 1px solid #f1f5f9;
-  background: #f8fafc;
+  background: #f8f9fa;
 }
 
 .file-transfer-page .progress-title {
@@ -1709,7 +1484,7 @@ file-transfer-page .product-cat {
 .file-transfer-page .checkout-section {
   padding: 20px;
   border-top: 1px solid #f1f5f9;
-  background: #f8fafc;
+  background: #f8f9fa;
 }
 
 .file-transfer-page .checkout-details {
@@ -2713,12 +2488,10 @@ file-transfer-page .product-cat {
 /* Paper Shop Styles */
 .file-transfer-page .paper-shop-content {
   margin-top: 3rem;
-  height:531px;
-
+  height: 531px;
 
   background-color: #111111;
-  margin-top:50px;
-
+  margin-top: 50px;
 }
 
 .file-transfer-page .product-cards-container {
@@ -2728,7 +2501,7 @@ file-transfer-page .product-cat {
   max-width: 2200px;
   margin: 0 auto;
   padding: 13 1rem;
-  margin-bottom:100px;
+  margin-bottom: 100px;
 }
 
 .file-transfer-page .product-card {
@@ -2739,7 +2512,7 @@ file-transfer-page .product-cat {
   border: 1px solid rgba(255, 255, 255, 0.1);
   backdrop-filter: blur(10px);
   width: 493px;
-  margin-top:40px;
+  margin-top: 40px;
 }
 
 .file-transfer-page .product-card:hover {
@@ -2750,7 +2523,7 @@ file-transfer-page .product-cat {
 .file-transfer-page .product-tilt {
   display: flex;
   justify-content: center;
-  height:290px;
+  height: 290px;
 }
 
 .file-transfer-page .product-img {
@@ -2761,8 +2534,6 @@ file-transfer-page .product-cat {
   box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
   transition: transform 0.3s ease;
 }
-
-
 
 .file-transfer-page .product-img img {
   width: 100%;
@@ -2929,14 +2700,333 @@ file-transfer-page .product-cat {
 }
 
 .file-transfer-page .modern-cart-container {
-  background: rgba(20, 20, 20, 0.95);
-  border-radius: 20px;
+  background: #1a1a1a;
+  border-radius: 16px;
   width: 100%;
-  max-width: 500px;
-  max-height: 90vh;
+  max-width: 580px;
+  max-height: 85vh;
   overflow: hidden;
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  backdrop-filter: blur(20px);
+  border: 1px solid #333;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+}
+
+.file-transfer-page .unified-cart {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  width: 500px;
+}
+
+.file-transfer-page .cart-header-modern {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 1.5rem;
+  background: #1a1a1a;
+}
+
+.file-transfer-page .cart-logo {
+  width: 32px;
+  height: 32px;
+  border-radius: 6px;
+}
+
+.file-transfer-page .cart-title {
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: #ffffff;
+  flex: 1;
+  text-align: center;
+  margin: 0;
+}
+
+.file-transfer-page .cart-close-btn-modern {
+  background: #333;
+  border: none;
+  border-radius: 8px;
+  width: 36px;
+  height: 36px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  color: #fff;
+}
+
+.file-transfer-page .cart-close-btn-modern:hover {
+  background: #444;
+}
+
+.file-transfer-page .cart-empty-modern {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 3rem 2rem;
+  color: #888;
+  text-align: center;
+}
+
+.file-transfer-page .empty-cart-icon-modern {
+  width: 64px;
+  height: 64px;
+  margin-bottom: 1rem;
+  color: #555;
+}
+
+.file-transfer-page .cart-empty-modern p {
+  font-size: 1.1rem;
+  margin: 0;
+}
+
+.file-transfer-page .cart-items-section {
+  flex: 1;
+  overflow-y: auto;
+  padding: 0;
+  max-height: 300px;
+}
+
+.file-transfer-page .cart-item {
+  display: flex;
+  align-items: center;
+  padding: 1rem 1.5rem;
+  gap: 1rem;
+  background: #1a1a1a;
+  transition: background 0.2s ease;
+}
+
+.file-transfer-page .cart-item:hover {
+  background: #222;
+}
+
+.file-transfer-page .cart-item:last-child {
+  border-bottom: none;
+}
+
+.file-transfer-page .item-icon {
+  flex-shrink: 0;
+  width: 48px;
+  height: 48px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #333;
+  border-radius: 8px;
+}
+
+.file-transfer-page .item-details {
+  flex: 1;
+  min-width: 0;
+}
+
+.file-transfer-page .item-name {
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: #fff;
+  margin-bottom: 0.25rem;
+  line-height: 1.2;
+}
+
+.file-transfer-page .item-category {
+  font-size: 0.8rem;
+  color: #888;
+  margin-bottom: 0.25rem;
+}
+
+.file-transfer-page .item-price {
+  font-size: 0.85rem;
+  color: #aaa;
+}
+
+.file-transfer-page .item-quantity {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  background: #333;
+  border-radius: 8px;
+  padding: 0.5rem;
+}
+
+.file-transfer-page .qty-btn {
+  background: #444;
+  border: none;
+  border-radius: 6px;
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  color: #fff;
+}
+
+.file-transfer-page .qty-btn:hover {
+  background: #555;
+  transform: scale(1.05);
+}
+
+.file-transfer-page .qty-btn:active {
+  transform: scale(0.95);
+}
+
+.file-transfer-page .qty-number {
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: #fff;
+  min-width: 24px;
+  text-align: center;
+}
+
+.file-transfer-page .item-total {
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: #fff;
+  min-width: 60px;
+  text-align: right;
+}
+
+.file-transfer-page .mobile-input-section {
+  padding: 1rem 1.5rem;
+  border-bottom: 1px solid #333;
+  background: #1a1a1a;
+}
+
+.file-transfer-page .mobile-input {
+  width: 100%;
+  padding: 0.75rem 1rem;
+  background: #333;
+  border: 1px solid #444;
+  border-radius: 8px;
+  color: #fff;
+  font-size: 0.95rem;
+  transition: all 0.2s ease;
+}
+
+.file-transfer-page .mobile-input:focus {
+  outline: none;
+  border-color: #666;
+  background: #3a3a3a;
+}
+
+.file-transfer-page .mobile-input::placeholder {
+  color: #888;
+}
+
+.file-transfer-page .mobile-error {
+  color: #ff6b6b;
+  font-size: 0.85rem;
+  margin-top: 0.5rem;
+}
+
+.file-transfer-page .checkout-section {
+  padding: 1.5rem;
+  background: #1a1a1a;
+  border-top: 1px solid #333;
+}
+
+.file-transfer-page .checkout-details {
+  margin-bottom: 1rem;
+}
+
+.file-transfer-page .detail-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 0.5rem;
+  font-size: 0.9rem;
+  color: #ccc;
+}
+
+.file-transfer-page .detail-row:last-child {
+  margin-bottom: 0;
+  font-weight: 600;
+  color: #fff;
+}
+
+.file-transfer-page .total-price {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: #fff;
+  text-align: center;
+  margin-bottom: 1.5rem;
+  padding: 1rem;
+  background: #333;
+  border-radius: 8px;
+}
+
+.file-transfer-page .checkout-buttons {
+  display: flex;
+  gap: 1rem;
+}
+
+.file-transfer-page .clear-btn {
+  flex: 1;
+  padding: 0.875rem 1.5rem;
+  background: #444;
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  font-size: 0.95rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.file-transfer-page .clear-btn:hover {
+  background: #555;
+}
+
+.file-transfer-page .pay-btn {
+  flex: 2;
+  padding: 0.875rem 1.5rem;
+  background: linear-gradient(135deg, #8b5cf6, #7c3aed);
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  font-size: 0.95rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.file-transfer-page .pay-btn:hover {
+  background: linear-gradient(135deg, #7c3aed, #6d28d9);
+  transform: translateY(-1px);
+}
+
+.file-transfer-page .pay-btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  transform: none;
+}
+
+/* Updated cart overlay and container to match the provided screenshot design */
+.file-transfer-page .cart-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.8);
+  backdrop-filter: blur(10px);
+  z-index: 2000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1rem;
+}
+
+.file-transfer-page .modern-cart-container {
+  background: #1a1a1a;
+  border-radius: 16px;
+  width: 100%;
+  max-width: 480px;
+  max-height: 85vh;
+  overflow: hidden;
+  border: 1px solid #333;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
 }
 
 .file-transfer-page .unified-cart {
@@ -2950,78 +3040,101 @@ file-transfer-page .product-cat {
   align-items: center;
   justify-content: space-between;
   padding: 1.5rem;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  border-bottom: 1px solid #333;
+  background: #1a1a1a;
 }
 
 .file-transfer-page .cart-logo {
-  width: 40px;
-  height: 40px;
-  border-radius: 8px;
+  width: 32px;
+  height: 32px;
+  border-radius: 6px;
 }
 
 .file-transfer-page .cart-title {
-  font-size: 1.3rem;
-  font-weight: 700;
+  font-size: 1.25rem;
+  font-weight: 600;
   color: #ffffff;
   flex: 1;
   text-align: center;
+  margin: 0;
 }
 
 .file-transfer-page .cart-close-btn-modern {
-  background: rgba(255, 255, 255, 0.1);
+  background: #333;
   border: none;
-  border-radius: 50%;
-  width: 40px;
-  height: 40px;
+  border-radius: 8px;
+  width: 36px;
+  height: 36px;
   display: flex;
   align-items: center;
   justify-content: center;
   cursor: pointer;
   transition: all 0.2s ease;
-  color: rgba(255, 255, 255, 0.8);
+  color: #fff;
 }
 
 .file-transfer-page .cart-close-btn-modern:hover {
-  background: rgba(255, 255, 255, 0.2);
-  color: white;
+  background: #444;
 }
 
+/* Updated cart empty state to match dark theme */
 .file-transfer-page .cart-empty-modern {
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
   padding: 3rem 2rem;
-  color: rgba(255, 255, 255, 0.6);
+  color: #888;
+  text-align: center;
 }
 
 .file-transfer-page .empty-cart-icon-modern {
-  width: 80px;
-  height: 80px;
+  width: 64px;
+  height: 64px;
   margin-bottom: 1rem;
-  opacity: 0.5;
+  color: #555;
 }
 
+.file-transfer-page .cart-empty-modern p {
+  font-size: 1.1rem;
+  margin: 0;
+}
+
+/* Redesigned cart items section to match the screenshot */
 .file-transfer-page .cart-items-section {
   flex: 1;
   overflow-y: auto;
-  padding: 1rem;
+  padding: 0;
   max-height: 300px;
 }
 
 .file-transfer-page .cart-item {
   display: flex;
   align-items: center;
+  padding: 1rem 1.5rem;
+  border-bottom: 1px solid #333;
   gap: 1rem;
-  padding: 1rem;
-  background: rgba(255, 255, 255, 0.05);
-  border-radius: 12px;
-  margin-bottom: 0.75rem;
-  border: 1px solid rgba(255, 255, 255, 0.1);
+  background: #1a1a1a;
+  transition: background 0.2s ease;
+}
+
+.file-transfer-page .cart-item:hover {
+  background: #222;
+}
+
+.file-transfer-page .cart-item:last-child {
+  border-bottom: none;
 }
 
 .file-transfer-page .item-icon {
   flex-shrink: 0;
+  width: 48px;
+  height: 48px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #333;
+  border-radius: 8px;
 }
 
 .file-transfer-page .item-details {
@@ -3030,113 +3143,261 @@ file-transfer-page .product-cat {
 }
 
 .file-transfer-page .item-name {
+  font-size: 0.95rem;
   font-weight: 600;
-  color: #ffffff;
-  font-size: 0.9rem;
+  color: #fff;
   margin-bottom: 0.25rem;
+  line-height: 1.2;
 }
 
 .file-transfer-page .item-category {
-  font-size: 0.75rem;
-  color: rgba(255, 255, 255, 0.6);
+  font-size: 0.8rem;
+  color: #888;
   margin-bottom: 0.25rem;
 }
 
 .file-transfer-page .item-price {
-  font-size: 0.8rem;
-  color: #667eea;
-  font-weight: 500;
+  font-size: 0.85rem;
+  color: #aaa;
 }
 
+/* Enhanced quantity controls with better +/- buttons */
 .file-transfer-page .item-quantity {
   display: flex;
   align-items: center;
-  gap: 0.5rem;
-  background: rgba(255, 255, 255, 0.1);
-  border-radius: 20px;
-  padding: 0.25rem;
+  gap: 0.75rem;
+  background: #333;
+  border-radius: 8px;
+  padding: 0.5rem;
 }
 
 .file-transfer-page .qty-btn {
-  background: rgba(255, 255, 255, 0.1);
+  background: #444;
   border: none;
+  border-radius: 6px;
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  color: #fff;
+}
+
+.file-transfer-page .qty-btn:hover {
+  background: #555;
+  transform: scale(1.05);
+}
+
+.file-transfer-page .qty-btn:active {
+  transform: scale(0.95);
+}
+
+.file-transfer-page .qty-number {
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: #fff;
+  min-width: 24px;
+  text-align: center;
+}
+
+.file-transfer-page .item-total {
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: #fff;
+  min-width: 60px;
+  text-align: right;
+}
+
+/* Updated mobile input section styling */
+.file-transfer-page .mobile-input-section {
+  padding: 1rem 1.5rem;
+  border-bottom: 1px solid #333;
+  background: #1a1a1a;
+}
+
+.file-transfer-page .mobile-input {
+  width: 100%;
+  padding: 0.75rem 1rem;
+  background: #333;
+  border: 1px solid #444;
+  border-radius: 8px;
+  color: #fff;
+  font-size: 0.95rem;
+  transition: all 0.2s ease;
+}
+
+.file-transfer-page .mobile-input:focus {
+  outline: none;
+  border-color: #666;
+  background: #3a3a3a;
+}
+
+.file-transfer-page .mobile-input::placeholder {
+  color: #888;
+}
+
+.file-transfer-page .mobile-error {
+  color: #ff6b6b;
+  font-size: 0.85rem;
+  margin-top: 0.5rem;
+}
+
+/* Updated checkout section to match the dark theme */
+.file-transfer-page .checkout-section {
+  padding: 1.5rem;
+  background: #1a1a1a;
+  border-top: 1px solid #333;
+}
+
+.file-transfer-page .checkout-details {
+  margin-bottom: 1rem;
+}
+
+.file-transfer-page .detail-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 0.5rem;
+  font-size: 0.9rem;
+  color: #ccc;
+}
+
+.file-transfer-page .detail-row:last-child {
+  margin-bottom: 0;
+  font-weight: 600;
+  color: #fff;
+}
+
+.file-transfer-page .total-price {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: #fff;
+  text-align: center;
+  margin-bottom: 1.5rem;
+  padding: 1rem;
+  background: #333;
+  border-radius: 8px;
+}
+
+.file-transfer-page .checkout-buttons {
+  display: flex;
+  gap: 1rem;
+}
+
+.file-transfer-page .clear-btn {
+  flex: 1;
+  padding: 0.875rem 1.5rem;
+  background: #444;
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  font-size: 0.95rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.file-transfer-page .clear-btn:hover {
+  background: #555;
+}
+
+.file-transfer-page .pay-btn {
+  flex: 2;
+  padding: 0.875rem 1.5rem;
+  background: linear-gradient(135deg, #8b5cf6, #7c3aed);
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  font-size: 0.95rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.file-transfer-page .pay-btn:hover {
+  background: linear-gradient(135deg, #7c3aed, #6d28d9);
+  transform: translateY(-1px);
+}
+
+.file-transfer-page .pay-btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  transform: none;
+}
+
+/* Updated floating cart button styles */
+.file-transfer-page .floating-cart-container {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  z-index: 1500;
+}
+
+.file-transfer-page .floating-cart-btn {
+  position: relative;
+  background: rgba(255, 255, 255, 0.95);
+  border: 2px solid rgba(0, 0, 0, 0.1);
+  border-radius: 50%;
+  width: 64px;
+  height: 64px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+}
+
+.file-transfer-page .floating-cart-btn:hover {
+  background: rgba(255, 255, 255, 1);
+  transform: translateY(-2px);
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.2);
+}
+
+.file-transfer-page .floating-cart-counter {
+  position: absolute;
+  top: -8px;
+  right: -8px;
+  background: #e74c3c;
+  color: white;
   border-radius: 50%;
   width: 28px;
   height: 28px;
   display: flex;
   align-items: center;
   justify-content: center;
-  cursor: pointer;
-  transition: all 0.2s ease;
-}
-
-.file-transfer-page .qty-btn:hover {
-  background: rgba(255, 255, 255, 0.2);
-}
-
-.file-transfer-page .qty-number {
-  color: #ffffff;
-  font-weight: 600;
-  font-size: 0.9rem;
-  min-width: 20px;
-  text-align: center;
-}
-
-.file-transfer-page .item-total {
-  font-weight: 700;
-  color: #667eea;
-  font-size: 0.9rem;
-  min-width: 60px;
-  text-align: right;
-}
-
-.file-transfer-page .mobile-input-section {
-  padding: 1rem;
-  border-top: 1px solid rgba(255, 255, 255, 0.1);
-}
-
-.file-transfer-page .mobile-input {
-  width: 100%;
-  padding: 0.75rem;
-  border: 1px solid rgba(255, 255, 255, 0.2);
-  border-radius: 8px;
-  background: rgba(255, 255, 255, 0.1);
-  color: #ffffff;
-  font-size: 0.9rem;
-}
-
-.file-transfer-page .mobile-input::placeholder {
-  color: rgba(255, 255, 255, 0.5);
-}
-
-.file-transfer-page .mobile-error {
-  color: #ff4757;
   font-size: 0.8rem;
-  margin-top: 0.5rem;
+  font-weight: 700;
+  border: 3px solid white;
+  animation: bounce 0.3s ease;
 }
 
+/* Added printing progress section styles */
 .file-transfer-page .printing-progress-section {
-  padding: 1rem;
-  border-top: 1px solid rgba(255, 255, 255, 0.1);
-  background: rgba(255, 255, 255, 0.05);
+  padding: 1.5rem;
+  background: #1a1a1a;
+  border-bottom: 1px solid #333;
 }
 
 .file-transfer-page .progress-title {
+  font-size: 1rem;
   font-weight: 600;
-  color: #ffffff;
+  color: #fff;
   margin-bottom: 0.5rem;
 }
 
 .file-transfer-page .progress-job {
-  font-size: 0.8rem;
-  color: rgba(255, 255, 255, 0.8);
-  margin-bottom: 0.75rem;
+  font-size: 0.9rem;
+  color: #ccc;
+  margin-bottom: 1rem;
 }
 
 .file-transfer-page .progress-bar {
   width: 100%;
   height: 8px;
-  background: rgba(255, 255, 255, 0.1);
+  background: #333;
   border-radius: 4px;
   overflow: hidden;
   margin-bottom: 0.5rem;
@@ -3150,102 +3411,21 @@ file-transfer-page .product-cat {
 }
 
 .file-transfer-page .progress-status {
-  font-size: 0.75rem;
-  color: rgba(255, 255, 255, 0.7);
+  font-size: 0.85rem;
+  color: #aaa;
   text-align: center;
 }
 
-.file-transfer-page .checkout-section {
-  padding: 1rem;
-  border-top: 1px solid rgba(255, 255, 255, 0.1);
-  background: rgba(255, 255, 255, 0.05);
-}
-
-.file-transfer-page .checkout-details {
-  margin-bottom: 1rem;
-}
-
-.file-transfer-page .detail-row {
-  display: flex;
-  justify-content: space-between;
-  margin-bottom: 0.5rem;
-  font-size: 0.9rem;
-  color: rgba(255, 255, 255, 0.8);
-}
-
-.file-transfer-page .total-price {
-  font-size: 1.5rem;
-  font-weight: 700;
-  color: #667eea;
-  text-align: center;
-  margin-bottom: 1rem;
-}
-
-.file-transfer-page .checkout-buttons {
-  display: flex;
-  gap: 0.75rem;
-}
-
-.file-transfer-page .clear-btn {
-  flex: 1;
-  padding: 0.75rem;
-  border: 1px solid rgba(255, 255, 255, 0.2);
-  border-radius: 8px;
-  background: transparent;
-  color: rgba(255, 255, 255, 0.8);
-  font-weight: 600;
-  cursor: pointer;
-  transition: all 0.2s ease;
-}
-
-.file-transfer-page .clear-btn:hover {
-  background: rgba(255, 255, 255, 0.1);
-  color: white;
-}
-
-.file-transfer-page .pay-btn {
-  flex: 2;
-  padding: 0.75rem;
-  border: none;
-  border-radius: 8px;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-  color: white;
-  font-weight: 600;
-  cursor: pointer;
-  transition: all 0.2s ease;
-}
-
-.file-transfer-page .pay-btn:hover {
-  transform: translateY(-1px);
-  box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
-}
-
-.file-transfer-page .pay-btn:disabled {
-  background: #666;
-  cursor: not-allowed;
-  transform: none;
-  box-shadow: none;
-}
-
-/* Responsive Design for Cart */
+/* Responsive adjustments */
 @media (max-width: 768px) {
-  .file-transfer-page .floating-cart-container {
-    bottom: 1rem;
-    right: 1rem;
-  }
-
-  .file-transfer-page .floating-cart-btn {
-    width: 50px;
-    height: 50px;
-  }
-
   .file-transfer-page .modern-cart-container {
     margin: 0.5rem;
     max-width: none;
+    max-height: 95vh;
   }
 
   .file-transfer-page .cart-item {
-    padding: 0.75rem;
+    padding: 0.75rem 1rem;
     gap: 0.75rem;
   }
 
@@ -3255,5 +3435,16 @@ file-transfer-page .product-cat {
 
   .file-transfer-page .checkout-buttons {
     flex-direction: column;
+  }
+
+  .file-transfer-page .floating-cart-btn {
+    width: 56px;
+    height: 56px;
+  }
+
+  .file-transfer-page .floating-cart-counter {
+    width: 24px;
+    height: 24px;
+    font-size: 0.75rem;
   }
 }

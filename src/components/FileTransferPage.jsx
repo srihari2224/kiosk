@@ -3,7 +3,8 @@ import { useState, useEffect } from "react"
 import { useNavigate } from "react-router-dom"
 import QRCode from "qrcode"
 import "./FileTransferPage.css"
-import sessionIcon from "../assets/session.svg"
+
+
 
 import videoAdSrc from "../assets/1_video_1.mp4"
 import videoAdsec2 from "../assets/1_video_2.mp4"
@@ -340,12 +341,12 @@ const FileTransferPage = () => {
             if (retryResult.success && retryResult.files && retryResult.files.length > 0) {
               setFiles(retryResult.files)
               console.log(`✅ Found ${retryResult.files.length} files after download:`, retryResult.files)
-              return
+              return retryResult.files
             }
           } else if (result.success && result.files && result.files.length > 0) {
             setFiles(result.files)
             console.log(`✅ Found ${result.files.length} files in session folder:`, result.files)
-            return
+            return result.files
           } else {
             console.log("📭 No files found in session folder, trying S3 download...")
             await downloadS3FilesToSession(sessionId)
@@ -354,7 +355,7 @@ const FileTransferPage = () => {
             if (finalResult.success && finalResult.files && finalResult.files.length > 0) {
               setFiles(finalResult.files)
               console.log(`✅ Found ${finalResult.files.length} files after S3 download:`, finalResult.files)
-              return
+              return finalResult.files
             }
           }
         } catch (electronError) {
@@ -364,9 +365,11 @@ const FileTransferPage = () => {
 
       console.log("📭 No files available for this session")
       setFiles([])
+      return []
     } catch (error) {
       console.error("❌ Error fetching session files:", error)
       setFiles([])
+      return []
     } finally {
       setLoading(false)
     }
@@ -509,10 +512,15 @@ const FileTransferPage = () => {
           timestamp: new Date().toISOString(),
           mobileNumber,
         },
-        theme: { color: "#000000" },
-        modal: {
-          ondismiss: () => setPaymentProcessing(false),
-          onhidden: () => setPaymentProcessing(false),
+        theme: { color: "#000000ff" },
+
+        config: {
+          modal: {
+            width: '150px',      // or '80%' or any valid CSS unit
+            height: '1050px',     // optional
+            ondismiss: () => setPaymentProcessing(false),
+            onhidden: () => setPaymentProcessing(false),
+          }
         },
         retry: { enabled: true, max_count: 3 },
         timeout: 300,
@@ -682,82 +690,109 @@ const FileTransferPage = () => {
   }
 
   const handleGetStarted = async () => {
+    console.log("🆔 Generated session ID:", sessionId)
+    console.log("QR Code URL:", `https://innvera.vercel.app/?session=${sessionId}`)
+
     try {
-      await fetchSessionFiles(sessionId)
-      handleNext()
+      console.log(`🔍 Fetching files directly from session folder: ${sessionId}`)
+      console.log("🔌 Using Electron API to get session files")
+
+      const result = await fetchSessionFiles(sessionId)
+
+      if (result.length > 0) {
+        console.log("✅ Found files, navigating to integrated view")
+        handleNext()
+      } else {
+        // Show alert for no files found
+        alert("No files found in session. Please upload files first.")
+      }
     } catch (error) {
       console.error("Error in handleGetStarted:", error)
+      alert("Error loading session files. Please try again.")
     }
+  }
+
+  const handleRefreshSession = () => {
+    const newSessionId = generateUniqueSessionId()
+    setSessionId(newSessionId)
+    localStorage.setItem("currentSessionId", newSessionId)
+    console.log("🔄 Refreshed session ID:", newSessionId)
+
+    // Clear existing files
+    setFiles([])
+    setShowFiles(false)
   }
 
   return (
     <div className="file-transfer-page">
       <Navbar />
 
-      <HeroSection sessionId={sessionId} onGetStarted={handleGetStarted} />
+      <HeroSection sessionId={sessionId} onGetStarted={handleGetStarted} onRefreshSession={handleRefreshSession} />
 
       <ProjectCards />
 
-      <div className="floating-cart-container">
-          <button className="floating-cart-btn" onClick={() => setShowCart(!showCart)}>
-            <img
-              src={shop || "/placeholder.svg"}
-              alt="Cart"
-              className="basket-icon"
-              style={{ width: 32, height: 32, objectFit: "contain" }}
-            />
-            {getTotalItems() > 0 && <span className="floating-cart-counter">{getTotalItems()}</span>}
-          </button>
-        </div>
+      
 
-        <div className="paper-shop-content">
-          <div className="product-cards-container">
-            {products.map((product) => (
-              <div key={product.id} className="product-card">
-                <div className="product-tilt">
-                  <div className="product-img">
-                    <img src={product.image || "/placeholder.svg"} alt={product.name} />
-                  </div>
-                </div>
-                <div className="product-info">
-                  <div className="product-cat">{product.category}</div>
-                  <h2 className="product-title">{product.name}</h2>
-                  <div className="product-bottom">
-                    <div className="product-price">
-                      <span className="price-old">₹{product.originalPrice}</span>
-                      <span className="price-new">₹{product.price}</span>
-                    </div>
-                    <button className="product-btn" onClick={() => addToCart(product)} disabled={!product.inStock}>
-                      <span>Add to Cart</span>
-                      <svg
-                        className="cart-icon"
-                        width="19"
-                        height="19"
-                        viewBox="0 0 24 24"
-                        fill="none"
-                        stroke="currentColor"
-                        strokeWidth="2"
-                      >
-                        <path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4" />
-                        <line x1="3" y1="6" x2="21" y2="6" />
-                        <path d="M16 10a4 4 0 01-8 0" />
-                      </svg>
-                    </button>
-                  </div>
-                  <div className="product-meta">
-                    <div className="product-stock">{product.inStock ? "In Stock" : "Out of Stock"}</div>
-                  </div>
+      <div className="floating-cart-container">
+        <button className="floating-cart-btn" onClick={() => setShowCart(!showCart)}>
+          <img
+            src={shop || "/placeholder.svg"}
+            alt="Cart"
+            className="basket-icon"
+            style={{ width: 32, height: 32, objectFit: "contain" }}
+          />
+          {getTotalItems() > 0 && <span className="floating-cart-counter">{getTotalItems()}</span>}
+        </button>
+      </div>
+
+      <div className="paper-shop-content">
+        <div className="product-cards-container">
+          {products.map((product) => (
+            <div key={product.id} className="product-card">
+              <div className="product-tilt">
+                <div className="product-img">
+                  <img src={product.image || "/placeholder.svg"} alt={product.name} />
                 </div>
               </div>
-            ))}
-          </div>
+              <div className="product-info">
+                <div className="product-cat">{product.category}</div>
+                <h2 className="product-title">{product.name}</h2>
+                <div className="product-bottom">
+                  <div className="product-price">
+                    <span className="price-old">₹{product.originalPrice}</span>
+                    <span className="price-new">₹{product.price}</span>
+                  </div>
+                  <button className="product-btn" onClick={() => addToCart(product)} disabled={!product.inStock}>
+                    <span>Add to Cart</span>
+                    <svg
+                      className="cart-icon"
+                      width="19"
+                      height="19"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      strokeWidth="2"
+                    >
+                      <path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4" />
+                      <line x1="3" y1="6" x2="21" y2="6" />
+                      <path d="M16 10a4 4 0 01-8 0" />
+                    </svg>
+                  </button>
+                </div>
+                <div className="product-meta">
+                  <div className="product-stock">{product.inStock ? "In Stock" : "Out of Stock"}</div>
+                </div>
+              </div>
+            </div>
+          ))}
         </div>
+      </div>
 
       {showCart && (
         <div className="cart-overlay" onClick={() => setShowCart(false)}>
           <div className="modern-cart-container" onClick={(e) => e.stopPropagation()}>
             <div className="unified-cart">
-              <div className="cart-header-modern">
+              {/* <div className="cart-header-modern">
                 <div>
                   <img class="cart-logo" src={logo2 || "/placeholder.svg"}></img>
                 </div>
@@ -768,7 +803,7 @@ const FileTransferPage = () => {
                     <line x1="6" y1="6" x2="18" y2="18"></line>
                   </svg>
                 </button>
-              </div>
+              </div> */}
 
               {cartItems.length === 0 ? (
                 <div className="cart-empty-modern">
@@ -967,6 +1002,10 @@ const FileTransferPage = () => {
           </div>
         </div>
       )}
+
+      
+        
+
     </div>
   )
 }

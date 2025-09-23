@@ -2,6 +2,7 @@
   min-height: 100vh;
   background: #111111;
   display: flex;
+  flex-direction: row;
   align-items: center;
   padding-top: 70px;
   position: relative;
@@ -19,6 +20,8 @@
   pointer-events: none;
 }
 
+
+
 .hero-container {
   max-width: 1400px;
   margin: 0 auto;
@@ -29,18 +32,16 @@
 }
 
 .hero-content {
-  width: 120%;
+  width: 100%;
   border-radius: 32px;
-  background:#393B3C;
+  background: #393b3c;
   display: flex;
   align-items: center;
-  justify-content: space-between;
   gap: 4rem;
   min-height: 450px;
   padding: 70px;
-  margin-left:-10%;
-  margin-top:-100px;
-
+  margin-left: -10%;
+  margin-top: -100px;
 }
 
 .hero-text {
@@ -51,7 +52,7 @@
 .hero-title {
   font-size: 5.2rem;
   font-weight: 600;
-  line-height: 0.9  ;
+  line-height: 0.9;
   margin-bottom: 1.5rem;
   letter-spacing: -0.02em;
 }
@@ -64,7 +65,7 @@
 
 .title-gradient {
   display: block;
-  background: linear-gradient(135deg, #8b5cf6,#7A7FEE, #7A7FEE);
+  background: linear-gradient(135deg, #8b5cf6, #7a7fee, #7a7fee);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
@@ -76,6 +77,14 @@
   color: rgba(255, 255, 255, 0.8);
   margin-bottom: 2.5rem;
   max-width: 540px;
+}
+
+/* Added styles for hero actions container and loading states */
+.hero-actions {
+  display: flex;
+  flex-direction: row;
+  gap: 1.5rem;
+  align-items: flex-start;
 }
 
 .hero-button {
@@ -91,26 +100,97 @@
   box-shadow: 0 4px 20px rgba(139, 92, 246, 0.3);
   position: relative;
   overflow: hidden;
+  min-width: 160px;
+  min-height: 56px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
-.hero-button::before {
-  content: "";
-  position: absolute;
-  top: 0;
-  left: -100%;
-  width: 100%;
-  height: 100%;
-  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
-  transition: left 0.5s ease;
+.hero-button.loading {
+  cursor: not-allowed;
+  opacity: 0.8;
 }
 
-.hero-button:hover::before {
-  left: 100%;
+.loading-spinner {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
 }
 
-.hero-button:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 8px 30px rgba(139, 92, 246, 0.4);
+.spinner {
+  width: 20px;
+  height: 20px;
+  border: 2px solid rgba(255, 255, 255, 0.3);
+  border-top: 2px solid white;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+/* Added session info and refresh button styles */
+.session-info {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 0.75rem 1.25rem;
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 8px;
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.session-label {
+  color: rgba(255, 255, 255, 0.7);
+  font-size: 0.875rem;
+  font-weight: 500;
+}
+
+.session-identity {
+  color: white;
+  font-size: 0.975rem;
+  font-weight: 500;
+  font-family: monospace;
+  background: rgba(0, 0, 0, 100);
+  padding: 0.25rem 0.5rem;
+  border-radius: 4px;
+}
+
+.refresh-button {
+  display: flex;
+  align-items: center;
+  gap: 0.375rem;
+  background: green;
+  color: white;
+  border: none;
+  padding: 0.5rem 0.75rem;
+  border-radius: 6px;
+  font-size: 0.85rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.refresh-button:hover {
+  background: rgba(255, 255, 255, 100);
+  color:green;
+  transform: translateY(-1px);
+}
+
+.refresh-button svg {
+  transition: transform 0.3s ease;
+}
+
+.refresh-button:hover svg {
+  transform: rotate(180deg);
 }
 
 .hero-visual {
@@ -118,12 +198,13 @@
   display: flex;
   align-items: center;
   justify-content: center;
+  margin-left:250px;
 }
 
 .qr-code-container {
   background: white;
-  padding: 2rem;
-  border-radius: 20px;
+  padding: -1rem;
+  border-radius: 0px;
   box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
   position: relative;
   display: flex;
@@ -142,7 +223,8 @@
   width: 300px;
   height: 300px;
   border-radius: 12px;
-  display: block;
+  display: block; 
+  padding:-30px;
 }
 
 .qr-placeholder {
@@ -158,11 +240,16 @@
 .qr-skeleton {
   width: 200px;
   height: 200px;
-  background: linear-gradient(90deg, #e2e8f0 25%, #f1f5f9 50%, #e2e8f0 75%);
+  background: linear-gradient(90deg, #0f61cb 25%, #f1f5f9 50%, #e2e8f0 75%);
   background-size: 200% 100%;
   animation: loading 1.5s infinite;
   border-radius: 8px;
 }
+
+.pricing{
+  background-color: red;
+}
+
 
 @keyframes loading {
   0% {
@@ -187,6 +274,16 @@
 
   .hero-container {
     padding: 0 2rem;
+  }
+
+  /* Added responsive styles for hero actions */
+  .hero-actions {
+    align-items: center;
+  }
+
+  .session-info {
+    flex-wrap: wrap;
+    justify-content: center;
   }
 }
 
@@ -222,6 +319,3 @@
     padding: 0 1.5rem;
   }
 }
-
-
-
