@@ -59,7 +59,9 @@
     margin-left: px;
     padding: 0;
     position: relative;
-    height: 1185px;
+    /* fill the full viewport height */
+    height: 1080px;
+   
 }
 
 .integrated-files-page .file-categories {
@@ -1290,7 +1292,8 @@
     display: flex
 ;
     flex-direction: column;
-    height: 1185px;
+    height: 1080px;
+    
 }
 
 /* Fixed cost-summary div with proper overflow and fixed height */
@@ -2432,4 +2435,32 @@
 .integrated-files-page .feedback-submit:hover {
   background: #e74493;
   transform: translateY(-1px);
+}
+
+
+.integrated-files-page .rating {
+  display: inline-block;
+}
+
+.integrated-files-page .rating input {
+  display: none;
+}
+
+.integrated-files-page .rating label {
+  float: right;
+  cursor: pointer;
+  color: #ccc;
+  transition: color 0.3s;
+}
+
+.integrated-files-page .rating label:before {
+  content: '\2605';
+  font-size: 30px;
+}
+
+.integrated-files-page .rating input:checked ~ label,
+.integrated-files-page .rating label:hover,
+.integrated-files-page .rating label:hover ~ label {
+  color: #6f00ff;
+  transition: color 0.3s;
 }

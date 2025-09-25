@@ -10,7 +10,7 @@ let PDFDocument
 try {
   PDFDocument = require("pdf-lib").PDFDocument
 } catch (e) {
-  console.log("ℹ️ pdf-lib not installed. Custom page range will rely on external tools.")
+  console.log("ℹ pdf-lib not installed. Custom page range will rely on external tools.")
 }
 
 let mainWindow
@@ -291,16 +291,17 @@ ipcMain.handle("send-sms-invoice", async (event, invoiceData) => {
 // PRINTER DETECTION
 ipcMain.handle("get-default-printer", async (event) => {
   try {
-    logPrint("🖨️ Getting default printer...")
-    const printerQuery = `Get-WmiObject -Class Win32_Printer | Where-Object {$_.Default -eq $true} | Select-Object Name, PrinterStatus | ConvertTo-Json`
+    logPrint("🖨 Getting default printer...")
+    const printerQuery =
+      'Get-WmiObject -Class Win32_Printer | Where-Object {$_.Default -eq $true} | Select-Object Name, PrinterStatus | ConvertTo-Json'
     const { stdout } = await execAsync(`powershell -Command "${printerQuery}"`)
 
-    if (stdout.trim()) {
+    if (stdout && stdout.trim()) {
       const printer = JSON.parse(stdout.trim())
       logPrint(`✅ Default printer: ${printer.Name}`)
       return { success: true, defaultPrinter: printer.Name, status: printer.PrinterStatus }
     } else {
-      logPrint("⚠️ No default printer found")
+      logPrint("⚠ No default printer found")
       return { success: false, error: "No default printer found" }
     }
   } catch (error) {
@@ -342,7 +343,7 @@ function parsePageRange(pageRangeStr) {
 // Create subset PDF for custom page ranges (like Python version)
 async function createTempPdfWithPages(sourcePath, pageRangeStr) {
   if (!PDFDocument) {
-    logPrint("⚠️ pdf-lib not available for custom page range")
+    logPrint("⚠ pdf-lib not available for custom page range")
     return null
   }
 
@@ -394,7 +395,7 @@ const findAdobeReader = () => {
       return adobePath
     }
   }
-  logPrint("⚠️ Adobe Reader not found")
+  logPrint("⚠ Adobe Reader not found")
   return null
 }
 
@@ -412,7 +413,7 @@ const findSumatraPDF = () => {
       return sumatraPath
     }
   }
-  logPrint("⚠️ SumatraPDF not found")
+  logPrint("⚠ SumatraPDF not found")
   return null
 }
 
@@ -422,8 +423,6 @@ const TARGET_PRINTER_NAME = "HP Smart Tank 710-720 series"
 // SIMPLIFIED BUT RELIABLE PDF PRINTING WITH COLOR/DUPLEX SUPPORT
 ipcMain.handle("print-pdf", async (event, printOptions) => {
   try {
-    logPrint(`🖨️ Starting RELIABLE PDF print for "${TARGET_PRINTER_NAME}" with options: ${JSON.stringify(printOptions)}`)
-
     const {
       filePath,
       copies = 1,
@@ -433,20 +432,25 @@ ipcMain.handle("print-pdf", async (event, printOptions) => {
       doubleSided = "one-side",
     } = printOptions
 
-    // Validate file path
+    // ensure we have a working targetPath variable
     let targetPath = filePath
-    if (!pathExists(targetPath)) {
-      const decoded = decodeURIComponent(filePath || "")
-      if (pathExists(decoded)) {
-        targetPath = decoded
-      }
-    }
-    if (!pathExists(targetPath)) {
-      throw new Error(`PDF file not found: ${filePath}`)
-    }
 
+    logPrint(`🖨 Starting RELIABLE PDF print for "${TARGET_PRINTER_NAME}" with options: ${JSON.stringify(printOptions)}`)
+
+    // Normalize doubleSided (accept boolean/string) -> canonical "both-sides" | "one-side"
+    let duplexMode = "one-side"
+    if (
+      doubleSided === true ||
+      doubleSided === "true" ||
+      String(doubleSided).toLowerCase() === "both-sides" ||
+      String(doubleSided).toLowerCase() === "twosided" ||
+      String(doubleSided).toLowerCase() === "two-sided"
+    ) {
+      duplexMode = "both-sides"
+    }
+    // Use duplexMode instead of raw doubleSided for logic & logging
     logPrint(`📄 File: ${path.basename(targetPath)}`)
-    logPrint(`⚙️ Settings: ${copies} copies, ${pageRange}, ${colorMode}, ${doubleSided}`)
+    logPrint(`⚙ Settings: ${copies} copies, ${pageRange}, ${colorMode}, ${duplexMode}`)
 
     let printSuccess = false
     let methodUsed = ""
@@ -474,7 +478,7 @@ ipcMain.handle("print-pdf", async (event, printOptions) => {
 
         // Add print settings - SIMPLE but EFFECTIVE
         const settings = []
-        if (doubleSided === "both-sides") {
+        if (duplexMode === "both-sides") {
           settings.push("duplex")
         }
         if (colorMode === "bw") {
@@ -484,12 +488,12 @@ ipcMain.handle("print-pdf", async (event, printOptions) => {
           sumatraCmd += ` -print-settings "${settings.join(",")}"`
         }
 
-        logPrint(`🖨️ SumatraPDF command: ${sumatraCmd}`)
+        logPrint(`🖨 SumatraPDF command: ${sumatraCmd}`)
 
         for (let copy = 1; copy <= copies; copy++) {
           const { stdout, stderr } = await execAsync(sumatraCmd)
           logPrint(`✅ SumatraPDF copy ${copy}/${copies} executed`)
-          if (stderr) logPrint(`⚠️ SumatraPDF stderr: ${stderr}`)
+          if (stderr) logPrint(`⚠ SumatraPDF stderr: ${stderr}`)
           if (copy < copies) {
             await new Promise((resolve) => setTimeout(resolve, 2000))
           }
@@ -500,7 +504,7 @@ ipcMain.handle("print-pdf", async (event, printOptions) => {
         methodUsed = "SumatraPDF"
         logPrint("✅ SumatraPDF print successful")
       } catch (error) {
-        logPrint(`⚠️ SumatraPDF failed: ${error.message}`)
+        logPrint(`⚠ SumatraPDF failed: ${error.message}`)
       }
     }
 
@@ -512,12 +516,12 @@ ipcMain.handle("print-pdf", async (event, printOptions) => {
 
         // Simple Adobe Reader command
         const adobeCmd = `"${adobePath}" /t "${targetPath}" "${TARGET_PRINTER_NAME}"`
-        logPrint(`🖨️ Adobe Reader command: ${adobeCmd}`)
+        logPrint(`🖨 Adobe Reader command: ${adobeCmd}`)
 
         for (let copy = 1; copy <= copies; copy++) {
           const { stdout, stderr } = await execAsync(adobeCmd)
           logPrint(`✅ Adobe Reader copy ${copy}/${copies} executed`)
-          if (stderr) logPrint(`⚠️ Adobe Reader stderr: ${stderr}`)
+          if (stderr) logPrint(`⚠ Adobe Reader stderr: ${stderr}`)
           if (copy < copies) {
             await new Promise((resolve) => setTimeout(resolve, 2000))
           }
@@ -528,7 +532,7 @@ ipcMain.handle("print-pdf", async (event, printOptions) => {
         methodUsed = "Adobe Reader"
         logPrint("✅ Adobe Reader print successful")
       } catch (error) {
-        logPrint(`⚠️ Adobe Reader failed: ${error.message}`)
+        logPrint(`⚠ Adobe Reader failed: ${error.message}`)
       }
     }
 
@@ -544,12 +548,12 @@ ipcMain.handle("print-pdf", async (event, printOptions) => {
         const escapedPrinterName = TARGET_PRINTER_NAME.replace(/'/g, "''")
 
         const shellCmd = `powershell -Command "Start-Process -FilePath '${escapedTargetPath}' -Verb PrintTo -ArgumentList '${escapedPrinterName}' -WindowStyle Hidden"`
-        logPrint(`🖨️ ShellExecute command: ${shellCmd}`)
+        logPrint(`🖨 ShellExecute command: ${shellCmd}`)
 
         for (let copy = 1; copy <= copies; copy++) {
           const { stdout, stderr } = await execAsync(shellCmd)
           logPrint(`✅ ShellExecute copy ${copy}/${copies} executed`)
-          if (stderr) logPrint(`⚠️ ShellExecute stderr: ${stderr}`)
+          if (stderr) logPrint(`⚠ ShellExecute stderr: ${stderr}`)
           if (copy < copies) {
             await new Promise((resolve) => setTimeout(resolve, 2000))
           }
@@ -560,7 +564,7 @@ ipcMain.handle("print-pdf", async (event, printOptions) => {
         methodUsed = "Windows ShellExecute"
         logPrint("✅ Windows ShellExecute print successful")
       } catch (error) {
-        logPrint(`⚠️ Windows ShellExecute failed: ${error.message}`)
+        logPrint(`⚠ Windows ShellExecute failed: ${error.message}`)
       }
     }
 
@@ -571,10 +575,10 @@ ipcMain.handle("print-pdf", async (event, printOptions) => {
 
         for (let copy = 1; copy <= copies; copy++) {
           const printCmd = `print /D:"${TARGET_PRINTER_NAME}" "${targetPath}"`
-          logPrint(`🖨️ Print command: ${printCmd}`)
+          logPrint(`🖨 Print command: ${printCmd}`)
           const { stdout, stderr } = await execAsync(printCmd)
           logPrint(`✅ Print command copy ${copy}/${copies} executed`)
-          if (stderr) logPrint(`⚠️ Print command stderr: ${stderr}`)
+          if (stderr) logPrint(`⚠ Print command stderr: ${stderr}`)
           if (copy < copies) {
             await new Promise((resolve) => setTimeout(resolve, 2000))
           }
@@ -585,7 +589,7 @@ ipcMain.handle("print-pdf", async (event, printOptions) => {
         methodUsed = "Windows Print Command"
         logPrint("✅ Windows print command successful")
       } catch (error) {
-        logPrint(`⚠️ Windows print command failed: ${error.message}`)
+        logPrint(`⚠ Windows print command failed: ${error.message}`)
       }
     }
 
@@ -596,9 +600,7 @@ ipcMain.handle("print-pdf", async (event, printOptions) => {
     // print dialog. We're trying to set the printer's default here.
     if (printSuccess) {
       try {
-        logPrint(
-          `🎨 Attempting to apply ${colorMode} and ${doubleSided} settings to "${TARGET_PRINTER_NAME}" post-print...`,
-        )
+        logPrint(`🎨 Attempting to apply ${colorMode} and ${duplexMode} settings to "${TARGET_PRINTER_NAME}" post-print...`)
 
         // Try to set color mode
         if (colorMode === "bw") {
@@ -608,7 +610,7 @@ ipcMain.handle("print-pdf", async (event, printOptions) => {
             )
             logPrint("✅ Post-print: B&W mode applied to printer")
           } catch (e) {
-            logPrint(`⚠️ Post-print color setting failed for "${TARGET_PRINTER_NAME}": ${e.message}`)
+            logPrint(`⚠ Post-print color setting failed for "${TARGET_PRINTER_NAME}": ${e.message}`)
           }
         } else {
           try {
@@ -617,19 +619,19 @@ ipcMain.handle("print-pdf", async (event, printOptions) => {
             )
             logPrint("✅ Post-print: Color mode applied to printer")
           } catch (e) {
-            logPrint(`⚠️ Post-print color setting failed for "${TARGET_PRINTER_NAME}": ${e.message}`)
+            logPrint(`⚠ Post-print color setting failed for "${TARGET_PRINTER_NAME}": ${e.message}`)
           }
         }
 
         // Try to set duplex mode
-        if (doubleSided === "both-sides") {
+        if (duplexMode === "both-sides") {
           try {
             await execAsync(
               `powershell -Command "Set-PrintConfiguration -PrinterName '${TARGET_PRINTER_NAME}' -DuplexingMode TwoSidedLongEdge"`,
             )
             logPrint("✅ Post-print: Duplex mode applied to printer")
           } catch (e) {
-            logPrint(`⚠️ Post-print duplex setting failed for "${TARGET_PRINTER_NAME}": ${e.message}`)
+            logPrint(`⚠ Post-print duplex setting failed for "${TARGET_PRINTER_NAME}": ${e.message}`)
           }
         } else {
           try {
@@ -638,11 +640,11 @@ ipcMain.handle("print-pdf", async (event, printOptions) => {
             )
             logPrint("✅ Post-print: Single-sided mode applied to printer")
           } catch (e) {
-            logPrint(`⚠️ Post-print single-sided setting failed for "${TARGET_PRINTER_NAME}": ${e.message}`)
+            logPrint(`⚠ Post-print single-sided setting failed for "${TARGET_PRINTER_NAME}": ${e.message}`)
           }
         }
       } catch (e) {
-        logPrint(`⚠️ Overall post-print configuration failed for "${TARGET_PRINTER_NAME}": ${e.message}`)
+        logPrint(`⚠ Overall post-print configuration failed for "${TARGET_PRINTER_NAME}": ${e.message}`)
       }
     }
 
@@ -653,10 +655,10 @@ ipcMain.handle("print-pdf", async (event, printOptions) => {
           try {
             if (fs.existsSync(tempFile)) {
               fs.unlinkSync(tempFile)
-              logPrint(`🗑️ Cleaned up temp file: ${tempFile}`)
+              logPrint(`🗑 Cleaned up temp file: ${tempFile}`)
             }
           } catch (e) {
-            logPrint(`⚠️ Failed to clean temp file: ${e.message}`)
+            logPrint(`⚠ Failed to clean temp file: ${e.message}`)
           }
         })
       }, 30000) // 30 seconds delay
@@ -664,11 +666,11 @@ ipcMain.handle("print-pdf", async (event, printOptions) => {
 
     if (printSuccess) {
       logPrint(
-        `✅ PDF print completed for "${TARGET_PRINTER_NAME}" using: ${methodUsed} with ${colorMode} mode and ${doubleSided} setting`,
+        `✅ PDF print completed for "${TARGET_PRINTER_NAME}" using: ${methodUsed} with ${colorMode} mode and ${duplexMode} setting,`,
       )
       return {
         success: true,
-        message: `PDF printed successfully to "${TARGET_PRINTER_NAME}" using ${methodUsed} in ${colorMode} mode with ${doubleSided} setting`,
+        message: `PDF printed successfully to "${TARGET_PRINTER_NAME}" using ${methodUsed} in ${colorMode} mode with ${duplexMode} setting`,
         method: methodUsed,
         copies,
         pageRange,
@@ -677,7 +679,7 @@ ipcMain.handle("print-pdf", async (event, printOptions) => {
       }
     } else {
       throw new Error(
-        `All PDF print methods failed for "${TARGET_PRINTER_NAME}" - ensure Adobe Reader or SumatraPDF is installed and the printer name is correct.`,
+        `All PDF print methods failed for "${TARGET_PRINTER_NAME}" - ensure Adobe Reader or SumatraPDF is installed and the printer name is correct.`
       )
     }
   } catch (error) {
@@ -692,9 +694,9 @@ ipcMain.handle("print-pdf", async (event, printOptions) => {
 // CANVAS PRINTING - BASED ON PYTHON VERSION
 ipcMain.handle("print-canvas", async (event, canvasData) => {
   try {
-    logPrint(`🖨️ Starting canvas print for "${TARGET_PRINTER_NAME}": ${canvasData?.pageData?.id || ""}`)
+    logPrint(`🖨 Starting canvas print for "${TARGET_PRINTER_NAME}": ${canvasData && canvasData.pageData ? canvasData.pageData.id || "" : ""}`)
 
-    const { pageData, colorMode } = canvasData
+    const { pageData, colorMode } = canvasData || {}
     if (!pageData || !Array.isArray(pageData.items) || pageData.items.length === 0) {
       throw new Error("Canvas page has no items to print")
     }
@@ -732,7 +734,7 @@ ipcMain.handle("print-canvas", async (event, canvasData) => {
                 else if (["webp"].includes(ext)) mime = "image/webp"
                 imgSrc = `data:${mime};base64,${buf.toString("base64")}`
               } else {
-                logPrint(`⚠️ [buildItemsHtml] missing src for item index ${idx} id=${item && item.id}`)
+                logPrint(`⚠ [buildItemsHtml] missing src for item index ${idx} id=${item && item.id}`)
                 return ""
               }
 
@@ -789,11 +791,7 @@ ipcMain.handle("print-canvas", async (event, canvasData) => {
                 .filter(Boolean)
                 .join("; ")
 
-              return (
-                `<div class="canvas-item" style='${containerStyle}'>` +
-                `<img src='${imgSrc}' alt='${alt}' style='${imgStyle}' />` +
-                `</div>`
-              )
+              return `<div class="canvas-item" style='${containerStyle}'><img src='${imgSrc}' alt='${alt}' style='${imgStyle}' /></div>`
             } catch (inner) {
               logPrint(`❌ [buildItemsHtml] error rendering item ${idx}: ${inner && inner.message}`)
               return ""
@@ -867,14 +865,14 @@ ipcMain.handle("print-canvas", async (event, canvasData) => {
     // Convert HTML to PDF using headless browser (like Python version)
     const browsers = [
       "msedge",
-      '"C:\\Program Files\\Google\\Chrome\\Application\\chrome.exe"',
-      '"C:\\Program Files (x86)\\Google\\Chrome\\Application\\chrome.exe"',
+      `"C:\\Program Files\\Google\\Chrome\\Application\\chrome.exe"`,
+      `"C:\\Program Files (x86)\\Google\\Chrome\\Application\\chrome.exe"`,
     ]
 
     let pdfCreated = false
     for (const browser of browsers) {
       try {
-        const command = `${browser} --headless=new --disable-gpu --print-to-pdf="${tempPdfPath}" --no-margins "file:///${tempHtmlPath.replace(/\\/g, "/")}"`
+        const command = `${browser} --headless=new --disable-gpu --print-to-pdf="${tempPdfPath}" --no-margins "file:///${tempHtmlPath.replace(/\\/g, "/")}"` 
         logPrint(`🔄 Converting to PDF: ${command}`)
         await execAsync(command)
 
@@ -884,7 +882,7 @@ ipcMain.handle("print-canvas", async (event, canvasData) => {
           break
         }
       } catch (browserError) {
-        logPrint(`⚠️ ${browser} failed: ${browserError.message}`)
+        logPrint(`⚠ ${browser} failed: ${browserError.message}`)
         continue
       }
     }
@@ -898,26 +896,26 @@ ipcMain.handle("print-canvas", async (event, canvasData) => {
     let methodUsed = ""
 
     // Try Adobe Reader first
-    const adobePath = findAdobeReader()
-    if (adobePath) {
+    const adobePath2 = findAdobeReader()
+    if (adobePath2) {
       try {
-        const adobeCmd = `"${adobePath}" /t "${tempPdfPath}" "${TARGET_PRINTER_NAME}"`
+        const adobeCmd = `"${adobePath2}" /t "${tempPdfPath}" "${TARGET_PRINTER_NAME}"`
         await execAsync(adobeCmd)
         await new Promise((resolve) => setTimeout(resolve, 3000))
         printSuccess = true
         methodUsed = "Adobe Reader"
         logPrint("✅ Canvas printed via Adobe Reader")
       } catch (error) {
-        logPrint(`⚠️ Adobe Reader failed for canvas: ${error.message}`)
+        logPrint(`⚠ Adobe Reader failed for canvas: ${error.message}`)
       }
     }
 
     // Try SumatraPDF
     if (!printSuccess) {
-      const sumatraPath = findSumatraPDF()
-      if (sumatraPath) {
+      const sumatraPath2 = findSumatraPDF()
+      if (sumatraPath2) {
         try {
-          let sumatraCmd = `"${sumatraPath}" -print-to "${TARGET_PRINTER_NAME}" "${tempPdfPath}"`
+          let sumatraCmd = `"${sumatraPath2}" -print-to "${TARGET_PRINTER_NAME}" "${tempPdfPath}"`
           if (colorMode === "bw") {
             sumatraCmd += ` -print-settings "monochrome"`
           }
@@ -927,7 +925,7 @@ ipcMain.handle("print-canvas", async (event, canvasData) => {
           methodUsed = "SumatraPDF"
           logPrint("✅ Canvas printed via SumatraPDF")
         } catch (error) {
-          logPrint(`⚠️ SumatraPDF failed for canvas: ${error.message}`)
+          logPrint(`⚠ SumatraPDF failed for canvas: ${error.message}`)
         }
       }
     }
@@ -944,7 +942,7 @@ ipcMain.handle("print-canvas", async (event, canvasData) => {
         methodUsed = "Windows ShellExecute"
         logPrint("✅ Canvas printed via Windows ShellExecute")
       } catch (error) {
-        logPrint(`⚠️ Windows ShellExecute failed for canvas: ${error.message}`)
+        logPrint(`⚠ Windows ShellExecute failed for canvas: ${error.message}`)
       }
     }
 
@@ -954,11 +952,11 @@ ipcMain.handle("print-canvas", async (event, canvasData) => {
         ;[tempHtmlPath, tempPdfPath].forEach((file) => {
           if (file && fs.existsSync(file)) {
             fs.unlinkSync(file)
-            logPrint(`🗑️ Cleaned up: ${file}`)
+            logPrint(`🗑 Cleaned up: ${file}`)
           }
         })
       } catch (cleanupError) {
-        logPrint(`⚠️ Cleanup error: ${cleanupError.message}`)
+        logPrint(`⚠ Cleanup error: ${cleanupError.message}`)
       }
     }, 30000) // 30 seconds delay
 
@@ -981,6 +979,3 @@ ipcMain.handle("print-canvas", async (event, canvasData) => {
     }
   }
 })
-
-
-

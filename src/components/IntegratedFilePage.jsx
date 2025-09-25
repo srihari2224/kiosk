@@ -729,7 +729,7 @@ function IntegratedFilePage() {
         return totalPages * 8
       } else {
         const sheets = Math.ceil(totalPages / 2)
-        if(totalPages%2===0) return sheets * 2
+        if(totalPages%2===0) return sheets * 3
         else return (sheets-1)* 3 + (2)
       }
     }
@@ -934,7 +934,7 @@ function IntegratedFilePage() {
 
       const Razorpay = await loadRazorpayScript()
       const options = {
-        key: "rzp_live_RIHIU9s2p53vFn",
+        key: import.meta.env.VITE_RAZORPAY_KEY_ID ,
         amount: totalAmount * 100,
         currency: "INR",
         name: "Print Shop",
@@ -1085,6 +1085,41 @@ function IntegratedFilePage() {
       if (printErrors.length > 0) {
         console.log("❌ Failed jobs:", printErrors)
       }
+
+      // --- send total sheets used to remote counter (one canvas = one sheet) ---
+      try {
+        const canvasSheets = builtPages.length
+        let pdfSheets = 0
+        for (const pdfJob of printQueue) {
+          const pages = Number(pdfJob.pagesToPrint || pdfJob.totalPages || 0)
+          const copies = Math.max(1, Number(pdfJob.printSettings?.copies || 1))
+          const duplex =
+            pdfJob.printSettings?.doubleSided === "both-sides" ||
+            pdfJob.printSettings?.doubleSided === true ||
+            String(pdfJob.printSettings?.doubleSided || "").toLowerCase().includes("both")
+
+          if (duplex) pdfSheets += Math.ceil((pages * copies) / 2)
+          else pdfSheets += pages * copies
+        }
+
+        const totalSheets = canvasSheets + pdfSheets
+        console.log("ℹ Sending total sheets used to counter:", totalSheets)
+
+        const apiUrl =
+          "https://s8wpc0jx1j.execute-api.ap-south-1.amazonaws.com/prod//incrementUsed"
+        const payload = { body: JSON.stringify({ pages: totalSheets, by: "last-and-final" }) }
+
+        const resp = await fetch(apiUrl, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(payload),
+        })
+        const respJson = await resp.json().catch(() => null)
+        console.log("ℹ Increment API response:", resp.status, respJson)
+      } catch (err) {
+        console.error("⚠ Failed to report sheets to increment API:", err)
+      }
+      // --- end reporting ---
 
       // Reset for next user
       // setTimeout(() => {
@@ -1901,22 +1936,17 @@ function IntegratedFilePage() {
             <div className="feedback-content">
               <h3 className="feedback-title">Give feedback</h3>
               <p className="feedback-subtitle">How was your printing experience?</p>
-              <div className="feedback-emojis" role="group" aria-label="Rate your experience">
-                <button className="emoji-option" type="button" aria-label="Terrible">
-                  😞
-                </button>
-                <button className="emoji-option" type="button" aria-label="Bad">
-                  😕
-                </button>
-                <button className="emoji-option" type="button" aria-label="Okay">
-                  🙂
-                </button>
-                <button className="emoji-option" type="button" aria-label="Good">
-                  😄
-                </button>
-                <button className="emoji-option" type="button" aria-label="Amazing">
-                  🤩
-                </button>
+              <div className="rating">
+                <input value="5" name="rating" id="star5" type="radio" />
+                <label htmlFor="star5"></label>
+                <input value="4" name="rating" id="star4" type="radio" />
+                <label htmlFor="star4"></label>
+                <input value="3" name="rating" id="star3" type="radio" />
+                <label htmlFor="star3"></label>
+                <input value="2" name="rating" id="star2" type="radio" />
+                <label htmlFor="star2"></label>
+                <input value="1" name="rating" id="star1" type="radio" />
+                <label htmlFor="star1"></label>
               </div>
               {/* Submit as a link to reload or return to initial stage without JS changes */}
               <form className="feedback-form" method="GET" action=".">

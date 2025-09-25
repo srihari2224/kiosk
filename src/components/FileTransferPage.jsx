@@ -76,7 +76,7 @@ const FileTransferPage = () => {
       originalPrice: 2,
       image: plane,
       inStock: true,
-      pdfPath: import.meta.env.VITE_PLANE || "C:\\Users\\msrih\\Downloads\\eastIT\\extras\\blank_A4.pdf",
+      pdfPath: "C:/Users/msrih/Downloads/eastIT/extras/blank_A4.pdf",
       printSettings: { colorMode: "color", doubleSided: false },
     },
     {
@@ -87,7 +87,7 @@ const FileTransferPage = () => {
       originalPrice: 5,
       image: graph,
       inStock: true,
-      pdfPath: import.meta.env.VITE_GRAPH || "C:\\Users\\msrih\\Downloads\\eastIT\\extras\\graph_A4.pdf",
+      pdfPath: "C:/Users/msrih/Downloads/eastIT/extras/graph_A4.pdf",
       printSettings: { colorMode: "color", doubleSided: false },
     },
     {
@@ -98,7 +98,7 @@ const FileTransferPage = () => {
       originalPrice: 4,
       image: margin,
       inStock: true,
-      pdfPath: import.meta.env.VITE_MARGIN || "C:\\Users\\msrih\\Downloads\\eastIT\\extras\\lined_A4.pdf",
+      pdfPath: "C:/Users/msrih/Downloads/eastIT/extras/lined_A4.pdf",
       printSettings: { colorMode: "blackwhite", doubleSided: true },
     },
   ]
@@ -492,7 +492,7 @@ const FileTransferPage = () => {
 
       const Razorpay = await loadRazorpayScript()
       const options = {
-        key: "rzp_live_RIHIU9s2p53vFn",
+        key: import.meta.env.VITE_RAZORPAY_KEY_ID,
         amount: totalAmount * 100,
         currency: "INR",
         name: "Print Shop",

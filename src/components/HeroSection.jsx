@@ -150,128 +150,180 @@ const HeroSection = ({ sessionId, onGetStarted, onRefreshSession, onProcess }) =
         </div>
       )}
 
-      {/* The processing overlay shown while the session fetch/download happens */}
-      {processingOpen && (
-        <div
-          style={{
-            position: "fixed",
-            inset: 0,
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "center",
-            zIndex: 1200,
-            background: "rgba(3,6,10,0.65)",
-            padding: 20,
-          }}
-          role="dialog"
-          aria-modal="true"
-        >
+        {processingOpen && (
           <div
             style={{
-              width: 620,
-              maxWidth: "100%",
-              background: "#070807",
-              borderRadius: 12,
-              padding: 18,
-              color: "#e6eefc",
-              border: "1px solid rgba(255,255,255,0.04)",
-              boxShadow: "0 12px 40px rgba(2,6,23,0.7)",
+          position: "fixed",
+          inset: 0,
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+          zIndex: 1200,
+          background: "rgba(3,6,10,0.65)",
+          padding: 20,
             }}
+            role="dialog"
+            aria-modal="true"
           >
-            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", gap: 12 }}>
-              <div style={{ display: "flex", gap: 14, alignItems: "center" }}>
-                <div
-                  style={{
-                    width: 54,
-                    height: 54,
-                    borderRadius: 12,
-                    background: "#0b1220",
-                    display: "flex",
-                    alignItems: "center",
-                    justifyContent: "center",
-                    border: "1px solid rgba(255,255,255,0.03)",
-                  }}
-                >
-                  <div className="site-spinner" style={{ width: 28, height: 28 }} />
-                </div>
-
-                <div>
-                  <div style={{ fontWeight: 700, fontSize: 24 }}>Processing session files</div>
-                  <div style={{ color: "#98a3b8", marginTop: 6, fontSize: 13 }}>
-                    {processingStage === "fetching" ? "Fetching files from the session and S3…" : "Files ready to process"}
-                  </div>
-                </div>
+            <div
+          style={{
+            width: 620,
+            maxWidth: "100%",
+            background: "#070807",
+            borderRadius: 12,
+            padding: 18,
+            color: "#e6eefc",
+            border: "1px solid rgba(255,255,255,0.04)",
+            boxShadow: "0 12px 40px rgba(2,6,23,0.7)",
+          }}
+            >
+          <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", gap: 12 }}>
+            <div style={{ display: "flex", gap: 14, alignItems: "center" }}>
+              <div
+            style={{
+              width: 54,
+              height: 54,
+              borderRadius: 12,
+              background: "#0b1220",
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              border: "1px solid rgba(255,255,255,0.03)",
+            }}
+              >
+            <div className="site-spinner" style={{ width: 28, height: 28 }} />
               </div>
 
+              <div>
+            <div style={{ fontWeight: 700, fontSize: 24 }}>Processing session files</div>
+            <div style={{ color: "#98a3b8", marginTop: 6, fontSize: 13 }}>
+              {processingStage === "fetching" ? "Fetching files from the session and S3…" : "Files ready to process"}
+            </div>
+              </div>
+            </div>
+
+            <button
+              onClick={handleCloseProcessing}
+              style={{
+            background: "transparent",
+            border: "none",
+            color: "#9aa7c7",
+            cursor: "pointer",
+            fontSize: 20,
+              }}
+              aria-label="Close processing"
+            >
+              ✕
+            </button>
+          </div>
+
+          <div style={{ marginTop: 16 }}>
+            {processingStage === "fetching" && (
+              <div style={{ color: "#bfc8d6", fontSize: 13 }}>
+            {/* Professional white loader */}
+            <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
+              <svg
+                width="44"
+                height="44"
+                viewBox="0 0 50 50"
+                xmlns="http://www.w3.org/2000/svg"
+                aria-hidden="true"
+              >
+                <defs>
+              <linearGradient id="g" x1="0%" x2="100%">
+                <stop offset="0%" stopColor="rgba(255,255,255,0.12)" />
+                <stop offset="50%" stopColor="#ffffff" />
+                <stop offset="100%" stopColor="rgba(255,255,255,0.12)" />
+              </linearGradient>
+                </defs>
+                <circle cx="25" cy="25" r="20" fill="none" stroke="rgba(255,255,255,0.06)" strokeWidth="4" />
+                <path
+              d="M25 5 A20 20 0 0 1 45 25"
+              fill="none"
+              stroke="url(#g)"
+              strokeWidth="4"
+              strokeLinecap="round"
+                >
+              <animateTransform
+                attributeName="transform"
+                type="rotate"
+                from="0 25 25"
+                to="360 25 25"
+                dur="1s"
+                repeatCount="indefinite"
+              />
+                </path>
+              </svg>
+
+              <div>
+                <div style={{ color: "#ffffff", fontWeight: 700, fontSize: 15 }}>Fetching files…</div>
+                <div style={{ color: "#9aa7c7", fontSize: 13 }}>This may take a few moments. Please keep this window open.</div>
+              </div>
+            </div>
+
+            {/* subtle progress hint bar */}
+            <div style={{ marginTop: 12, height: 8, background: "rgba(255,255,255,0.03)", borderRadius: 8, overflow: "hidden" }}>
+              <div
+                style={{
+              width: "28%",
+              height: "100%",
+              background: "linear-gradient(90deg, rgba(255,255,255,0.12), rgba(255,255,255,0.9))",
+              borderRadius: 8,
+              // simple CSS animation fallback: use transition on mount is not possible here,
+              // but we keep a pleasant static indicator. If desired, move to CSS for animated stripes.
+                }}
+              />
+            </div>
+              </div>
+            )}
+
+            {processingStage === "ready" && (
+              <>
+            <div style={{ marginTop: 8, display: "flex", flexDirection: "column", gap: 8 }}>
+              {sessionFiles.length > 0 ? (
+                sessionFiles.map((f, i) => (
+              <div
+                key={i}
+                style={{
+                  display: "flex",
+                  justifyContent: "space-between",
+                  alignItems: "center",
+                  padding: "8px 10px",
+                  background: "#06060a",
+                  borderRadius: 8,
+                  border: "1px solid rgba(255,255,255,0.02)",
+                  color: "#dbe8ff",
+                  fontSize: 20,
+                }}
+              >
+                <div style={{ overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap", maxWidth: 360 }}>
+                  {f.name || f.filename || f.key || f}
+                </div>
+                <div style={{ color: "#98a3b8", fontSize: 12 }}>{f.size ? `${Math.round(f.size / 1024)} KB` : ""}</div>
+              </div>
+                ))
+              ) : (
+                <div style={{ color: "#9aa7c7", fontSize: 13 }}>No files were returned for this session.</div>
+              )}
+            </div>
+
+            <div style={{ display: "flex", justifyContent: "flex-end", gap: 10, marginTop: 14 }}>
               <button
                 onClick={handleCloseProcessing}
                 style={{
-                  background: "transparent",
-                  border: "none",
-                  color: "#9aa7c7",
-                  cursor: "pointer",
-                  fontSize: 20,
+              background: "transparent",
+              border: "1px solid rgba(255, 255, 255, 0.06);",
+              color: "#000000ff",
+              padding: "8px 12px",
+              borderRadius: 8,
+              cursor: "pointer",
+              fontSize: 30,
                 }}
-                aria-label="Close processing"
               >
-                ✕
+                Close
               </button>
-            </div>
 
-            <div style={{ marginTop: 16 }}>
-              {processingStage === "fetching" && (
-                <div style={{ color: "#bfc8d6", fontSize: 13 }}>
-                  The app is checking the session folder and downloading missing files. This may take a few seconds.
-                </div>
-              )}
-
-              {processingStage === "ready" && (
-                <>
-                  <div style={{ marginTop: 8, display: "flex", flexDirection: "column", gap: 8 }}>
-                    {sessionFiles.length > 0 ? (
-                      sessionFiles.map((f, i) => (
-                        <div
-                          key={i}
-                          style={{
-                            display: "flex",
-                            justifyContent: "space-between",
-                            alignItems: "center",
-                            padding: "8px 10px",
-                            background: "#06060a",
-                            borderRadius: 8,
-                            border: "1px solid rgba(255,255,255,0.02)",
-                            color: "#dbe8ff",
-                            fontSize: 20,
-                          }}
-                        >
-                          <div style={{ overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap", maxWidth: 360 }}>
-                            {f.name || f.filename || f.key || f}
-                          </div>
-                          <div style={{ color: "#98a3b8", fontSize: 12 }}>{f.size ? `${Math.round(f.size / 1024)} KB` : ""}</div>
-                        </div>
-                      ))
-                    ) : (
-                      <div style={{ color: "#9aa7c7", fontSize: 13 }}>No files were returned for this session.</div>
-                    )}
-                  </div>
-
-                  <div style={{ display: "flex", justifyContent: "flex-end", gap: 10, marginTop: 14 }}>
-                    <button
-                      onClick={handleCloseProcessing}
-                      style={{
-                        background: "transparent",
-                        border: "1px solid rgba(255, 255, 255, 0.06);",
-                        color: "#000000ff",
-                        padding: "8px 12px",
-                        borderRadius: 8,
-                        cursor: "pointer",
-                        fontSize: 30,
-                      }}
-                    >
-                      Close
-                    </button>
-
-                    {/* Only show Process files when we actually have files */}
+              {/* Only show Process files when we actually have files */}
                     {sessionFiles && sessionFiles.length > 0 && (
                       <button
                         onClick={handleProcessClick}
