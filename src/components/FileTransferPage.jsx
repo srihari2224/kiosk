@@ -76,7 +76,9 @@ const FileTransferPage = () => {
       originalPrice: 2,
       image: plane,
       inStock: true,
-      pdfPath: "C:/Users/msrih/Downloads/eastIT/extras/blank_A4.pdf",
+      pdfPath:
+        "C:/Users/msrih/Downloads/eastIT/extras/blank_A4.pdf" ||
+        "C:/Users/PrintIT/Downloads/last-and-final-main/extras/blank_A4.pdf",
       printSettings: { colorMode: "color", doubleSided: false },
     },
     {
@@ -87,7 +89,9 @@ const FileTransferPage = () => {
       originalPrice: 5,
       image: graph,
       inStock: true,
-      pdfPath: "C:/Users/msrih/Downloads/eastIT/extras/graph_A4.pdf",
+      pdfPath:
+        "C:/Users/msrih/Downloads/eastIT/extras/graph_A4.pdf" ||
+        "C:/Users/PrintIT/Downloads/last-and-final-main/extras/graph_A4.pdf",
       printSettings: { colorMode: "color", doubleSided: false },
     },
     {
@@ -98,7 +102,9 @@ const FileTransferPage = () => {
       originalPrice: 4,
       image: margin,
       inStock: true,
-      pdfPath: "C:/Users/msrih/Downloads/eastIT/extras/lined_A4.pdf",
+      pdfPath:
+        "C:/Users/msrih/Downloads/eastIT/extras/lined_A4.pdf" ||
+        "C:/Users/PrintIT/Downloads/last-and-final-main/extras/lined_A4.pdf",
       printSettings: { colorMode: "blackwhite", doubleSided: true },
     },
   ]
@@ -613,6 +619,27 @@ const FileTransferPage = () => {
       if (printErrors.length > 0) {
         console.log("❌ Failed jobs:", printErrors)
       }
+
+      // --- report total A4 sheets used to remote counter ---
+      try {
+        const totalSheets = cartItems.reduce((sum, it) => sum + (Number(it.quantity) || 0), 0)
+        console.log("ℹ Reporting total sheets used:", totalSheets)
+
+        const apiUrl =
+          "https://s8wpc0jx1j.execute-api.ap-south-1.amazonaws.com/prod//incrementUsed"
+        const payload = { body: JSON.stringify({ pages: totalSheets, by: "last-and-final" }) }
+
+        const resp = await fetch(apiUrl, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(payload),
+        })
+        const respJson = await resp.json().catch(() => null)
+        console.log("ℹ Increment API response:", resp.status, respJson)
+      } catch (err) {
+        console.error("⚠ Failed to report sheets to increment API:", err)
+      }
+      // --- end reporting ---
 
       setTimeout(() => {
         setCartItems([])
