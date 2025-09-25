@@ -697,18 +697,15 @@ const FileTransferPage = () => {
       console.log(`🔍 Fetching files directly from session folder: ${sessionId}`)
       console.log("🔌 Using Electron API to get session files")
 
+      // fetchSessionFiles returns the files array (or [])
       const result = await fetchSessionFiles(sessionId)
 
-      if (result.length > 0) {
-        console.log("✅ Found files, navigating to integrated view")
-        handleNext()
-      } else {
-        // Show alert for no files found
-        alert("No files found in session. Please upload files first.")
-      }
+      // return files so HeroSection can show them in the processing overlay
+      return result || []
     } catch (error) {
       console.error("Error in handleGetStarted:", error)
-      alert("Error loading session files. Please try again.")
+      // error -> return empty array so caller knows nothing found
+      return []
     }
   }
 
@@ -727,7 +724,21 @@ const FileTransferPage = () => {
     <div className="file-transfer-page">
       <Navbar />
 
-      <HeroSection sessionId={sessionId} onGetStarted={handleGetStarted} onRefreshSession={handleRefreshSession} />
+      <HeroSection
+        sessionId={sessionId}
+        onGetStarted={handleGetStarted}
+        onRefreshSession={handleRefreshSession}
+        onProcess={({ sessionId: sId, files: f }) => {
+          const filesArr = Array.isArray(f) ? f : []
+          if (filesArr.length > 0) {
+            navigate("/integrated-files", {
+              state: { files: filesArr, sessionId: sId || sessionId },
+            })
+          } else {
+            alert("No files to process. Please upload files first.")
+          }
+        }}
+      />
 
       <ProjectCards />
 

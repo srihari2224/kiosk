@@ -1,0 +1,160 @@
+/* isolated styles for OfferCard (imported by OfferCard.jsx) */
+.offer-card {
+  all: unset;
+  display: block;
+}
+
+.offer-card {
+  padding: 18px;
+  border-radius: 12px;
+  background: #fff;
+  color: #0b0b0b;
+  font-family: Inter, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
+}
+
+.offer-card * {
+  box-sizing: border-box;
+}
+
+/* The main card visuals are applied in HeroSection.css (.offer-card) */
+/* This file ensures resets and prevents global bleed. */
+
+/* compact title and reduced line-height */
+.offer-title {
+  margin: 10px 0 6px;
+  line-height: 1.05;
+  font-size: 20px;
+  font-weight: 800;
+}
+
+.offer-sub {
+  margin: 0 0 12px;
+  color: #6b7280;
+  font-size: 13px;
+  line-height: 1.25;
+}
+
+/* bullets list */
+.offer-bullets {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin: 6px 0 12px;
+}
+
+/* each bullet: left text block + right price block */
+.offer-bullet {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 10px;
+  border-radius: 10px;
+  background: #fbfcfd;
+  border: 1px solid rgba(0,0,0,0.04);
+}
+
+/* left area with checkbox and text */
+.bullet-left {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  min-width: 0;
+}
+
+/* check icon */
+.check {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 22px;
+  height: 22px;
+  background: #e6fbf0;
+  border-radius: 50%;
+  color: #14a248;
+  flex: 0 0 22px;
+}
+
+/* text stack inside left */
+.bullet-text {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+/* primary text (left middle) */
+.bullet-title {
+  font-size: 14px;
+  font-weight: 600;
+  color: #111827;
+  line-height: 1.05;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  overflow: hidden;
+}
+
+/* secondary small label */
+.bullet-sub {
+  font-size: 12px;
+  color: #6b7280;
+  line-height: 1.05;
+  margin-top: 2px;
+}
+
+/* price block aligned to right corner */
+.offer-price {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  justify-content: center;
+  min-width: 70px;
+  gap: 2px;
+}
+
+/* big amount */
+.offer-price-amount {
+  font-size: 20px;
+  font-weight: 800;
+  color: #0b0b0b;
+  line-height: 1;
+}
+
+/* small "only" label */
+.offer-price-once {
+  font-size: 11px;
+  color: #6b7280;
+  line-height: 1;
+}
+
+/* CTA and trust */
+.offer-cta {
+  width: 100%;
+  margin-top: 8px;
+  padding: 10px;
+  border-radius: 8px;
+  background: #0466d6;
+  color: #fff;
+  border: none;
+  cursor: pointer;
+  font-weight: 700;
+}
+
+.offer-trust {
+  margin-top: 10px;
+  font-size: 12px;
+  color: #6b7280;
+}
+
+/* small screen tweaks */
+@media (max-width: 480px) {
+  .offer-bullet {
+    padding: 8px;
+    gap: 8px;
+  }
+  .offer-price {
+    min-width: 60px;
+  }
+  .offer-title {
+    font-size: 18px;
+  }
+}

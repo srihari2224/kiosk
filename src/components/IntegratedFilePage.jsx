@@ -722,11 +722,11 @@ function IntegratedFilePage() {
     }
 
     totalPages *= edgePrintSettings.copies
-    const costPerPage = edgePrintSettings.colorMode === "color" ? 10 : 2
+    const costPerPage = edgePrintSettings.colorMode === "color" ? 8 : 2
 
     if (edgePrintSettings.doubleSided === "both-sides") {
       if (edgePrintSettings.colorMode === "color") {
-        return totalPages * 10
+        return totalPages * 8
       } else {
         const sheets = Math.ceil(totalPages / 2)
         return sheets * 3
@@ -874,7 +874,7 @@ function IntegratedFilePage() {
     const baseCost =
       pages.reduce((total, page) => {
         if (page.items.length === 0) return total
-        return total + (page.colorMode === "color" ? 10 : 2)
+        return total + (page.colorMode === "color" ? 8 : 2)
       }, 0) + printQueue.reduce((total, item) => total + item.cost, 0)
 
     return baseCost
@@ -1210,17 +1210,19 @@ function IntegratedFilePage() {
 
   return (
     <div className="integrated-files-page">
-      <div className="page-header">
-        <button className="back-button" onClick={handleBackToFileTransfer}>
-          <ArrowLeft size={20} />
-          Back to File Transfer
-        </button>
-      </div>
+      
 
       <div className="main-content">
         {/* Left Sidebar: Files and Queue */}
-        <div className="sidebar">
+          <div className="sidebar">
+
           <div className="file-categories">
+            <div className="page-header">
+                <button className="back-button" onClick={handleBackToFileTransfer}>
+                  <ArrowLeft size={20} />
+                  Back to File Transfer
+                </button>
+            </div>
             <div className="category-header">
               <h3>Categories</h3>
             </div>
@@ -1326,7 +1328,9 @@ function IntegratedFilePage() {
                 </ul>
               </div>
             )}
-            {showFilters && (
+           
+          </div>
+           {showFilters && (
               <div className="filters-section" ref={filtersRef}>
                 <div className="filters-header">
                   <button onClick={() => setShowFilters(false)} className="back-btn">
@@ -1367,7 +1371,6 @@ function IntegratedFilePage() {
                 ))}
               </div>
             )}
-          </div>
         </div>
 
         {/* Canvas Area */}
@@ -1704,6 +1707,12 @@ function IntegratedFilePage() {
 
         {/* Right Sidebar: Cost + Payment + Print Queue */}
         <div className="right-sidebar">
+
+          <h3 className="offer-title">
+            Print <em>Faster</em>
+            <br />
+            with <span className="offer-title-acc">Canvas UI Pro</span>
+          </h3>
           <div className="cost-summary">
             <h4>Cost Summary</h4>
             <div className="cost-details">
@@ -1825,60 +1834,62 @@ function IntegratedFilePage() {
                 </div>
               </div>
               {mobileError && <div className="mobile-error">{mobileError}</div>}
-            </div>
 
-            <button
-              className="payment-button"
-              onClick={handlePaymentClick}
-              disabled={calculateTotalCost() === 0 || paymentProcessing || !mobileNumber || printingInProgress}
-            >
-              <span className="btn-text">
-                {printingInProgress ? "Printing..." : paymentProcessing ? "Loading Payment..." : "Pay Now"}
-              </span>
-            </button>
+              <button
+                className="payment-button"
+                onClick={handlePaymentClick}
+                disabled={calculateTotalCost() === 0 || paymentProcessing || !mobileNumber || printingInProgress}
+              >
+                <span className="btn-text">
+                  {printingInProgress ? "Printing..." : paymentProcessing ? "Loading Payment..." : "Pay Now"}
+                </span>
+              </button>
 
-            {(paymentProcessing || printingInProgress) && (
-              <div className="payment-processing">
-                {printingInProgress && printProgress.status !== "idle" && (
-                  <div className="print-progress">
-                    <div
-                      className="progress-bar"
-                      style={{
-                        width: "100%",
-                        height: "4px",
-                        background: "#f0f0f0",
-                        borderRadius: "2px",
-                        marginBottom: "8px",
-                      }}
-                    >
+              {(paymentProcessing || printingInProgress) && (
+                <div className="payment-processing">
+                  {printingInProgress && printProgress.status !== "idle" && (
+                    <div className="print-progress">
                       <div
-                        className="progress-fill"
+                        className="progress-bar"
                         style={{
                           width: "100%",
-                          height: "100%",
-                          backgroundColor:
-                            printProgress.status === "completed"
-                              ? "#28a745"
-                              : printProgress.status === "completed_with_errors"
-                                ? "#ffc107"
-                                : "#007bff",
+                          height: "4px",
+                          background: "#f0f0f0",
                           borderRadius: "2px",
-                          transition: "width 0.3s ease",
+                          marginBottom: "8px",
                         }}
-                      ></div>
+                      >
+                        <div
+                          className="progress-fill"
+                          style={{
+                            width: "100%",
+                            height: "100%",
+                            backgroundColor:
+                              printProgress.status === "completed"
+                                ? "#28a745"
+                                : printProgress.status === "completed_with_errors"
+                                  ? "#ffc107"
+                                  : "#007bff",
+                            borderRadius: "2px",
+                            transition: "width 0.3s ease",
+                          }}
+                        ></div>
+                      </div>
+                      <div className="progress-text" style={{ fontSize: "12px", color: "#666" }}>
+                        {printProgress.currentJob} ({printProgress.completed}/{printProgress.total})
+                      </div>
                     </div>
-                    <div className="progress-text" style={{ fontSize: "12px", color: "#666" }}>
-                      {printProgress.currentJob} ({printProgress.completed}/{printProgress.total})
-                    </div>
-                  </div>
-                )}
-                <p style={{ textAlign: "center", marginTop: "10px", color: "#666", fontSize: "14px" }}>
-                  {printingInProgress
-                    ? "Printing with your selected options..."
-                    : "Loading Razorpay payment gateway..."}
-                </p>
-              </div>
-            )}
+                  )}
+                  <p style={{ textAlign: "center", marginTop: "10px", color: "#666", fontSize: "14px" }}>
+                    {printingInProgress
+                      ? "Printing with your selected options..."
+                      : "Loading Razorpay payment gateway..."}
+                  </p>
+                </div>
+              )}
+            </div>
+
+            
           </div>
         </div>
       </div>

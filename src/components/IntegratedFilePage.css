@@ -49,16 +49,17 @@
 
 /* Sidebar styles - Light Theme - MADE WIDER - FIXED GAPS */
 .integrated-files-page .sidebar {
-  width: 320px;
-  background-color: rgba(255, 255, 255, 0.95);
-  backdrop-filter: blur(20px);
-  -webkit-backdrop-filter: blur(20px);
-  border-right: 1px solid rgba(0, 0, 0, 0.1);
-  overflow-y: auto;
-  height: 100%;
-  margin-left: 10px;
-  padding: 0;
-  position: relative; /* anchor Filters overlay inside sidebar */
+    width: 420px;
+    background-color: #fffffff2;
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border-right: 1px solid rgba(0, 0, 0, .1);
+    overflow-y: auto;
+    height: 100%;
+    margin-left: px;
+    padding: 0;
+    position: relative;
+    height: 1185px;
 }
 
 .integrated-files-page .file-categories {
@@ -263,6 +264,7 @@
   overflow: hidden;
   margin: 0;
   padding: 0;
+  height:1200px;
 }
 
 .integrated-files-page .canvas-toolbar {
@@ -1276,17 +1278,19 @@
 
 /* Right sidebar - MADE WIDER - FIXED GAPS */
 .integrated-files-page .right-sidebar {
-  width: 400px;
-  background-color: rgba(248, 249, 250, 0.95);
-  backdrop-filter: blur(20px);
-  -webkit-backdrop-filter: blur(20px);
-  border-left: 1px solid rgba(0, 0, 0, 0.1);
-  overflow-y: auto;
-  height: 100%;
-  padding: 20px;
-  margin: 0;
-  display: flex;
-  flex-direction: column;
+      width: 450px;
+    background-color: #f8f9faf2;
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border-left: 1px solid rgba(0, 0, 0, .1);
+    overflow-y: auto;
+    height: 100%;
+    padding: 20px;
+    margin: 0;
+    display: flex
+;
+    flex-direction: column;
+    height: 1185px;
 }
 
 /* Fixed cost-summary div with proper overflow and fixed height */
@@ -1621,7 +1625,7 @@
 }
 
 .integrated-files-page .payment-button:disabled {
-  background: #666;
+  background: #000000;
   cursor: not-allowed;
   transform: none;
 }
