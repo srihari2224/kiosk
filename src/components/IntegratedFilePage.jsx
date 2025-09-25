@@ -729,7 +729,8 @@ function IntegratedFilePage() {
         return totalPages * 8
       } else {
         const sheets = Math.ceil(totalPages / 2)
-        return sheets * 3
+        if(totalPages%2===0) return sheets * 2
+        else return (sheets-1)* 3 + (2)
       }
     }
     return totalPages * costPerPage
@@ -1726,7 +1727,7 @@ function IntegratedFilePage() {
                         <span>
                           Page {page.id} ({page.colorMode === "color" ? "Color" : "B&W"})
                         </span>
-                        <span>₹{page.colorMode === "color" ? 10 : 2}</span>
+                        <span>₹{page.colorMode === "color" ? 8 : 2}</span>
                       </div>
                     )
                   })}
