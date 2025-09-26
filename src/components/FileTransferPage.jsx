@@ -77,6 +77,7 @@ const FileTransferPage = () => {
       image: plane,
       inStock: true,
       pdfPath:
+        "C:/Users/msrih/Downloads/eastIT/extras/blank_A4.pdf" ||
         "C:/Users/PrintIT/Downloads/last-and-final-main/extras/blank_A4.pdf",
       printSettings: { colorMode: "color", doubleSided: false },
     },
@@ -89,6 +90,7 @@ const FileTransferPage = () => {
       image: graph,
       inStock: true,
       pdfPath:
+        "C:/Users/msrih/Downloads/eastIT/extras/graph_A4.pdf" ||
         "C:/Users/PrintIT/Downloads/last-and-final-main/extras/graph_A4.pdf",
       printSettings: { colorMode: "color", doubleSided: false },
     },
@@ -101,6 +103,7 @@ const FileTransferPage = () => {
       image: margin,
       inStock: true,
       pdfPath:
+        "C:/Users/msrih/Downloads/eastIT/extras/lined_A4.pdf" ||
         "C:/Users/PrintIT/Downloads/last-and-final-main/extras/lined_A4.pdf",
       printSettings: { colorMode: "blackwhite", doubleSided: true },
     },

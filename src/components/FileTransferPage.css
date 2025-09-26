@@ -357,6 +357,7 @@
 
 .file-transfer-page .next-btn:hover:not(:disabled) {
   background: #1565c0;
+  transform: translateY(-1px);
 }
 
 .file-transfer-page .next-btn:disabled {
@@ -404,6 +405,7 @@
 .file-transfer-page .modern-file-card:hover {
   background: #f8f9fa;
   border-color: #3498db;
+  transform: translateY(-1px);
   box-shadow: 0 2px 8px rgba(52, 152, 219, 0.15);
 }
 
@@ -511,6 +513,214 @@
   cursor: not-allowed;
 }
 
+/* Added product cards styling for paper shop section */
+.file-transfer-page .product-cards-container {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+  padding: 0rem 1.5rem;
+  height: 100%;
+  overflow-y: auto;
+  max-height: calc(100vh - 200px);
+  margin-top: 100px;
+}
+
+.file-transfer-page .product-cards-container::-webkit-scrollbar {
+  width: 0px;
+}
+
+.file-transfer-page .product-cards-container::-webkit-scrollbar-track {
+  background: #ffffff;
+}
+
+.file-transfer-page .product-cards-container::-webkit-scrollbar-thumb {
+  background: #ffffff;
+  border-radius: 4px;
+}
+
+.file-transfer-page .product-cards-container::-webkit-scrollbar-thumb:hover {
+  background: #ffffff;
+}
+
+.file-transfer-page .product-card {
+  width: 100%;
+  background: #fff;
+  border-radius: 12px;
+  transition: 0.3s;
+  font-family: "Segoe UI", sans-serif;
+  overflow: hidden;
+  position: relative;
+  cursor: pointer;
+  /* Increased minimum height from 280px to 380px for better proportions */
+  min-height: 480px;
+  border-color: #e8e3e3;
+  border-width: 0.01px;
+  border-style: solid;
+}
+
+.file-transfer-page .product-card:hover {
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+}
+
+.file-transfer-page .product-badge {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  background: linear-gradient(to right, rgba(169, 3, 41, 1) 0%, rgba(196, 72, 72, 1) 44%, rgba(170, 34, 56, 1) 100%);
+  color: #fff;
+  padding: 6px 12px;
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  border-radius: 8px;
+  z-index: 10;
+}
+
+.file-transfer-page .product-tilt {
+  overflow: hidden;
+  height: 300px;
+}
+
+.file-transfer-page .product-img {
+  /* Increased height from 160px to 200px for better image display */
+  height: 400px;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #ffffff;
+  padding: 1rem;
+}
+
+.file-transfer-page .product-img img {
+  /* Increased image size from 120px to 150px for better visibility */
+  width: 300px;
+  height: 400px;
+  object-fit: contain;
+  transition: transform 0.5s;
+}
+
+.file-transfer-page .product-info {
+  /* Increased padding for better spacing with taller cards */
+  padding: 1.5rem;
+  height: 200px;
+}
+
+file-transfer-page .product-cat {
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  color: #71717a;
+  margin-bottom: 6px;
+}
+
+.file-transfer-page .product-title {
+  font-size: 16px;
+  font-weight: 700;
+  color: #18181b;
+  margin: 0 0 10px;
+  letter-spacing: -0.5px;
+}
+
+.file-transfer-page .product-desc {
+  font-size: 12px;
+  color: #52525b;
+  line-height: 1.5;
+  margin-bottom: 15px;
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.file-transfer-page .product-bottom {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 10px;
+}
+
+.file-transfer-page .product-price {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+}
+
+.file-transfer-page .price-old {
+  font-size: 18px;
+  text-decoration: line-through;
+  color: #e23c33;
+  margin-right: 8px;
+}
+
+.file-transfer-page .price-new {
+  font-size: 25px;
+  font-weight: 700;
+  color: #18181b;
+}
+
+.file-transfer-page .product-btn {
+  background: linear-gradient(45deg, #18181b, #27272a);
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  padding: 8px 16px;
+  font-size: 18px;
+  font-weight: 600;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  transition: 0.3s;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  position: relative;
+  overflow: hidden;
+}
+
+.file-transfer-page .product-btn:hover {
+  background: linear-gradient(45deg, #27272a, #3f3f46);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+.file-transfer-page .product-btn:before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+  transition: 0.5s;
+}
+
+.file-transfer-page .product-btn:hover:before {
+  left: 100%;
+}
+
+.file-transfer-page .cart-icon {
+  transition: transform 0.3s;
+}
+
+.file-transfer-page .product-btn:hover .cart-icon {
+  transform: rotate(-10deg) scale(1.1);
+}
+
+.file-transfer-page .product-meta {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  padding-top: 8px;
+}
+
+.file-transfer-page .product-stock {
+  font-size: 15px;
+  font-weight: 600;
+  color: #22c55e;
+  margin-top: -12px;
+}
 
 /* Responsive adjustments for smaller 25% space */
 @media (max-width: 1200px) {
@@ -718,6 +928,7 @@
 
 .file-transfer-page .cart-basket-btn:hover {
   background: rgba(255, 255, 255, 0.2);
+  transform: translateY(-1px);
 }
 
 .file-transfer-page .basket-icon {
@@ -1460,7 +1671,7 @@
 
 /* Added hover effect to make images rise up and scale */
 .file-transfer-page .img_container img:hover {
-  transform: scale(1.05);
+  transform: scale(1.05) translateY(-10px);
   box-shadow: 0 15px 35px rgba(0, 0, 0, 0.3);
   z-index: 10;
 }
@@ -2290,7 +2501,7 @@
   max-width: 2200px;
   margin: 0 auto;
   padding: 13 1rem;
-  margin-bottom: 28px;
+  margin-bottom: 100px;
 }
 
 .file-transfer-page .product-card {
