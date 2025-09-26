@@ -48,7 +48,7 @@
 
 .title-gradient {
   display: block;
-  background: linear-gradient(135deg, #8b5cf6, #a855f7, #7c3aed);
+  background: #7A7FEE;
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;

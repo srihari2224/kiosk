@@ -4,6 +4,10 @@ import { useState, useEffect } from "react"
 import QRCodeLib from "qrcode"
 import "./HeroSection.css"
 import OfferCard from "./OfferCard"
+import arrow from "../assets/arrow.svg"
+import start from "../assets/start.svg"
+import id from "../assets/id.svg"
+import refresh from "../assets/refresh.svg"
 
 const HeroSection = ({ sessionId, onGetStarted, onRefreshSession, onProcess }) => {
   const [isLoading, setIsLoading] = useState(false)
@@ -94,20 +98,15 @@ const HeroSection = ({ sessionId, onGetStarted, onRefreshSession, onProcess }) =
                   onClick={handleGetStarted}
                   disabled={isLoading}
                 >
-                  Get Started
+                 <img src={start}></img> Get Started
                 </button>
 
                 {sessionId && (
                   <div className="session-info" style={{ display: "flex", alignItems: "center", gap: "8px" }}>
-                    <span className="session-label">Session ID:</span>
+                    <img src={id}></img>
                     <span className="session-identity">{sessionId}</span>
                     <button className="refresh-button" onClick={handleRefreshSession}>
-                      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                        <path d="M3 12a9 9 0 0 1 9-9 9.75 9.75 0 0 1 6.74 2.74L21 8" />
-                        <path d="M21 3v5h-5" />
-                        <path d="M21 12a9 9 0 0 1-9 9 9.75 9.75 0 0 1-6.74-2.74L3 16" />
-                        <path d="M3 21v-5h5" />
-                      </svg>
+                      <img src={refresh}></img>
                       Refresh
                     </button>
                   </div>
@@ -180,23 +179,24 @@ const HeroSection = ({ sessionId, onGetStarted, onRefreshSession, onProcess }) =
           <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", gap: 12 }}>
             <div style={{ display: "flex", gap: 14, alignItems: "center" }}>
               <div
-            style={{
-              width: 54,
-              height: 54,
-              borderRadius: 12,
-              background: "#0b1220",
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "center",
-              border: "1px solid rgba(255,255,255,0.03)",
-            }}
+                style={{
+                  width: 54,
+                  height: 54,
+                  borderRadius: 12,
+                  background: "#0b1220",
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  border: "1px solid rgba(255,255,255,0.03)",
+                }}
               >
-            <div className="site-spinner" style={{ width: 28, height: 28 }} />
+                <img src={arrow} alt="arrow" style={{ width: 54 }} />
+                <div className="site-spinner" />
               </div>
 
               <div>
-            <div style={{ fontWeight: 700, fontSize: 24 }}>Processing session files</div>
-            <div style={{ color: "#98a3b8", marginTop: 6, fontSize: 13 }}>
+            <div style={{ fontWeight: 700, fontSize: 30 }}>Processing session files</div>
+            <div style={{ color: "#98a3b8", marginTop: 6, fontSize: 23 }}>
               {processingStage === "fetching" ? "Fetching files from the session and S3…" : "Files ready to process"}
             </div>
               </div>
@@ -207,7 +207,7 @@ const HeroSection = ({ sessionId, onGetStarted, onRefreshSession, onProcess }) =
               style={{
             background: "transparent",
             border: "none",
-            color: "#9aa7c7",
+            color: "#ffffffff",
             cursor: "pointer",
             fontSize: 20,
               }}
@@ -219,15 +219,16 @@ const HeroSection = ({ sessionId, onGetStarted, onRefreshSession, onProcess }) =
 
           <div style={{ marginTop: 16 }}>
             {processingStage === "fetching" && (
-              <div style={{ color: "#bfc8d6", fontSize: 13 }}>
+              <div style={{ color: "#bfc8d6", fontSize: 23 }}>
             {/* Professional white loader */}
             <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
               <svg
-                width="44"
-                height="44"
+                width="64"
+                height="64"
                 viewBox="0 0 50 50"
                 xmlns="http://www.w3.org/2000/svg"
                 aria-hidden="true"
+                marginTop="10px"
               >
                 <defs>
               <linearGradient id="g" x1="0%" x2="100%">
@@ -256,8 +257,8 @@ const HeroSection = ({ sessionId, onGetStarted, onRefreshSession, onProcess }) =
               </svg>
 
               <div>
-                <div style={{ color: "#ffffff", fontWeight: 700, fontSize: 15 }}>Fetching files…</div>
-                <div style={{ color: "#9aa7c7", fontSize: 13 }}>This may take a few moments. Please keep this window open.</div>
+                <div style={{ color: "#ffffffff", fontWeight: 700, fontSize: 25 ,marginTop:"10px" }}>Fetching files…</div>
+                <div style={{ color: "#2ec907ff", fontSize: 17 }}>This may take a few moments. Please keep this window open.</div>
               </div>
             </div>
 
@@ -303,7 +304,7 @@ const HeroSection = ({ sessionId, onGetStarted, onRefreshSession, onProcess }) =
               </div>
                 ))
               ) : (
-                <div style={{ color: "#9aa7c7", fontSize: 13 }}>No files were returned for this session.</div>
+                <div style={{ color: "#e2160fff", fontSize: 25 ,marginTop:"10px" }}>No files were returned for this session.</div>
               )}
             </div>
 
@@ -311,7 +312,7 @@ const HeroSection = ({ sessionId, onGetStarted, onRefreshSession, onProcess }) =
               <button
                 onClick={handleCloseProcessing}
                 style={{
-              background: "transparent",
+              backgroundColor: "#e6eefc",
               border: "1px solid rgba(255, 255, 255, 0.06);",
               color: "#000000ff",
               padding: "8px 12px",

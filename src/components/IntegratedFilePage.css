@@ -31,7 +31,7 @@
   flex-direction: column;
   height: 100%;
   width: 100%;
-  background-color: #ffffff;
+  background-color:#343333;
   font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
   color: #000000;
   margin: 0;
@@ -260,26 +260,28 @@
 .integrated-files-page .canvas-area {
   flex: 1;
   display: flex;
-  flex-direction: column;
+  flex-direction: row;
   height: 100%;
   position: relative;
   overflow: hidden;
   margin: 0;
   padding: 0;
-  height:1200px;
+  height:1135px;
+  background-color:#303030f2;
 }
 
 .integrated-files-page .canvas-toolbar {
   position: relative;
-  top: 0;
-  left: 0;
+  top: 14;
+  left: -57px;
   right: 0;
-  height: 60px;
-  background-color: rgba(255, 255, 255, 0.95);
+  height: 210px;
+  background-color:#313131;
   backdrop-filter: blur(20px);
   -webkit-backdrop-filter: blur(20px);
   border-bottom: 1px solid rgba(0, 0, 0, 0.1);
   display: flex;
+  flex-direction: column;
   align-items: center;
   padding: 0 16px;
   gap: 12px;
@@ -290,7 +292,7 @@
 /* Button styles - Keep original colors */
 .integrated-files-page .Add-button {
   position: relative;
-  width: 140px;
+  width: 120px;
   height: 40px;
   cursor: pointer;
   display: flex;
@@ -298,6 +300,7 @@
   border: 1px solid #34974d;
   background-color: #3aa856;
   border-radius: 20px;
+  margin-top: 10px;
 }
 
 .integrated-files-page .Add-button,
@@ -317,7 +320,7 @@
   position: absolute;
   transform: translateX(90px);
   height: 100%;
-  width: 32px;
+  width: 26px;
   background-color: #34974d;
   display: flex;
   align-items: center;
@@ -401,7 +404,7 @@
 }
 
 .integrated-files-page .delete-button {
-  width: 130px;
+  width: 120px;
   height: 40px;
   cursor: pointer;
   display: flex;
@@ -551,8 +554,34 @@
     linear-gradient(90deg, rgba(0, 0, 0, 0.01) 1px, transparent 1px);
   background-size: 100px 100px, 100px 100px, 20px 20px, 20px 20px;
   background-position: -1px -1px, -1px -1px, -1px -1px, -1px -1px;
-  padding-bottom: 80px;
   margin: 0;
+}
+
+/* ensure canvas container provides stacking context */
+.a4-canvas {
+  position: relative; /* needed so .canvas-background can be absolute inside */
+  z-index: 1;
+}
+
+/* background image wrapper that fills the canvas and crops nicely */
+.canvas-background {
+  position: absolute;
+  inset: 0;               /* top:0; right:0; bottom:0; left:0 */
+  z-index: 0;
+  overflow: hidden;
+  pointer-events: none;
+  border-radius: 12px;    /* match A4 canvas rounded corners if present */
+}
+
+/* make the actual <img> perfectly fit the div (cover, centered) */
+.canvas-background img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;      /* preserve aspect ratio and fill the area */
+  object-position: center center;
+  display: block;
+  user-select: none;
+  -webkit-user-drag: none;
 }
 
 .integrated-files-page .canvas-background {
@@ -666,7 +695,7 @@
 }
 
 .integrated-files-page .canvas-item.selected {
-  border-color: #8b5cf6 !important;
+  border-color: #ffffff !important;
   box-shadow: 0 0 0 3px rgba(139, 92, 246, 0.1);
 }
 
@@ -763,14 +792,14 @@
 }
 
 .integrated-files-page .resize-handle {
-  position: absolute;
-  background: #8b5cf6;
-  border: 2px solid white;
-  border-radius: 50%;
-  pointer-events: all;
-  z-index: 15;
-  width: 12px;
-  height: 12px;
+    position: absolute;
+    background: #000000;
+    border: 9px solid #000000;
+    border-radius: 50%;
+    pointer-events: all;
+    z-index: 15;
+    width: 12px;
+    height: 12px;
 }
 
 /* Corner handles */
@@ -980,10 +1009,6 @@
   background: #f9fafb !important;
   border: 1px solid #e5e7eb !important;
   border-radius: 4px !important;
-}
-
-.integrated-files-page .position-buttons button:hover {
-  background: #f3f4f6 !important;
 }
 
 /* Updated rotation handle to prevent being affected by transforms */
@@ -1281,7 +1306,7 @@
 /* Right sidebar - MADE WIDER - FIXED GAPS */
 .integrated-files-page .right-sidebar {
       width: 450px;
-    background-color: #f8f9faf2;
+    background-color: #303030f2;
     backdrop-filter: blur(20px);
     -webkit-backdrop-filter: blur(20px);
     border-left: 1px solid rgba(0, 0, 0, .1);
@@ -1362,22 +1387,23 @@
 }
 
 .integrated-files-page .total-cost {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  font-weight: 700;
-  font-size: 18px;
-  margin-top: 283px;
-  padding: 15px 140px;
-  border-top: 2px solid rgba(0, 0, 0, 0.1);
-  background-color: #000000;
-  color: #ffffff;
-  border-radius: 0px 0px 12px 12px;
-  letter-spacing: -0.3px;
-  position: fixed;
-  margin-left: -18px;
-  height: 56px;
-  width: 418px;
+      display: flex
+;
+    justify-content: space-between;
+    align-items: center;
+    font-weight: 700;
+    font-size: 18px;
+    margin-top: 283px;
+    padding: 15px 140px;
+    border-top: 2px solid rgba(0, 0, 0, .1);
+    background-color: #000;
+    color: #fff;
+    border-radius: 0 0 12px 12px;
+    letter-spacing: -.3px;
+    position: fixed;
+    margin-left: -19px;
+    height: 56px;
+    width: 410px;
 }
 
 /* Added coupon section styles */
@@ -2455,12 +2481,21 @@
 
 .integrated-files-page .rating label:before {
   content: '\2605';
-  font-size: 30px;
+  font-size: 60px;
 }
 
 .integrated-files-page .rating input:checked ~ label,
 .integrated-files-page .rating label:hover,
 .integrated-files-page .rating label:hover ~ label {
-  color: #6f00ff;
+  color:#ffe102;
   transition: color 0.3s;
+}
+
+
+.integrated-files-page .back-button{
+  width:140px;
+  background-color: black ;
+  color:white;
+  padding:4px;
+  border-radius:16px;
 }

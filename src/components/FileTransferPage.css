@@ -680,7 +680,6 @@ file-transfer-page .product-cat {
 
 .file-transfer-page .product-btn:hover {
   background: linear-gradient(45deg, #27272a, #3f3f46);
-  transform: translateY(-1px);
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
 }
 
@@ -2578,18 +2577,18 @@ file-transfer-page .product-cat {
 .file-transfer-page .price-old {
   color: rgba(255, 255, 255, 0.5);
   text-decoration: line-through;
-  font-size: 0.9rem;
+  font-size: 1.4rem;
 }
 
 .file-transfer-page .price-new {
   color: #667eea;
-  font-size: 1.2rem;
+  font-size: 1.9rem;
   font-weight: 700;
 }
 
 .file-transfer-page .product-btn {
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-  color: white;
+  background:#000000;
+  color: rgb(255, 255, 255);
   border: none;
   padding: 0.6rem 1.2rem;
   border-radius: 25px;
@@ -2643,7 +2642,7 @@ file-transfer-page .product-cat {
   width: 60px;
   height: 60px;
   border-radius: 50%;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  background: #7A7FEE;
   border: none;
   cursor: pointer;
   box-shadow: 0 8px 25px rgba(102, 126, 234, 0.4);
@@ -3331,7 +3330,7 @@ file-transfer-page .product-cat {
 
 .file-transfer-page .floating-cart-btn {
   position: relative;
-  background: rgba(16, 126, 211, 0.95);
+  background:#7A7FEE;
   border: 2px solid rgba(0, 0, 0, 0.1);
   border-radius: 50%;
   width: 64px;

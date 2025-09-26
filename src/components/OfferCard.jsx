@@ -1,9 +1,10 @@
 import "./OfferCard.css"
+import scanner from "../assets/scanner.svg"
 
 export default function OfferCard() {
   return (
     <div className="offer-card">
-      <div className="offer-label">
+      {/* <div className="offer-label">
         <span
           className="offer-label-dot"
           aria-hidden="true"
@@ -19,7 +20,7 @@ export default function OfferCard() {
           }}
         ></span>
         <span style={{ color: "blue" ,fontSize:"20px" ,fontWeight:"600" }}> LIMITED TIME OFFER</span>
-      </div>
+      </div> */}
 
       <h3 className="offer-title">
         Print <em>Faster</em>
@@ -114,10 +115,10 @@ export default function OfferCard() {
       </div>
 
       <button className="offer-cta" type="button">
-        Scan The QR CODE
+        <img src={scanner}></img> 
+        <div>Scan QR code</div>
       </button>
 
-      <div className="offer-trust">Built For NITC Students</div>
     </div>
   )
 }
