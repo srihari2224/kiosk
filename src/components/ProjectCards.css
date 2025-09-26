@@ -20,7 +20,7 @@
   padding: 0 3rem;
   position: relative;
   z-index: 1;
-  margin-bottom: 100px;
+  margin-bottom: 145px;
 }
 
 .projects-header {
@@ -33,7 +33,7 @@
 }
 
 .projects-title {
-  font-size: 3.5rem;
+  font-size: 4rem;
   font-weight: 700;
   line-height: 1.1;
   margin-bottom: 1.5rem;
@@ -167,7 +167,6 @@
 
 .project-link:hover {
   color: #a855f7;
-  transform: translateX(4px);
 }
 
 .project-link svg {
@@ -210,7 +209,7 @@
 }
 
 .product-card:hover {
-  transform: translateY(-8px);
+  transform: scale(1.05);
   border-color: rgba(139, 92, 246, 0.3);
   box-shadow: 0 20px 60px rgba(139, 92, 246, 0.2);
 }
@@ -237,9 +236,7 @@
   transition: transform 0.3s ease;
 }
 
-.product-card:hover .product-img img {
-  transform: scale(1.05);
-}
+
 
 .product-info {
   padding: 1.5rem;
@@ -363,7 +360,6 @@
 }
 
 .floating-cart-btn:hover {
-  transform: translateY(-2px);
   box-shadow: 0 12px 35px rgba(139, 92, 246, 0.4);
 }
 
@@ -584,7 +580,6 @@
 
 .pay-btn:hover {
   background: linear-gradient(135deg, #7c3aed, #8b5cf6);
-  transform: translateY(-1px);
 }
 
 @media (max-width: 1024px) {

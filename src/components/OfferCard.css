@@ -21,9 +21,8 @@
 
 /* compact title and reduced line-height */
 .offer-title {
-  margin: 10px 0 6px;
-  line-height: 1.05;
-  font-size: 20px;
+margin: 40px 10px 40px;  line-height: 1.05;
+  font-size: 40px;
   font-weight: 800;
 }
 
@@ -47,11 +46,10 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 12px;
+  gap: 76px;
   padding: 10px;
   border-radius: 10px;
   background: #fbfcfd;
-  border: 1px solid rgba(0,0,0,0.04);
 }
 
 /* left area with checkbox and text */
@@ -84,7 +82,7 @@
 
 /* primary text (left middle) */
 .bullet-title {
-  font-size: 14px;
+  font-size: 30px;
   font-weight: 600;
   color: #111827;
   line-height: 1.05;
@@ -95,7 +93,7 @@
 
 /* secondary small label */
 .bullet-sub {
-  font-size: 12px;
+  font-size: 24px;
   color: #6b7280;
   line-height: 1.05;
   margin-top: 2px;
@@ -113,7 +111,7 @@
 
 /* big amount */
 .offer-price-amount {
-  font-size: 20px;
+  font-size: 35px;
   font-weight: 800;
   color: #0b0b0b;
   line-height: 1;
@@ -121,7 +119,7 @@
 
 /* small "only" label */
 .offer-price-once {
-  font-size: 11px;
+  font-size: 15px;
   color: #6b7280;
   line-height: 1;
 }
@@ -129,7 +127,7 @@
 /* CTA and trust */
 .offer-cta {
   width: 100%;
-  margin-top: 8px;
+  margin-top: 18px;
   padding: 10px;
   border-radius: 8px;
   background: #0466d6;
@@ -137,12 +135,14 @@
   border: none;
   cursor: pointer;
   font-weight: 700;
+  font-size: 20px;
 }
 
 .offer-trust {
   margin-top: 10px;
-  font-size: 12px;
-  color: #6b7280;
+  font-size: 15px;
+  color: #000000;
+  margin-left:125px;
 }
 
 /* small screen tweaks */

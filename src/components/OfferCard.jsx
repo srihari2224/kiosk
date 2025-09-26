@@ -18,7 +18,7 @@ export default function OfferCard() {
             animation: "liveDotPulse 1.2s infinite"
           }}
         ></span>
-        <span style={{ color: "blue" }}> LIMITED TIME OFFER</span>
+        <span style={{ color: "blue" ,fontSize:"20px" ,fontWeight:"600" }}> LIMITED TIME OFFER</span>
       </div>
 
       <h3 className="offer-title">
@@ -28,15 +28,14 @@ export default function OfferCard() {
       </h3>
 
       <p className="offer-sub">
-        Stop building from scratch. Get 8 production‑ready templates and 50+ premium components that your users will
-        love.
+        
       </p>
 
       <div className="offer-bullets">
         <div className="offer-bullet">
           <div className="bullet-left">
             <span className="check" aria-hidden="true">
-              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3">
+              <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3">
                 <path d="M20 6L9 17l-5-5" />
               </svg>
             </span>
@@ -56,7 +55,7 @@ export default function OfferCard() {
         <div className="offer-bullet">
           <div className="bullet-left">
             <span className="check" aria-hidden="true">
-              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3">
+              <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3">
                 <path d="M20 6L9 17l-5-5" />
               </svg>
             </span>
@@ -76,7 +75,7 @@ export default function OfferCard() {
         <div className="offer-bullet">
           <div className="bullet-left">
             <span className="check" aria-hidden="true">
-              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3">
+              <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3">
                 <path d="M20 6L9 17l-5-5" />
               </svg>
             </span>
@@ -96,7 +95,7 @@ export default function OfferCard() {
         <div className="offer-bullet">
           <div className="bullet-left">
             <span className="check" aria-hidden="true">
-              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3">
+              <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3">
                 <path d="M20 6L9 17l-5-5" />
               </svg>
             </span>

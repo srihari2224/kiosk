@@ -24,6 +24,7 @@
 .navbar-brand {
   display: flex;
   align-items: center;
+  margin-top:10px;
 }
 
 .brand-logo {

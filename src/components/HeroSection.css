@@ -360,7 +360,7 @@ ease;
   background: #444;       /* keep your grey */
   border-radius: 12px;
   padding: 36px 44px;     /* a bit more padding for larger box */
-  height: 420px;           /* explicit height you asked for */
+  height: 520px;           /* explicit height you asked for */
   min-height: 420px;      /* ensure it doesn't shrink below this */
   max-width: calc(100% - 360px); /* leave space for offer-card (320px + gap) */
   box-sizing: border-box;
@@ -663,10 +663,11 @@ ease;
   display: flex;
   align-items: center;
   gap: 28px;
-  width: 100%;           /* ensure row fits container */
+  width: 115%;           /* ensure row fits container */
   box-sizing: border-box;
-  margin-left: 0;        /* remove earlier negative offset */
+  margin-left: -110px;        /* remove earlier negative offset */
   /* remove fixed height so children control layout */
+  margin-top:-110px;
 }
 
 /* hero content: allow it to take remaining space and be compact */
@@ -675,7 +676,7 @@ ease;
   background: #444;       /* keep your grey */
   border-radius: 12px;
   padding: 36px 44px;     /* a bit more padding for larger box */
-  height: 420px;           /* explicit height you asked for */
+  height: 520px;           /* explicit height you asked for */
   min-height: 420px;      /* ensure it doesn't shrink below this */
   max-width: calc(100% - 360px); /* leave space for offer-card (320px + gap) */
   box-sizing: border-box;
@@ -694,7 +695,7 @@ ease;
   font-size: 5.2rem;
   font-weight: 600;
   line-height: 0.9;
-  margin-bottom: 1.5rem;
+  margin-bottom: 4.5rem;
   letter-spacing: -0.02em;
 }
 
@@ -859,7 +860,10 @@ ease;
 }
 
 .offer-card-wrapper .offer-card {
-  margin: 0;
+
+  width:550px;
+  height:635px;
+  margin-left:100px;
 }
 
 .qr-code-container {
@@ -876,8 +880,8 @@ ease;
 
 .qr-code-image {
   display: block;
-  width: 220px;
-  height: 220px;
+  width: 300px;
+  height: 300px;
   object-fit: contain;
   background: #fff;
   border-radius: 8px;

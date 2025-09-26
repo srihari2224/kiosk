@@ -777,7 +777,7 @@ const FileTransferPage = () => {
             src={shop || "/placeholder.svg"}
             alt="Cart"
             className="basket-icon"
-            style={{ width: 32, height: 32, objectFit: "contain" }}
+            style={{ width: 46, height: 46, objectFit: "contain" }}
           />
           {getTotalItems() > 0 && <span className="floating-cart-counter">{getTotalItems()}</span>}
         </button>
