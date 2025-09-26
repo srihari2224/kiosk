@@ -508,35 +508,7 @@ ipcMain.handle("print-pdf", async (event, printOptions) => {
       }
     }
 
-    // Method 2: Adobe Reader - SIMPLE and RELIABLE
-    const adobePath = findAdobeReader()
-    if (adobePath && !printSuccess) {
-      try {
-        logPrint("🔄 Trying Adobe Reader - SIMPLE method...")
-
-        // Simple Adobe Reader command
-        const adobeCmd = `"${adobePath}" /t "${targetPath}" "${TARGET_PRINTER_NAME}"`
-        logPrint(`🖨 Adobe Reader command: ${adobeCmd}`)
-
-        for (let copy = 1; copy <= copies; copy++) {
-          const { stdout, stderr } = await execAsync(adobeCmd)
-          logPrint(`✅ Adobe Reader copy ${copy}/${copies} executed`)
-          if (stderr) logPrint(`⚠ Adobe Reader stderr: ${stderr}`)
-          if (copy < copies) {
-            await new Promise((resolve) => setTimeout(resolve, 2000))
-          }
-        }
-
-        await new Promise((resolve) => setTimeout(resolve, 2000))
-        printSuccess = true
-        methodUsed = "Adobe Reader"
-        logPrint("✅ Adobe Reader print successful")
-      } catch (error) {
-        logPrint(`⚠ Adobe Reader failed: ${error.message}`)
-      }
-    }
-
-    // Method 3: Windows ShellExecute - MOST RELIABLE (requires default printer to be set or specific printer to be known by system)
+    // Method: Windows ShellExecute - MOST RELIABLE (requires default printer to be set or specific printer to be known by system)
     // Note: ShellExecute 'Print' verb usually prints to default printer.
     // To target a specific printer, 'PrintTo' verb is used with printer name as argument.
     if (!printSuccess) {
@@ -565,31 +537,6 @@ ipcMain.handle("print-pdf", async (event, printOptions) => {
         logPrint("✅ Windows ShellExecute print successful")
       } catch (error) {
         logPrint(`⚠ Windows ShellExecute failed: ${error.message}`)
-      }
-    }
-
-    // Method 4: Simple print command - FALLBACK
-    if (!printSuccess) {
-      try {
-        logPrint("🔄 Trying simple print command - FALLBACK...")
-
-        for (let copy = 1; copy <= copies; copy++) {
-          const printCmd = `print /D:"${TARGET_PRINTER_NAME}" "${targetPath}"`
-          logPrint(`🖨 Print command: ${printCmd}`)
-          const { stdout, stderr } = await execAsync(printCmd)
-          logPrint(`✅ Print command copy ${copy}/${copies} executed`)
-          if (stderr) logPrint(`⚠ Print command stderr: ${stderr}`)
-          if (copy < copies) {
-            await new Promise((resolve) => setTimeout(resolve, 2000))
-          }
-        }
-
-        await new Promise((resolve) => setTimeout(resolve, 2000))
-        printSuccess = true
-        methodUsed = "Windows Print Command"
-        logPrint("✅ Windows print command successful")
-      } catch (error) {
-        logPrint(`⚠ Windows print command failed: ${error.message}`)
       }
     }
 
@@ -863,10 +810,12 @@ ipcMain.handle("print-canvas", async (event, canvasData) => {
     logPrint(`✅ Created HTML file: ${tempHtmlPath}`)
 
     // Convert HTML to PDF using headless browser (like Python version)
+    // browsers used to convert canvas HTML -> PDF (prefer Chrome)
     const browsers = [
-      "msedge",
       `"C:\\Program Files\\Google\\Chrome\\Application\\chrome.exe"`,
+
       `"C:\\Program Files (x86)\\Google\\Chrome\\Application\\chrome.exe"`,
+
     ]
 
     let pdfCreated = false
@@ -900,6 +849,7 @@ ipcMain.handle("print-canvas", async (event, canvasData) => {
     if (adobePath2) {
       try {
         const adobeCmd = `"${adobePath2}" /t "${tempPdfPath}" "${TARGET_PRINTER_NAME}"`
+
         await execAsync(adobeCmd)
         await new Promise((resolve) => setTimeout(resolve, 3000))
         printSuccess = true
