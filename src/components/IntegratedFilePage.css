@@ -260,28 +260,28 @@
 .integrated-files-page .canvas-area {
   flex: 1;
   display: flex;
-  flex-direction: row;
+  flex-direction: column;
   height: 100%;
   position: relative;
   overflow: hidden;
   margin: 0;
   padding: 0;
-  height:1135px;
+  height:1080px;
   background-color:#303030f2;
 }
 
 .integrated-files-page .canvas-toolbar {
   position: relative;
   top: 14;
-  left: -57px;
+  left: 837px;
   right: 0;
-  height: 210px;
+  height: 90px;
   background-color:#313131;
   backdrop-filter: blur(20px);
   -webkit-backdrop-filter: blur(20px);
   border-bottom: 1px solid rgba(0, 0, 0, 0.1);
   display: flex;
-  flex-direction: column;
+  flex-direction:row;
   align-items: center;
   padding: 0 16px;
   gap: 12px;
@@ -661,6 +661,9 @@
   border-radius: 8px;
   border: 1px solid rgba(0, 0, 0, 0.05);
   margin-top: 10px;
+  position:fixed;
+  
+  margin-left: 321px;
 }
 
 .integrated-files-page .a4-canvas.bw {

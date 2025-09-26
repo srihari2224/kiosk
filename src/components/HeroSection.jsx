@@ -8,6 +8,8 @@ import arrow from "../assets/arrow.svg"
 import start from "../assets/start.svg"
 import id from "../assets/id.svg"
 import refresh from "../assets/refresh.svg"
+import process from "../assets/process.svg"
+import files from "../assets/files.svg"
 
 const HeroSection = ({ sessionId, onGetStarted, onRefreshSession, onProcess }) => {
   const [isLoading, setIsLoading] = useState(false)
@@ -283,24 +285,12 @@ const HeroSection = ({ sessionId, onGetStarted, onRefreshSession, onProcess }) =
             <div style={{ marginTop: 8, display: "flex", flexDirection: "column", gap: 8 }}>
               {sessionFiles.length > 0 ? (
                 sessionFiles.map((f, i) => (
-              <div
-                key={i}
-                style={{
-                  display: "flex",
-                  justifyContent: "space-between",
-                  alignItems: "center",
-                  padding: "8px 10px",
-                  background: "#06060a",
-                  borderRadius: 8,
-                  border: "1px solid rgba(255,255,255,0.02)",
-                  color: "#dbe8ff",
-                  fontSize: 20,
-                }}
-              >
-                <div style={{ overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap", maxWidth: 360 }}>
-                  {f.name || f.filename || f.key || f}
+              <div key={i} className="processing-file-row">
+                <div className="processing-file-left">
+                  <img src={files} alt="file" className="processing-file-icon" />
+                  <span className="processing-file-name">{f.name || f.filename || f.key || f}</span>
                 </div>
-                <div style={{ color: "#98a3b8", fontSize: 12 }}>{f.size ? `${Math.round(f.size / 1024)} KB` : ""}</div>
+                <div className="processing-file-size">{f.size ? `${Math.round(f.size / 1024)} KB` : ""}</div>
               </div>
                 ))
               ) : (
@@ -339,6 +329,7 @@ const HeroSection = ({ sessionId, onGetStarted, onRefreshSession, onProcess }) =
                           boxShadow: "0 6px 18px rgba(0,123,255,0.2)",
                         }}
                       >
+                        <img src={process}></img>
                         Process files
                       </button>
                     )}
