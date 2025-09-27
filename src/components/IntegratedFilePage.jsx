@@ -5,10 +5,6 @@ import { useLocation, useNavigate } from "react-router-dom"
 import { Plus, Trash, ImageIcon, FileText, X, ArrowLeft } from "lucide-react"
 import "./IntegratedFilePage.css"
 import india from "../assets/india-flag-icon.svg"
-import canvas from "../assets/canvas.jpg"
-import add from "../assets/add.svg"
-import copy from "../assets/copy.svg"
-import deleted from "../assets/delete.svg"
 
 function IntegratedFilePage() {
   const canvasRef = useRef(null)
@@ -726,15 +722,14 @@ function IntegratedFilePage() {
     }
 
     totalPages *= edgePrintSettings.copies
-    const costPerPage = edgePrintSettings.colorMode === "color" ? 8 : 2
+    const costPerPage = edgePrintSettings.colorMode === "color" ? 10 : 2
 
     if (edgePrintSettings.doubleSided === "both-sides") {
       if (edgePrintSettings.colorMode === "color") {
-        return totalPages * 8
+        return totalPages * 10
       } else {
         const sheets = Math.ceil(totalPages / 2)
-        if(totalPages%2===0) return sheets * 3
-        else return (sheets-1)* 3 + (2)
+        return sheets * 3
       }
     }
     return totalPages * costPerPage
@@ -879,7 +874,7 @@ function IntegratedFilePage() {
     const baseCost =
       pages.reduce((total, page) => {
         if (page.items.length === 0) return total
-        return total + (page.colorMode === "color" ? 8 : 2)
+        return total + (page.colorMode === "color" ? 10 : 2)
       }, 0) + printQueue.reduce((total, item) => total + item.cost, 0)
 
     return baseCost
@@ -1090,42 +1085,38 @@ function IntegratedFilePage() {
         console.log("❌ Failed jobs:", printErrors)
       }
 
-      // --- send total sheets used to remote counter (one canvas = one sheet) ---
+      // --- compute total sheets used and send to remote API ---
       try {
+        // canvas sheets: one sheet per canvas page that has items
         const canvasSheets = builtPages.length
-        let pdfSheets = 0
-        for (const pdfJob of printQueue) {
-          const pages = Number(pdfJob.pagesToPrint || pdfJob.totalPages || 0)
-          const copies = Math.max(1, Number(pdfJob.printSettings?.copies || 1))
-          const duplex =
-            pdfJob.printSettings?.doubleSided === "both-sides" ||
-            pdfJob.printSettings?.doubleSided === true ||
-            String(pdfJob.printSettings?.doubleSided || "").toLowerCase().includes("both")
 
-          if (duplex) pdfSheets += Math.ceil((pages * copies) / 2)
-          else pdfSheets += pages * copies
-        }
+        // pdf sheets: sum sheets per pdf job (account copies and duplex)
+        const pdfSheets = printQueue.reduce((sum, job) => {
+          const pagesToPrint = job.pagesToPrint || job.totalPages || 0
+          const copies = (job.printSettings && job.printSettings.copies) || 1
+          const totalPagesForJob = pagesToPrint * copies
+          const sheetsForJob =
+            job.printSettings && job.printSettings.doubleSided === "both-sides"
+              ? Math.ceil(totalPagesForJob / 2)
+              : totalPagesForJob
+          return sum + sheetsForJob
+        }, 0)
 
         const totalSheets = canvasSheets + pdfSheets
-        console.log("ℹ Sending total sheets used to counter:", totalSheets)
+        console.log("[Sheets] canvas:", canvasSheets, "pdf:", pdfSheets, "total:", totalSheets)
 
-        const apiUrl =
-          "https://s8wpc0jx1j.execute-api.ap-south-1.amazonaws.com/prod//incrementUsed"
-        const payload = { body: JSON.stringify({ pages: totalSheets, by: "last-and-final" }) }
-
-        const resp = await fetch(apiUrl, {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify(payload),
-        })
-        const respJson = await resp.json().catch(() => null)
-        console.log("ℹ Increment API response:", resp.status, respJson)
+        // send to API (fire-and-forget)
+        await sendSheetsCount(totalSheets)
       } catch (err) {
-        console.error("⚠ Failed to report sheets to increment API:", err)
+        console.error("[Sheets] failed to compute/send total sheets:", err)
       }
-      // --- end reporting ---
 
-      // Reset for next user
+      console.log("🎉 Silent printing completed - Check Windows Print Queue")
+      if (printErrors.length > 0) {
+        console.log("❌ Failed jobs:", printErrors)
+      }
+
+      // Reset for next user (optional)
       // setTimeout(() => {
       //   setPages([{ id: 1, items: [], colorMode: "color" }])
       //   setActivePage(1)
@@ -1254,15 +1245,16 @@ function IntegratedFilePage() {
 
       <div className="main-content">
         {/* Left Sidebar: Files and Queue */}
-          <div className="sidebar">
 
+        <div className="sidebar">
+
+          <div className="page-header">
+            <button className="back-button" onClick={handleBackToFileTransfer}>
+              <ArrowLeft size={20} />
+              Back to File Transfer
+            </button>
+          </div>
           <div className="file-categories">
-            <div className="page-header">
-                <button className="back-button" onClick={handleBackToFileTransfer}>
-                  <ArrowLeft size={20} />
-                  Back to File Transfer
-                </button>
-            </div>
             <div className="category-header">
               <h3>Categories</h3>
             </div>
@@ -1368,9 +1360,7 @@ function IntegratedFilePage() {
                 </ul>
               </div>
             )}
-           
-          </div>
-           {showFilters && (
+            {showFilters && (
               <div className="filters-section" ref={filtersRef}>
                 <div className="filters-header">
                   <button onClick={() => setShowFilters(false)} className="back-btn">
@@ -1411,24 +1401,44 @@ function IntegratedFilePage() {
                 ))}
               </div>
             )}
+          </div>
         </div>
 
         {/* Canvas Area */}
         <div className="canvas-area">
-
           <div className="canvas-toolbar">
-            <button type="button"  onClick={addNewPage}>
-              <img src={add}></img>
-              
+            <button type="button" className="Add-button" onClick={addNewPage}>
+              <span className="button__text">Add Page</span>
+              <span className="button__icon">
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="20"
+                  viewBox="0 0 24 24"
+                  strokeWidth="2"
+                  strokeLinejoin="round"
+                  strokeLinecap="round"
+                  stroke="currentColor"
+                  height="20"
+                  fill="none"
+                  className="svg"
+                >
+                  <line y2="19" y1="5" x2="12" x1="12"></line>
+                  <line y2="12" y1="12" x2="19" x1="5"></line>
+                </svg>
+              </span>
             </button>
 
-            <button  onClick={duplicatePage}>
-              <img src={copy}></img>
-
+            <button className="Duplicate" onClick={duplicatePage}>
+              <span>COPY Page</span>
             </button>
 
-            <button  onClick={() => deletePage(activePage)}>
-              <img src={deleted}></img>
+            <button className="delete-button" onClick={() => deletePage(activePage)}>
+              <span className="delete-button__text">Delete</span>
+              <span className="delete-button__icon">
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24">
+                  <path d="M24 20.188l-8.315-8.209 8.2-8.282-3.697-3.697-8.212 8.318-8.31-8.203-3.666 3.666 8.321 8.24-8.206 8.313 3.666 3.666 8.237-8.318 8.285 8.203z"></path>
+                </svg>
+              </span>
             </button>
 
             <div>
@@ -1464,15 +1474,15 @@ function IntegratedFilePage() {
                     </div>
                   </div>
                 </label>
-                <span style={{ fontWeight: "500", fontSize: "14px" ,color:"white"}}>
+                <span style={{ fontWeight: "500", fontSize: "14px" }}>
                   {currentPage?.colorMode === "color" ? "Color" : "B&W"}
                 </span>
               </div>
             </div>
           </div>
 
-
           <div className="canvas-container">
+            <div className="canvas-background"></div>
             {pages.length > 0 ? (
               <>
                 <div className="page-navigation">
@@ -1486,9 +1496,6 @@ function IntegratedFilePage() {
                     </button>
                   ))}
                 </div>
-                
-
-
 
                 <div
                   className={`a4-canvas ${currentPage?.colorMode}`}
@@ -1508,7 +1515,7 @@ function IntegratedFilePage() {
                         height: `${item.height}px`,
                         border:
                           selectedItem && selectedItem.id === item.id
-                            ? `0px solid #ffffffff`
+                            ? `2px solid #8b5cf6`
                             : item.locked
                               ? `2px solid #ef4444`
                               : `1px dashed rgba(0,0,0,0.3)`,
@@ -1553,7 +1560,7 @@ function IntegratedFilePage() {
                             <>
                               <div
                                 className="resize-handles"
-                                style={{ outline: `6px solid #000000ff`, borderRadius: "6px" }}
+                                style={{ outline: `2px solid #8b5cf6`, borderRadius: "6px" }}
                               >
                                 {/* Corner handles */}
                                 <div
@@ -1609,12 +1616,12 @@ function IntegratedFilePage() {
                               </svg>
                             </button> */}
                             <button onClick={() => duplicateItem(item)} title="Duplicate">
-                              <svg width="26" height="26" viewBox="0 0 24 24" fill="currentColor">
+                              <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
                                 <path d="M16 1H4c-1.1 0-2 .9-2 2v14h2V3h12V1zm3 4H8c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h11c1.1 0 2-.9 2-2V7c0-1.1-.9-2-2-2zm0 16H8V7h11v14z" />
                               </svg>
                             </button>
                             <button onClick={() => deleteItem(item)} title="Delete">
-                              <svg width="26" height="26" viewBox="0 0 24 24" fill="currentColor">
+                              <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
                                 <path d="M6 19c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7H6v12zM19 4h-3.5l-1-1h-5l-1 1H5v2h14V4z" />
                               </svg>
                             </button>
@@ -1647,7 +1654,7 @@ function IntegratedFilePage() {
                                 <input
                                   type="range"
                                   min="0"
-                                  max="100"
+                                                                   max="100"
                                   value={(item.opacity || 1) * 100}
                                   onChange={(e) => updateItemTransparency(item, e.target.value)}
                                   className="transparency-slider"
@@ -1727,32 +1734,24 @@ function IntegratedFilePage() {
               </div>
             )}
           </div>
-          
-
-          
         </div>
 
-          <div className="right-sidebar">
-
-            <h3 className="offer-title" style={{ color: "#fff" }}>
-              Print <em>Faster</em>
-              <br />
-              with <span className="offer-title-acc" style={{ color: "#0b69acff" }}>Canvas UI </span>
-            </h3>
-            <div className="cost-summary">
-              <h4>Cost Summary</h4>
-              <div className="cost-details">
-                {pages.length > 0 && (
-            <div className="cost-section">
-              <h5>Canvas Pages</h5>
-              {pages.map((page) => {
+        {/* Right Sidebar: Cost + Payment + Print Queue */}
+        <div className="right-sidebar">
+          <div className="cost-summary">
+            <h4>Cost Summary</h4>
+            <div className="cost-details">
+              {pages.length > 0 && (
+                <div className="cost-section">
+                  <h5>Canvas Pages</h5>
+                  {pages.map((page) => {
                     if (page.items.length === 0) return null
                     return (
                       <div key={page.id} className="cost-item">
                         <span>
                           Page {page.id} ({page.colorMode === "color" ? "Color" : "B&W"})
                         </span>
-                        <span>₹{page.colorMode === "color" ? 8 : 2}</span>
+                        <span>₹{page.colorMode === "color" ? 10 : 2}</span>
                       </div>
                     )
                   })}
@@ -1860,62 +1859,60 @@ function IntegratedFilePage() {
                 </div>
               </div>
               {mobileError && <div className="mobile-error">{mobileError}</div>}
-
-              <button
-                className="payment-button"
-                onClick={handlePaymentClick}
-                disabled={calculateTotalCost() === 0 || paymentProcessing || !mobileNumber || printingInProgress}
-              >
-                <span className="btn-text">
-                  {printingInProgress ? "Printing..." : paymentProcessing ? "Loading Payment..." : "Pay Now"}
-                </span>
-              </button>
-
-              {(paymentProcessing || printingInProgress) && (
-                <div className="payment-processing">
-                  {printingInProgress && printProgress.status !== "idle" && (
-                    <div className="print-progress">
-                      <div
-                        className="progress-bar"
-                        style={{
-                          width: "100%",
-                          height: "4px",
-                          background: "#f0f0f0",
-                          borderRadius: "2px",
-                          marginBottom: "8px",
-                        }}
-                      >
-                        <div
-                          className="progress-fill"
-                          style={{
-                            width: "100%",
-                            height: "100%",
-                            backgroundColor:
-                              printProgress.status === "completed"
-                                ? "#28a745"
-                                : printProgress.status === "completed_with_errors"
-                                  ? "#ffc107"
-                                  : "#007bff",
-                            borderRadius: "2px",
-                            transition: "width 0.3s ease",
-                          }}
-                        ></div>
-                      </div>
-                      <div className="progress-text" style={{ fontSize: "12px", color: "#666" }}>
-                        {printProgress.currentJob} ({printProgress.completed}/{printProgress.total})
-                      </div>
-                    </div>
-                  )}
-                  <p style={{ textAlign: "center", marginTop: "10px", color: "#666", fontSize: "14px" }}>
-                    {printingInProgress
-                      ? "Printing with your selected options..."
-                      : "Loading Razorpay payment gateway..."}
-                  </p>
-                </div>
-              )}
             </div>
 
-            
+            <button
+              className="payment-button"
+              onClick={handlePaymentClick}
+              disabled={calculateTotalCost() === 0 || paymentProcessing || !mobileNumber || printingInProgress}
+            >
+              <span className="btn-text">
+                {printingInProgress ? "Printing..." : paymentProcessing ? "Loading Payment..." : "Pay Now"}
+              </span>
+            </button>
+
+            {(paymentProcessing || printingInProgress) && (
+              <div className="payment-processing">
+                {printingInProgress && printProgress.status !== "idle" && (
+                  <div className="print-progress">
+                    <div
+                      className="progress-bar"
+                      style={{
+                        width: "100%",
+                        height: "4px",
+                        background: "#f0f0f0",
+                        borderRadius: "2px",
+                        marginBottom: "8px",
+                      }}
+                    >
+                      <div
+                        className="progress-fill"
+                        style={{
+                          width: "100%",
+                          height: "100%",
+                          backgroundColor:
+                            printProgress.status === "completed"
+                              ? "#28a745"
+                              : printProgress.status === "completed_with_errors"
+                                ? "#ffc107"
+                                : "#007bff",
+                          borderRadius: "2px",
+                          transition: "width 0.3s ease",
+                        }}
+                      ></div>
+                    </div>
+                    <div className="progress-text" style={{ fontSize: "12px", color: "#666" }}>
+                      {printProgress.currentJob} ({printProgress.completed}/{printProgress.total})
+                    </div>
+                  </div>
+                )}
+                <p style={{ textAlign: "center", marginTop: "10px", color: "#666", fontSize: "14px" }}>
+                  {printingInProgress
+                    ? "Printing with your selected options..."
+                    : "Loading Razorpay payment gateway..."}
+                </p>
+              </div>
+            )}
           </div>
         </div>
       </div>
@@ -1926,17 +1923,22 @@ function IntegratedFilePage() {
             <div className="feedback-content">
               <h3 className="feedback-title">Give feedback</h3>
               <p className="feedback-subtitle">How was your printing experience?</p>
-              <div className="rating">
-                <input value="5" name="rating" id="star5" type="radio" />
-                <label htmlFor="star5"></label>
-                <input value="4" name="rating" id="star4" type="radio" />
-                <label htmlFor="star4"></label>
-                <input value="3" name="rating" id="star3" type="radio" />
-                <label htmlFor="star3"></label>
-                <input value="2" name="rating" id="star2" type="radio" />
-                <label htmlFor="star2"></label>
-                <input value="1" name="rating" id="star1" type="radio" />
-                <label htmlFor="star1"></label>
+              <div className="feedback-emojis" role="group" aria-label="Rate your experience">
+                <button className="emoji-option" type="button" aria-label="Terrible">
+                  😞
+                </button>
+                <button className="emoji-option" type="button" aria-label="Bad">
+                  😕
+                </button>
+                <button className="emoji-option" type="button" aria-label="Okay">
+                  🙂
+                </button>
+                <button className="emoji-option" type="button" aria-label="Good">
+                  😄
+                </button>
+                <button className="emoji-option" type="button" aria-label="Amazing">
+                  🤩
+                </button>
               </div>
               {/* Submit as a link to reload or return to initial stage without JS changes */}
               <form className="feedback-form" method="GET" action=".">

@@ -31,7 +31,7 @@
   flex-direction: column;
   height: 100%;
   width: 100%;
-  background-color:#343333;
+  background-color: #ffffff;
   font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
   color: #000000;
   margin: 0;
@@ -49,19 +49,16 @@
 
 /* Sidebar styles - Light Theme - MADE WIDER - FIXED GAPS */
 .integrated-files-page .sidebar {
-    width: 420px;
-    background-color: #fffffff2;
-    backdrop-filter: blur(20px);
-    -webkit-backdrop-filter: blur(20px);
-    border-right: 1px solid rgba(0, 0, 0, .1);
-    overflow-y: auto;
-    height: 100%;
-    margin-left: px;
-    padding: 0;
-    position: relative;
-    /* fill the full viewport height */
-    height: 1080px;
-   
+  width: 450px;
+  background-color: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border-right: 1px solid rgba(0, 0, 0, 0.1);
+  overflow-y: auto;
+  height: 100%;
+  margin-left: 10px;
+  padding: 0;
+  position: relative; /* anchor Filters overlay inside sidebar */
 }
 
 .integrated-files-page .file-categories {
@@ -266,22 +263,20 @@
   overflow: hidden;
   margin: 0;
   padding: 0;
-  height:1080px;
-  background-color:#303030f2;
+  background-color: #000000;
 }
 
 .integrated-files-page .canvas-toolbar {
   position: relative;
-  top: 14;
-  left: 837px;
+  top: 0;
+  left: 0;
   right: 0;
-  height: 90px;
-  background-color:#313131;
+  height: 60px;
+  background-color: rgba(255, 255, 255, 0.95);
   backdrop-filter: blur(20px);
   -webkit-backdrop-filter: blur(20px);
   border-bottom: 1px solid rgba(0, 0, 0, 0.1);
   display: flex;
-  flex-direction:row;
   align-items: center;
   padding: 0 16px;
   gap: 12px;
@@ -292,7 +287,7 @@
 /* Button styles - Keep original colors */
 .integrated-files-page .Add-button {
   position: relative;
-  width: 120px;
+  width: 140px;
   height: 40px;
   cursor: pointer;
   display: flex;
@@ -300,7 +295,6 @@
   border: 1px solid #34974d;
   background-color: #3aa856;
   border-radius: 20px;
-  margin-top: 10px;
 }
 
 .integrated-files-page .Add-button,
@@ -320,7 +314,7 @@
   position: absolute;
   transform: translateX(90px);
   height: 100%;
-  width: 26px;
+  width: 32px;
   background-color: #34974d;
   display: flex;
   align-items: center;
@@ -404,7 +398,7 @@
 }
 
 .integrated-files-page .delete-button {
-  width: 120px;
+  width: 130px;
   height: 40px;
   cursor: pointer;
   display: flex;
@@ -554,34 +548,8 @@
     linear-gradient(90deg, rgba(0, 0, 0, 0.01) 1px, transparent 1px);
   background-size: 100px 100px, 100px 100px, 20px 20px, 20px 20px;
   background-position: -1px -1px, -1px -1px, -1px -1px, -1px -1px;
+  padding-bottom: 80px;
   margin: 0;
-}
-
-/* ensure canvas container provides stacking context */
-.a4-canvas {
-  position: relative; /* needed so .canvas-background can be absolute inside */
-  z-index: 1;
-}
-
-/* background image wrapper that fills the canvas and crops nicely */
-.canvas-background {
-  position: absolute;
-  inset: 0;               /* top:0; right:0; bottom:0; left:0 */
-  z-index: 0;
-  overflow: hidden;
-  pointer-events: none;
-  border-radius: 12px;    /* match A4 canvas rounded corners if present */
-}
-
-/* make the actual <img> perfectly fit the div (cover, centered) */
-.canvas-background img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;      /* preserve aspect ratio and fill the area */
-  object-position: center center;
-  display: block;
-  user-select: none;
-  -webkit-user-drag: none;
 }
 
 .integrated-files-page .canvas-background {
@@ -661,9 +629,6 @@
   border-radius: 8px;
   border: 1px solid rgba(0, 0, 0, 0.05);
   margin-top: 10px;
-  position:fixed;
-  
-  margin-left: 321px;
 }
 
 .integrated-files-page .a4-canvas.bw {
@@ -698,7 +663,7 @@
 }
 
 .integrated-files-page .canvas-item.selected {
-  border-color: #ffffff !important;
+  border-color: #8b5cf6 !important;
   box-shadow: 0 0 0 3px rgba(139, 92, 246, 0.1);
 }
 
@@ -795,14 +760,14 @@
 }
 
 .integrated-files-page .resize-handle {
-    position: absolute;
-    background: #000000;
-    border: 9px solid #000000;
-    border-radius: 50%;
-    pointer-events: all;
-    z-index: 15;
-    width: 12px;
-    height: 12px;
+  position: absolute;
+  background: #8b5cf6;
+  border: 2px solid white;
+  border-radius: 50%;
+  pointer-events: all;
+  z-index: 15;
+  width: 12px;
+  height: 12px;
 }
 
 /* Corner handles */
@@ -1012,6 +977,10 @@
   background: #f9fafb !important;
   border: 1px solid #e5e7eb !important;
   border-radius: 4px !important;
+}
+
+.integrated-files-page .position-buttons button:hover {
+  background: #f3f4f6 !important;
 }
 
 /* Updated rotation handle to prevent being affected by transforms */
@@ -1308,20 +1277,17 @@
 
 /* Right sidebar - MADE WIDER - FIXED GAPS */
 .integrated-files-page .right-sidebar {
-      width: 450px;
-    background-color: #303030f2;
-    backdrop-filter: blur(20px);
-    -webkit-backdrop-filter: blur(20px);
-    border-left: 1px solid rgba(0, 0, 0, .1);
-    overflow-y: auto;
-    height: 100%;
-    padding: 20px;
-    margin: 0;
-    display: flex
-;
-    flex-direction: column;
-    height: 1080px;
-    
+  width: 450px;
+  background-color: rgba(248, 249, 250, 0.95);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border-left: 1px solid rgba(0, 0, 0, 0.1);
+  overflow-y: auto;
+  height: 100%;
+  padding: 20px;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
 }
 
 /* Fixed cost-summary div with proper overflow and fixed height */
@@ -1390,23 +1356,22 @@
 }
 
 .integrated-files-page .total-cost {
-      display: flex
-;
-    justify-content: space-between;
-    align-items: center;
-    font-weight: 700;
-    font-size: 18px;
-    margin-top: 283px;
-    padding: 15px 140px;
-    border-top: 2px solid rgba(0, 0, 0, .1);
-    background-color: #000;
-    color: #fff;
-    border-radius: 0 0 12px 12px;
-    letter-spacing: -.3px;
-    position: fixed;
-    margin-left: -19px;
-    height: 56px;
-    width: 410px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-weight: 700;
+  font-size: 18px;
+  margin-top: 283px;
+  padding: 15px 140px;
+  border-top: 2px solid rgba(0, 0, 0, 0.1);
+  background-color: #000000;
+  color: #ffffff;
+  border-radius: 0px 0px 12px 12px;
+  letter-spacing: -0.3px;
+  position: fixed;
+  margin-left: -18px;
+  height: 56px;
+  width: 418px;
 }
 
 /* Added coupon section styles */
@@ -1657,7 +1622,7 @@
 }
 
 .integrated-files-page .payment-button:disabled {
-  background: #000000;
+  background: #666;
   cursor: not-allowed;
   transform: none;
 }
@@ -2467,38 +2432,13 @@
 }
 
 
-.integrated-files-page .rating {
-  display: inline-block;
-}
-
-.integrated-files-page .rating input {
-  display: none;
-}
-
-.integrated-files-page .rating label {
-  float: right;
-  cursor: pointer;
-  color: #ccc;
-  transition: color 0.3s;
-}
-
-.integrated-files-page .rating label:before {
-  content: '\2605';
-  font-size: 60px;
-}
-
-.integrated-files-page .rating input:checked ~ label,
-.integrated-files-page .rating label:hover,
-.integrated-files-page .rating label:hover ~ label {
-  color:#ffe102;
-  transition: color 0.3s;
-}
-
-
 .integrated-files-page .back-button{
-  width:140px;
-  background-color: black ;
-  color:white;
-  padding:4px;
-  border-radius:16px;
+  background-color: black;
+  border-radius: 16px;
+  padding: 8px 16px;
+  color: white;
+  font-weight: 600;
+  display: inline-flex;
+  align-items: center;
+
 }
