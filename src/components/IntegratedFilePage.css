@@ -36,6 +36,7 @@
   color: #000000;
   margin: 0;
   padding: 0;
+  position:absolute
 }
 
 /* Main content layout for 75% width - FIXED GAPS */
