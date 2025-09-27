@@ -5,6 +5,10 @@ import { useLocation, useNavigate } from "react-router-dom"
 import { Plus, Trash, ImageIcon, FileText, X, ArrowLeft } from "lucide-react"
 import "./IntegratedFilePage.css"
 import india from "../assets/india-flag-icon.svg"
+import categ from "../assets/categ.svg"
+import upi from "../assets/upi.svg"
+import lines from "../assets/lines.svg"
+import print from "../assets/print.svg"
 
 function IntegratedFilePage() {
   const canvasRef = useRef(null)
@@ -1260,12 +1264,13 @@ function IntegratedFilePage() {
                 </button>
             </div>
             <div className="category-header">
+              <img src={categ}></img>
               <h3>Categories</h3>
             </div>
 
             <div className="category">
               <div className="category-title">
-                <ImageIcon size={16} />
+                <ImageIcon size={36} />
                 <span>Images ({fileCategories.images.length})</span>
               </div>
               <ul className="file-list">
@@ -1314,7 +1319,7 @@ function IntegratedFilePage() {
 
             <div className="category">
               <div className="category-title">
-                <FileText size={16} />
+                <FileText size={36} />
                 <span>PDFs ({fileCategories.pdfs.length})</span>
               </div>
               <ul className="file-list">
@@ -1337,6 +1342,7 @@ function IntegratedFilePage() {
             {printQueue.length > 0 && (
               <div className="print-queue">
                 <div className="category-header">
+                  <img src={lines}></img>
                   <h3>Print Queue ({printQueue.length})</h3>
                 </div>
                 <ul className="queue-list">
@@ -1565,7 +1571,7 @@ function IntegratedFilePage() {
                             <>
                               <div
                                 className="resize-handles"
-                                style={{ outline: `2px solid #8b5cf6`, borderRadius: "6px" }}
+                                style={{ outline: `4px solid #000000ff`, borderRadius: "6px" }}
                               >
                                 {/* Corner handles */}
                                 <div
@@ -1744,6 +1750,10 @@ function IntegratedFilePage() {
         {/* Right Sidebar: Cost + Payment + Print Queue */}
         <div className="right-sidebar">
 
+          <div class="print">
+            <img src={print}></img>
+          </div>
+
           <h3 className="offer-title">
             Print <em>Faster</em>
             <br />
@@ -1876,6 +1886,7 @@ function IntegratedFilePage() {
                 onClick={handlePaymentClick}
                 disabled={calculateTotalCost() === 0 || paymentProcessing || !mobileNumber || printingInProgress}
               >
+                <img src={upi}></img>
                 <span className="btn-text">
                   {printingInProgress ? "Printing..." : paymentProcessing ? "Loading Payment..." : "Pay Now"}
                 </span>
@@ -1916,7 +1927,7 @@ function IntegratedFilePage() {
                       </div>
                     </div>
                   )}
-                  <p style={{ textAlign: "center", marginTop: "10px", color: "#666", fontSize: "14px" }}>
+                  <p style={{ textAlign: "center", marginTop: "10px", color: "#000000ff", fontSize: "24px" }}>
                     {printingInProgress
                       ? "Printing with your selected options..."
                       : "Loading Razorpay payment gateway..."}
@@ -1936,18 +1947,19 @@ function IntegratedFilePage() {
             <div className="feedback-content">
               <h3 className="feedback-title">Give feedback</h3>
               <p className="feedback-subtitle">How was your printing experience?</p>
-              <div className="rating">
-                <input value="5" name="rating" id="star5" type="radio" />
-                <label htmlFor="star5"></label>
-                <input value="4" name="rating" id="star4" type="radio" />
-                <label htmlFor="star4"></label>
-                <input value="3" name="rating" id="star3" type="radio" />
-                <label htmlFor="star3"></label>
-                <input value="2" name="rating" id="star2" type="radio" />
-                <label htmlFor="star2"></label>
-                <input value="1" name="rating" id="star1" type="radio" />
-                <label htmlFor="star1"></label>
+              <div class="rating">
+                <input type="radio" id="star5" name="rate" value="5" />
+                <label for="star5" title="text"></label>
+                <input type="radio" id="star4" name="rate" value="4" />
+                <label for="star4" title="text"></label>
+                <input type="radio" id="star3" name="rate" value="3" />
+                <label for="star3" title="text"></label>
+                <input type="radio" id="star2" name="rate" value="2" />
+                <label for="star2" title="text"></label>
+                <input checked="" type="radio" id="star1" name="rate" value="1" />
+                <label for="star1" title="text"></label>
               </div>
+
               {/* Submit as a link to reload or return to initial stage without JS changes */}
               <form className="feedback-form" method="GET" action=".">
                 <button className="feedback-submit" type="submit">
