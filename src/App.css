@@ -3,3 +3,24 @@
   background: #ffffff;
   color: #000000;
 }
+
+/* Main zoom for your app */
+html {
+  zoom: 1;
+}
+
+/* Simple fix - just reset zoom and let Razorpay handle positioning */
+iframe[src*="razorpay"],
+iframe[src*="checkout.razorpay.com"],
+div[class*="razorpay"],
+div[id*="razorpay"],
+body > div[style*="position: fixed"],
+body > div[style*="z-index"] {
+  zoom: 1.3 !important;
+}
+
+/* Ensure Razorpay container is visible */
+body > div[style*="position: fixed"] {
+  display: block !important;
+  visibility: visible !important;
+}

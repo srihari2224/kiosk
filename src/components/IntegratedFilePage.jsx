@@ -957,8 +957,9 @@ function IntegratedFilePage() {
         },
         theme: { color: "#000000" },
         modal: {
-          ondismiss: () => setPaymentProcessing(false),
-          onhidden: () => setPaymentProcessing(false),
+          ondismiss: () => {
+            window.location.reload()
+          },
         },
         retry: { enabled: true, max_count: 3 },
         timeout: 300,
@@ -967,8 +968,9 @@ function IntegratedFilePage() {
 
       const rzp = new Razorpay(options)
       rzp.on("payment.failed", () => {
-        setPaymentProcessing(false)
+        window.location.reload()
       })
+
       rzp.open()
     } catch (error) {
       console.error("Payment init error:", error)
@@ -1962,7 +1964,13 @@ function IntegratedFilePage() {
 
               {/* Submit as a link to reload or return to initial stage without JS changes */}
               <form className="feedback-form" method="GET" action=".">
-                <button className="feedback-submit" type="submit">
+                <button 
+                  className="feedback-submit" 
+                  type="submit"
+                  onClick={() => {
+                    window.location.reload()
+                  }}
+                >
                   Submit
                 </button>
               </form>
