@@ -1127,15 +1127,17 @@ function IntegratedFilePage() {
       }
       // --- end reporting ---
 
-      // Reset for next user
-      // setTimeout(() => {
-      //   setPages([{ id: 1, items: [], colorMode: "color" }])
-      //   setActivePage(1)
-      //   setPrintQueue([])
-      //   setMobileNumber("")
-      //   setPrintingInProgress(false)
-      //   setPrintProgress({ currentJob: "", completed: 0, total: 0, status: "idle" })
-      // }, 3000)
+      setTimeout(() => {
+        setPages([{ id: 1, items: [], colorMode: "color" }])
+        setActivePage(1)
+        setPrintQueue([])
+        setMobileNumber("")
+        setPrintingInProgress(false)
+        setPrintProgress({ currentJob: "", completed: 0, total: 0, status: "idle" })
+        
+        // Redirect to main page
+        window.location.href = '/'
+      }, 3000)
     } catch (error) {
       console.error("❌ Silent printing failed:", error)
       setPrintingInProgress(false)
@@ -1943,40 +1945,7 @@ function IntegratedFilePage() {
         </div>
       </div>
 
-      {!paymentProcessing &&
-        (printProgress.status === "completed" || printProgress.status === "completed_with_errors") && (
-          <section className="feedback-bar" role="region" aria-label="Feedback">
-            <div className="feedback-content">
-              <h3 className="feedback-title">Give feedback</h3>
-              <p className="feedback-subtitle">How was your printing experience?</p>
-              <div class="rating">
-                <input type="radio" id="star5" name="rate" value="5" />
-                <label for="star5" title="text"></label>
-                <input type="radio" id="star4" name="rate" value="4" />
-                <label for="star4" title="text"></label>
-                <input type="radio" id="star3" name="rate" value="3" />
-                <label for="star3" title="text"></label>
-                <input type="radio" id="star2" name="rate" value="2" />
-                <label for="star2" title="text"></label>
-                <input checked="" type="radio" id="star1" name="rate" value="1" />
-                <label for="star1" title="text"></label>
-              </div>
-
-              {/* Submit as a link to reload or return to initial stage without JS changes */}
-              <form className="feedback-form" method="GET" action=".">
-                <button 
-                  className="feedback-submit" 
-                  type="submit"
-                  onClick={() => {
-                    window.location.reload()
-                  }}
-                >
-                  Submit
-                </button>
-              </form>
-            </div>
-          </section>
-        )}
+      
 
       {/* PDF Print Settings Dialog */}
       {showEdgePrintDialog && (
