@@ -963,7 +963,6 @@ function IntegratedFilePage() {
         },
         retry: { enabled: true, max_count: 3 },
         timeout: 300,
-        payment_capture: 1,
         remember_customer: false,
       }
 
