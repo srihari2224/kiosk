@@ -1939,8 +1939,6 @@ function IntegratedFilePage() {
                 </div>
               )}
             </div>
-
-            
           </div>
         </div>
       </div>
