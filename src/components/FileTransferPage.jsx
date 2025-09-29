@@ -466,92 +466,83 @@ const FileTransferPage = () => {
   }
 
   const handlePrintShopPayment = async () => {
-  const totalAmount = getTotalCost()
-  if (totalAmount === 0 || cartItems.length === 0) return
+    const totalAmount = getTotalCost()
+    if (totalAmount === 0 || cartItems.length === 0) return
 
-  if (!mobileNumber) {
-    setMobileError("Mobile number is required")
-    return
-  }
-  if (!validateMobileNumber(mobileNumber)) {
-    setMobileError("Please enter a valid 10-digit mobile number")
-    return
-  }
-
-  setPaymentProcessing(true)
-
-  try {
-    const loadRazorpayScript = () =>
-      new Promise((resolve, reject) => {
-        if (window.Razorpay) return resolve(window.Razorpay)
-        const script = document.createElement("script")
-        script.src = "https://checkout.razorpay.com/v1/checkout.js"
-        script.async = true
-        const timeout = setTimeout(() => reject(new Error("Razorpay script loading timeout")), 10000)
-        script.onload = () => {
-          clearTimeout(timeout)
-          return window.Razorpay ? resolve(window.Razorpay) : reject(new Error("Razorpay object not found"))
-        }
-        script.onerror = () => reject(new Error("Failed to load Razorpay script"))
-        document.head.appendChild(script)
-      })
-
-    const Razorpay = await loadRazorpayScript()
-    const options = {
-      key: import.meta.env.VITE_RAZORPAY_KEY_ID,
-      amount: totalAmount * 100,
-      currency: "INR",
-      name: "Print Shop",
-      description: `Paper Print Order - Session ${sessionId}`,
-      handler: (response) => {
-        processPrintShopOrder(response)
-      },
-      prefill: {
-        name: "Customer",
-        email: "customer@example.com",
-        contact: mobileNumber,
-      },
-      notes: {
-        sessionId,
-        totalItems: getTotalItems(),
-        cartItems: JSON.stringify(cartItems.map((item) => ({ name: item.name, quantity: item.quantity }))),
-        timestamp: new Date().toISOString(),
-        mobileNumber,
-      },
-      theme: { color: "#000000ff" },
-      
-      // CORRECT: Put modal callbacks here, not in config.modal
-          modal: {
-        ondismiss: () => {
-          window.location.reload()
-        },
-      },
-      
-      retry: { enabled: true, max_count: 3 },
-      timeout: 300,
-      remember_customer: false,
+    if (!mobileNumber) {
+      setMobileError("Mobile number is required")
+      return
+    }
+    if (!validateMobileNumber(mobileNumber)) {
+      setMobileError("Please enter a valid 10-digit mobile number")
+      return
     }
 
-    const rzp = new Razorpay(options)
-    
-    // Additional event listeners
-    rzp.on("payment.failed", (response) => {
-      console.log("Payment failed:", response)
-      setPaymentProcessing(false)
-    })
+    setPaymentProcessing(true)
 
-    // Handle manual close/cancel
-    rzp.on("payment.cancel", () => {
-      console.log("Payment cancelled by user")
-      setPaymentProcessing(false)
-    })
+    try {
+      const loadRazorpayScript = () =>
+        new Promise((resolve, reject) => {
+          if (window.Razorpay) return resolve(window.Razorpay)
+          const script = document.createElement("script")
+          script.src = "https://checkout.razorpay.com/v1/checkout.js"
+          script.async = true
+          const timeout = setTimeout(() => reject(new Error("Razorpay script loading timeout")), 10000)
+          script.onload = () => {
+            clearTimeout(timeout)
+            return window.Razorpay ? resolve(window.Razorpay) : reject(new Error("Razorpay object not found"))
+          }
+          script.onerror = () => reject(new Error("Failed to load Razorpay script"))
+          document.head.appendChild(script)
+        })
 
-    rzp.open()
-  } catch (error) {
-    console.error("Payment init error:", error)
-    setPaymentProcessing(false)
+      const Razorpay = await loadRazorpayScript()
+      
+      // Clean and validate all data
+      const cleanAmount = Math.round(totalAmount * 100) // Must be integer in paise
+      const cleanMobile = mobileNumber.replace(/[^0-9]/g, '') // Only digits
+      
+      const options = {
+        key: import.meta.env.VITE_RAZORPAY_KEY_ID,
+        amount: cleanAmount,
+        currency: "INR",
+        name: "Print Shop",
+        description: "Paper Print Order",
+        handler: (response) => {
+          processPrintShopOrder(response)
+        },
+        prefill: {
+          contact: cleanMobile,
+        },
+        notes: {
+          sessionId: String(sessionId),
+          totalItems: String(getTotalItems()),
+          timestamp: new Date().toISOString(),
+        },
+        theme: { color: "#000000" },
+        modal: {
+          ondismiss: () => {
+            window.location.reload()
+          },
+        },
+        payment_capture: 1,
+        timeout: 600, // 10 minutes
+      }
+
+      const rzp = new Razorpay(options)
+      
+      rzp.on("payment.failed", () => {
+        window.location.reload()
+      })
+
+      rzp.open()
+
+    } catch (error) {
+      console.error("Payment init error:", error)
+      alert("Payment gateway initialization failed. Please refresh and try again.")
+      window.location.reload()
+    }
   }
-}
 
   const processPrintShopOrder = async (paymentResponse) => {
     try {
