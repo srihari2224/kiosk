@@ -941,7 +941,7 @@ function IntegratedFilePage() {
         key: import.meta.env.VITE_RAZORPAY_KEY_ID ,
         amount: totalAmount * 100,
         currency: "INR",
-        name: "INNVERA",
+        name: "Print Shop",
         description: `Print Job - Session ${sessionId}`,
         handler: (response) => {
           // Start printing with user-selected options after payment
