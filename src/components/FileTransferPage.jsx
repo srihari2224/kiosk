@@ -1,10 +1,8 @@
 "use client"
 import { useState, useEffect } from "react"
-import { useNavigate } from "react-router-dom"
 import QRCode from "qrcode"
 import "./FileTransferPage.css"
-
-
+import { Link, useNavigate } from "react-router-dom" 
 
 import videoAdSrc from "../assets/1_video_1.mp4"
 import videoAdsec2 from "../assets/1_video_2.mp4"
@@ -465,9 +463,12 @@ const FileTransferPage = () => {
     return mobileRegex.test(number)
   }
 
-  const handlePrintShopPayment = async () => {
+ const handlePrintShopPayment = async () => {
   const totalAmount = getTotalCost()
-  if (totalAmount === 0 || cartItems.length === 0) return
+  
+  if (totalAmount === 0 || cartItems.length === 0) {
+    return
+  }
 
   if (!mobileNumber) {
     setMobileError("Mobile number is required")
@@ -475,6 +476,10 @@ const FileTransferPage = () => {
   }
   if (!validateMobileNumber(mobileNumber)) {
     setMobileError("Please enter a valid 10-digit mobile number")
+    return
+  }
+
+  if (paymentProcessing) {
     return
   }
 
@@ -497,13 +502,19 @@ const FileTransferPage = () => {
       })
 
     const Razorpay = await loadRazorpayScript()
+    
+    const amountInPaise = Math.round(totalAmount * 100)
+    
+    let paymentSuccessful = false
+
     const options = {
       key: import.meta.env.VITE_RAZORPAY_KEY_ID,
-      amount: totalAmount * 100,
+      amount: amountInPaise,
       currency: "INR",
       name: "Print Shop",
       description: `Paper Print Order - Session ${sessionId}`,
       handler: (response) => {
+        paymentSuccessful = true
         processPrintShopOrder(response)
       },
       prefill: {
@@ -518,15 +529,15 @@ const FileTransferPage = () => {
         timestamp: new Date().toISOString(),
         mobileNumber,
       },
-      theme: { color: "#000000ff" },
-      
-      // CORRECT: Put modal callbacks here, not in config.modal
-          modal: {
+      theme: { color: "#000000" },
+      modal: {
         ondismiss: () => {
+          if (paymentSuccessful) {
+            return
+          }
           window.location.reload()
         },
       },
-      
       retry: { enabled: true, max_count: 3 },
       timeout: 300,
       remember_customer: false,
@@ -534,21 +545,13 @@ const FileTransferPage = () => {
 
     const rzp = new Razorpay(options)
     
-    // Additional event listeners
-    rzp.on("payment.failed", (response) => {
-      console.log("Payment failed:", response)
-      setPaymentProcessing(false)
-    })
-
-    // Handle manual close/cancel
-    rzp.on("payment.cancel", () => {
-      console.log("Payment cancelled by user")
-      setPaymentProcessing(false)
+    rzp.on("payment.failed", () => {
+      window.location.reload()
     })
 
     rzp.open()
   } catch (error) {
-    console.error("Payment init error:", error)
+    console.error("Payment initialization error:", error)
     setPaymentProcessing(false)
   }
 }
@@ -1016,6 +1019,7 @@ const FileTransferPage = () => {
 
               {cartItems.length > 0 && (
                 <div className="checkout-section">
+                  <h>Min Order ABOVE : 5 rs</h>
                   <div className="checkout-details">
                     <div className="detail-row">
                       <span>Total Items:</span>
@@ -1049,6 +1053,23 @@ const FileTransferPage = () => {
           </div>
         </div>
       )}
+
+
+
+      <footer className="site-footer" style={{ padding: "20px 0", textAlign: "center" }}>
++        <nav style={{ display: "flex", justifyContent: "center", gap: 20 }}>
++          <Link to="/terms-of-service" style={{ color: "#999", textDecoration: "none" }}>
++            Terms of Service
++          </Link>
++          <Link to="/privacy-policy" style={{ color: "#999", textDecoration: "none" }}>
++            Privacy Policy
++          </Link>
++          <Link to="/refund-policy" style={{ color: "#999", textDecoration: "none" }}>
++            Refund &amp; Cancellation Policy
++          </Link>
++        </nav>
++     </footer>
+      
 
       
         

@@ -1,18 +1,20 @@
-import { Routes, Route, Navigate } from "react-router-dom"
+import React from "react"
+import { Routes, Route } from "react-router-dom"
 import FileTransferPage from "./components/FileTransferPage"
 import IntegratedFilePage from "./components/IntegratedFilePage"
+import TermsOfService from "./components/TermsOfService"
+import PrivacyPolicy from "./components/PrivacyPolicy"
+import RefundPolicy from "./components/RefundPolicy"
 import "./App.css"
 
-function App() {
+export default function App() {
   return (
-    <div className="app">
-      <Routes>
-        <Route path="/" element={<Navigate to="/file-transfer" replace />} />
-        <Route path="/file-transfer" element={<FileTransferPage />} />
-        <Route path="/integrated-files" element={<IntegratedFilePage />} />
-      </Routes>
-    </div>
+    <Routes>
+      <Route path="/" element={<FileTransferPage />} />
+      <Route path="/integrated-files" element={<IntegratedFilePage />} />
+      <Route path="/terms-of-service" element={<TermsOfService />} />
+      <Route path="/privacy-policy" element={<PrivacyPolicy />} />
+      <Route path="/refund-policy" element={<RefundPolicy />} />
+    </Routes>
   )
 }
-
-export default App

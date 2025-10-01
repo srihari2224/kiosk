@@ -2485,7 +2485,7 @@ file-transfer-page .product-cat {
 /* Paper Shop Styles */
 .file-transfer-page .paper-shop-content {
   margin-top: 3rem;
-  height: 531px;
+  height: 650px;
 
   background-color: #111111;
   margin-top: 50px;
@@ -2510,6 +2510,7 @@ file-transfer-page .product-cat {
   backdrop-filter: blur(10px);
   width: 493px;
   margin-top: 40px;
+  height: 493px;
 }
 
 .file-transfer-page .product-card:hover {
@@ -2603,7 +2604,8 @@ file-transfer-page .product-cat {
 }
 
 .file-transfer-page .product-btn:hover {
-  box-shadow: 0 8px 25px rgba(102, 126, 234, 0.4);
+  background:#ffffff;
+  color: rgb(0, 0, 0);
 }
 
 .file-transfer-page .product-btn:disabled {
@@ -3438,5 +3440,83 @@ file-transfer-page .product-cat {
     width: 24px;
     height: 24px;
     font-size: 0.75rem;
+  }
+}
+
+
+
+/* Footer: centered rounded pill with separators */
+.site-footer {
+  position: absolute;
+  left: 50%;
+  bottom: 18px;
+  transform: translateX(-50%);
+  z-index: 9999;
+  pointer-events: auto;
+  width: auto;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* pill container */
+.site-footer nav {
+  display: flex;
+  gap: 32px;
+  align-items: center;
+  padding: 14px 34px;
+  border-radius: 999px;
+  background: rgba(0, 0, 0, 0.9);
+  box-shadow: 0 10px 30px rgba(0,0,0,0.55), inset 0 1px 0 rgba(255,255,255,0.03);
+  backdrop-filter: blur(6px);
+}
+
+/* links */
+.site-footer nav a {
+  color: #ffffff;
+  text-decoration: none;
+  font-weight: 600;
+  font-size: 15px;
+  letter-spacing: 0.2px;
+  padding: 6px 6px;
+  transition: opacity 150ms ease, transform 150ms ease;
+}
+
+/* thin vertical separators between links */
+.site-footer nav a:not(:last-child)::after {
+  content: "";
+  display: inline-block;
+  width: 1px;
+  height: 20px;
+  background: rgba(255,255,255,0.14);
+  margin-left: 22px;
+  vertical-align: middle;
+}
+
+/* hover */
+.site-footer nav a:hover {
+  opacity: 0.95;
+  transform: translateY(-2px);
+}
+
+/* smaller screens: stack / reduce padding */
+@media (max-width: 640px) {
+  .site-footer {
+    bottom: 12px;
+  }
+  .site-footer nav {
+    gap: 12px;
+    padding: 10px 14px;
+    width: calc(100% - 32px);
+    max-width: 640px;
+    box-sizing: border-box;
+  }
+  .site-footer nav a {
+    font-size: 14px;
+  }
+  .site-footer nav a:not(:last-child)::after {
+    height: 16px;
+    margin-left: 12px;
   }
 }
