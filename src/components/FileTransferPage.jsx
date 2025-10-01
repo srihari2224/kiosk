@@ -1017,56 +1017,58 @@ const FileTransferPage = () => {
                 </div>
               )}
 
-        {cartItems.length > 0 && (
-          <div className="checkout-section">
-            <h3 style={{ color: "white" }}>Min Order ABOVE : 5 rs</h3>
-            <div className="checkout-details">
-              <div className="detail-row">
-                <span>Total Items:</span>
-                <span>{getTotalItems()}</span>
-              </div>
-              <div className="detail-row">
-                <span>Your cart total:</span>
-                <span>₹{getTotalCost().toFixed(2)}</span>
-              </div>
-            </div>
-            <div className="total-price">₹{getTotalCost().toFixed(2)}</div>
-            <div className="checkout-buttons">
-              <button
-                className="clear-btn"
-                onClick={clearCart}
-                disabled={paymentProcessing || printingInProgress}
-              >
-                Clear Cart
-              </button>
-              <button
-                className="pay-btn"
-                onClick={handlePrintShopPayment}
-                disabled={paymentProcessing || printingInProgress || cartItems.length === 0}
-              >
-                {paymentProcessing ? "Processing..." : printingInProgress ? "Printing..." : "Pay Now"}
-              </button>
+              {cartItems.length > 0 && (
+                <div className="checkout-section">
+                  <h class="above5">Min Order ABOVE : 5 rs</h>
+                  <div className="checkout-details">
+                    <div className="detail-row">
+                      <span>Total Items:</span>
+                      <span>{getTotalItems()}</span>
+                    </div>
+                    <div className="detail-row">
+                      <span>Your cart total:</span>
+                      <span>₹{getTotalCost().toFixed(2)}</span>
+                    </div>
+                  </div>
+                  <div className="total-price">₹{getTotalCost().toFixed(2)}</div>
+                  <div className="checkout-buttons">
+                    <button
+                      className="clear-btn"
+                      onClick={clearCart}
+                      disabled={paymentProcessing || printingInProgress}
+                    >
+                      Clear Cart
+                    </button>
+                    <button
+                      className="pay-btn"
+                      onClick={handlePrintShopPayment}
+                      disabled={paymentProcessing || printingInProgress || cartItems.length === 0}
+                    >
+                      {paymentProcessing ? "Processing..." : printingInProgress ? "Printing..." : "Pay Now"}
+                    </button>
+                  </div>
+                </div>
+              )}
             </div>
           </div>
-        )}
-      </div>
-    </div>
-  </div>
-)}
+        </div>
+      )}
 
-<footer className="site-footer" style={{ padding: "20px 0", textAlign: "center" }}>
-  <nav style={{ display: "flex", justifyContent: "center", gap: 20 }}>
-    <Link to="/terms-of-service" style={{ color: "#999", textDecoration: "none" }}>
-      Terms of Service
-    </Link>
-    <Link to="/privacy-policy" style={{ color: "#999", textDecoration: "none" }}>
-      Privacy Policy
-    </Link>
-    <Link to="/refund-policy" style={{ color: "#999", textDecoration: "none" }}>
-      Refund &amp; Cancellation Policy
-    </Link>
-  </nav>
-</footer>
+
+
+      <footer className="site-footer" style={{ padding: "20px 0", textAlign: "center" }}>
++        <nav style={{ display: "flex", justifyContent: "center", gap: 20 }}>
++          <Link to="/terms-of-service" style={{ color: "#999", textDecoration: "none" }}>
++            Terms of Service
++          </Link>
++          <Link to="/privacy-policy" style={{ color: "#999", textDecoration: "none" }}>
++            Privacy Policy
++          </Link>
++          <Link to="/refund-policy" style={{ color: "#999", textDecoration: "none" }}>
++            Refund &amp; Cancellation Policy
++          </Link>
++        </nav>
++     </footer>
       
 
       
