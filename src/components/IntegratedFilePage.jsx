@@ -9,6 +9,9 @@ import categ from "../assets/categ.svg"
 import upi from "../assets/upi.svg"
 import lines from "../assets/lines.svg"
 import print from "../assets/print.svg"
+import canvas from "../assets/canvas.png"
+import addpage from "../assets/add page.svg"
+
 
 function IntegratedFilePage() {
   const canvasRef = useRef(null)
@@ -18,8 +21,8 @@ function IntegratedFilePage() {
   const { files = [], sessionId = "" } = location.state || {}
 
   // Pages and canvas editing
-  const [pages, setPages] = useState([{ id: 1, items: [], colorMode: "color" }])
-  const [activePage, setActivePage] = useState(1)
+  const [pages, setPages] = useState([])
+  const [activePage, setActivePage] = useState(null)
   const [draggingFile, setDraggingFile] = useState(null)
   const [draggingItem, setDraggingItem] = useState(null)
   const [dragOffset, setDragOffset] = useState({ x: 0, y: 0 })
@@ -1249,7 +1252,7 @@ function IntegratedFilePage() {
   }
 
   const handleBackToFileTransfer = () => {
-    navigate("/file-transfer")
+    navigate("/")
   }
 
   return (
@@ -1497,7 +1500,10 @@ function IntegratedFilePage() {
           </div>
 
           <div className="canvas-container">
-            <div className="canvas-background"></div>
+            <div 
+              className="canvas-background" 
+              style={{ backgroundImage: `url(${canvas})` }}
+            ></div>
             {pages.length > 0 ? (
               <>
                 <div className="page-navigation">
@@ -1742,7 +1748,7 @@ function IntegratedFilePage() {
                   <h3>No Canvas Pages</h3>
                   <p>Add a canvas page to start designing</p>
                   <button className="toolbar-button" onClick={addNewPage}>
-                    <Plus size={14} />
+                    <img src={addpage}></img>
                     <span>Add Canvas Page</span>
                   </button>
                 </div>
@@ -2038,8 +2044,8 @@ function IntegratedFilePage() {
                 <div className="cost-display-section">
                   <div className="cost-breakdown">
                     <h4>Cost: ₹{calculateEdgePrintCost()}</h4>
-                    <div style={{ fontSize: "12px", color: "#666", marginTop: "4px" }}>
-                      These settings will be applied exactly as selected
+                    <div style={{ fontSize: "22px", color: "#666", marginTop: "4px" }}>
+                      Do Not pull the papers until it prints the double side , Be patience while printing !
                     </div>
                   </div>
                 </div>
