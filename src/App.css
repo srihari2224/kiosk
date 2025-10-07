@@ -16,7 +16,7 @@ div[class*="razorpay"],
 div[id*="razorpay"],
 body > div[style*="position: fixed"],
 body > div[style*="z-index"] {
-  zoom: 1.3 !important;
+  zoom: 1.4 !important;
 }
 
 /* Ensure Razorpay container is visible */

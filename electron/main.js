@@ -31,7 +31,6 @@ function createWindow() {
 
   mainWindow.loadURL("https://last-and-final.vercel.app").catch((err) => {
     console.error("Failed to load local React app:", err)
-
   })
 
   mainWindow.once("ready-to-show", () => {
@@ -310,6 +309,152 @@ ipcMain.handle("get-default-printer", async (event) => {
   }
 })
 
+// PRINT JOB MONITORING SYSTEM
+const activePrintJobs = new Map() // Track jobs by unique identifier
+let monitoringInterval = null
+
+// Get current print queue
+async function getPrintQueue(printerName) {
+  try {
+    const printerEscaped = printerName.replace(/'/g, "''")
+    const query = `Get-PrintJob -PrinterName '${printerEscaped}' | Select-Object Id, Name, JobStatus, DocumentName, TotalPages, PagesPrinted, SubmittedTime, Position | ConvertTo-Json`
+    
+    const { stdout } = await execAsync(`powershell -Command "${query}"`)
+    
+    if (stdout && stdout.trim()) {
+      let jobs = JSON.parse(stdout.trim())
+      if (!Array.isArray(jobs)) jobs = [jobs]
+      return jobs
+    }
+    return []
+  } catch (error) {
+    return []
+  }
+}
+
+// Monitor print jobs continuously
+async function monitorPrintQueue(printerName) {
+  try {
+    const jobs = await getPrintQueue(printerName)
+    
+    if (jobs.length > 0) {
+      console.log(`\n${"=".repeat(80)}`)
+      console.log(`📊 PRINT QUEUE STATUS for "${printerName}" - ${new Date().toLocaleTimeString()}`)
+      console.log(`${"=".repeat(80)}`)
+      
+      jobs.forEach((job, index) => {
+        const jobId = job.Id
+        const previousStatus = activePrintJobs.get(jobId)
+        const currentStatus = job.JobStatus
+        
+        // Status change detection
+        if (previousStatus && previousStatus !== currentStatus) {
+          console.log(`\n🔄 JOB STATUS CHANGED:`)
+          console.log(`   Job ID: ${jobId}`)
+          console.log(`   ${previousStatus} → ${currentStatus}`)
+        }
+        
+        // Display job details
+        console.log(`\n📄 Job #${index + 1} (ID: ${jobId})`)
+        console.log(`   Document: ${job.DocumentName || 'Unknown'}`)
+        console.log(`   Status: ${currentStatus}`)
+        console.log(`   Progress: ${job.PagesPrinted || 0}/${job.TotalPages || 0} pages`)
+        console.log(`   Position: ${job.Position} in queue`)
+        console.log(`   Submitted: ${job.SubmittedTime || 'Unknown'}`)
+        
+        // Update tracking
+        activePrintJobs.set(jobId, currentStatus)
+        
+        // Status-specific messages
+        if (currentStatus === 'Printing') {
+          console.log(`   ✅ PRINTING NOW...`)
+        } else if (currentStatus === 'Paused') {
+          console.log(`   ⏸️  PAUSED`)
+        } else if (currentStatus === 'Error') {
+          console.log(`   ❌ ERROR DETECTED`)
+        } else if (currentStatus === 'Deleting') {
+          console.log(`   🗑️  BEING DELETED`)
+        } else if (currentStatus === 'Spooling') {
+          console.log(`   📤 SPOOLING...`)
+        } else if (currentStatus === 'Printed') {
+          console.log(`   ✅ COMPLETED`)
+        }
+      })
+      
+      console.log(`\n${"=".repeat(80)}\n`)
+      
+      // Cleanup completed jobs from tracking
+      const currentJobIds = jobs.map(j => j.Id)
+      for (const [jobId, status] of activePrintJobs.entries()) {
+        if (!currentJobIds.includes(jobId)) {
+          console.log(`✅ Job ${jobId} completed and removed from queue`)
+          activePrintJobs.delete(jobId)
+        }
+      }
+    } else if (activePrintJobs.size > 0) {
+      console.log(`\n✅ All print jobs completed - Queue is now empty`)
+      activePrintJobs.clear()
+    }
+  } catch (error) {
+    console.error(`❌ Error monitoring print queue: ${error.message}`)
+  }
+}
+
+// Start monitoring
+function startPrintMonitoring(printerName) {
+  if (monitoringInterval) {
+    clearInterval(monitoringInterval)
+  }
+  
+  console.log(`\n🚀 Starting print job monitoring for "${printerName}"`)
+  console.log(`⏰ Checking queue every 2 seconds...\n`)
+  
+  // Initial check
+  monitorPrintQueue(printerName)
+  
+  // Set up continuous monitoring
+  monitoringInterval = setInterval(() => {
+    monitorPrintQueue(printerName)
+  }, 2000) // Check every 2 seconds
+}
+
+// Stop monitoring
+function stopPrintMonitoring() {
+  if (monitoringInterval) {
+    clearInterval(monitoringInterval)
+    monitoringInterval = null
+    console.log(`\n⏹️  Print monitoring stopped\n`)
+  }
+}
+
+// IPC handlers for monitoring
+ipcMain.handle("start-print-monitoring", async (event, printerName) => {
+  try {
+    startPrintMonitoring(printerName || TARGET_PRINTER_NAME)
+    return { success: true, message: "Print monitoring started" }
+  } catch (error) {
+    return { success: false, error: error.message }
+  }
+})
+
+ipcMain.handle("stop-print-monitoring", async (event) => {
+  try {
+    stopPrintMonitoring()
+    return { success: true, message: "Print monitoring stopped" }
+  } catch (error) {
+    return { success: false, error: error.message }
+  }
+})
+
+ipcMain.handle("get-print-queue", async (event, printerName) => {
+  try {
+    const jobs = await getPrintQueue(printerName || TARGET_PRINTER_NAME)
+    return { success: true, jobs, count: jobs.length }
+  } catch (error) {
+    return { success: false, error: error.message, jobs: [], count: 0 }
+  }
+})
+
 // CORE PRINTING FUNCTIONS - BASED ON PYTHON VERSION
 
 // Parse custom page ranges like "1-3,5,7-9" into actual page numbers
@@ -436,6 +581,9 @@ ipcMain.handle("print-pdf", async (event, printOptions) => {
     let targetPath = filePath
 
     logPrint(`🖨 Starting RELIABLE PDF print for "${TARGET_PRINTER_NAME}" with options: ${JSON.stringify(printOptions)}`)
+    
+    // Start monitoring when print job is initiated
+    startPrintMonitoring(TARGET_PRINTER_NAME)
 
     // Normalize doubleSided (accept boolean/string) -> canonical "both-sides" | "one-side"
     let duplexMode = "one-side"
@@ -489,13 +637,15 @@ ipcMain.handle("print-pdf", async (event, printOptions) => {
         }
 
         logPrint(`🖨 SumatraPDF command: ${sumatraCmd}`)
+        console.log(`\n🚀 Sending print job to queue...`)
 
         for (let copy = 1; copy <= copies; copy++) {
           const { stdout, stderr } = await execAsync(sumatraCmd)
           logPrint(`✅ SumatraPDF copy ${copy}/${copies} executed`)
+          console.log(`✅ Copy ${copy}/${copies} sent to print queue`)
           if (stderr) logPrint(`⚠ SumatraPDF stderr: ${stderr}`)
           if (copy < copies) {
-            await new Promise((resolve) => setTimeout(resolve, 2000))
+            await new Promise((resolve) => setTimeout(resolve, 10000))
           }
         }
 
@@ -508,23 +658,22 @@ ipcMain.handle("print-pdf", async (event, printOptions) => {
       }
     }
 
-    // Method: Windows ShellExecute - MOST RELIABLE (requires default printer to be set or specific printer to be known by system)
-    // Note: ShellExecute 'Print' verb usually prints to default printer.
-    // To target a specific printer, 'PrintTo' verb is used with printer name as argument.
+    // Method: Windows ShellExecute - MOST RELIABLE
     if (!printSuccess) {
       try {
         logPrint("🔄 Trying Windows ShellExecute 'PrintTo' - MOST RELIABLE...")
 
-        // Escape targetPath and TARGET_PRINTER_NAME for PowerShell
         const escapedTargetPath = targetPath.replace(/'/g, "''")
         const escapedPrinterName = TARGET_PRINTER_NAME.replace(/'/g, "''")
 
         const shellCmd = `powershell -Command "Start-Process -FilePath '${escapedTargetPath}' -Verb PrintTo -ArgumentList '${escapedPrinterName}' -WindowStyle Hidden"`
         logPrint(`🖨 ShellExecute command: ${shellCmd}`)
+        console.log(`\n🚀 Sending print job to queue...`)
 
         for (let copy = 1; copy <= copies; copy++) {
           const { stdout, stderr } = await execAsync(shellCmd)
           logPrint(`✅ ShellExecute copy ${copy}/${copies} executed`)
+          console.log(`✅ Copy ${copy}/${copies} sent to print queue`)
           if (stderr) logPrint(`⚠ ShellExecute stderr: ${stderr}`)
           if (copy < copies) {
             await new Promise((resolve) => setTimeout(resolve, 2000))
@@ -541,10 +690,6 @@ ipcMain.handle("print-pdf", async (event, printOptions) => {
     }
 
     // APPLY COLOR/DUPLEX SETTINGS AFTER PRINTING (if possible)
-    // This is a best-effort attempt as direct control over print job settings
-    // is limited with these external tools. The primary way to control
-    // these is through the printer's default settings or the application's
-    // print dialog. We're trying to set the printer's default here.
     if (printSuccess) {
       try {
         logPrint(`🎨 Attempting to apply ${colorMode} and ${duplexMode} settings to "${TARGET_PRINTER_NAME}" post-print...`)
@@ -613,7 +758,7 @@ ipcMain.handle("print-pdf", async (event, printOptions) => {
 
     if (printSuccess) {
       logPrint(
-        `✅ PDF print completed for "${TARGET_PRINTER_NAME}" using: ${methodUsed} with ${colorMode} mode and ${duplexMode} setting,`,
+        `✅ PDF print completed for "${TARGET_PRINTER_NAME}" using: ${methodUsed} with ${colorMode} mode and ${duplexMode} setting`,
       )
       return {
         success: true,
@@ -642,6 +787,9 @@ ipcMain.handle("print-pdf", async (event, printOptions) => {
 ipcMain.handle("print-canvas", async (event, canvasData) => {
   try {
     logPrint(`🖨 Starting canvas print for "${TARGET_PRINTER_NAME}": ${canvasData && canvasData.pageData ? canvasData.pageData.id || "" : ""}`)
+    
+    // Start monitoring when print job is initiated
+    startPrintMonitoring(TARGET_PRINTER_NAME)
 
     const { pageData, colorMode } = canvasData || {}
     if (!pageData || !Array.isArray(pageData.items) || pageData.items.length === 0) {
@@ -810,12 +958,9 @@ ipcMain.handle("print-canvas", async (event, canvasData) => {
     logPrint(`✅ Created HTML file: ${tempHtmlPath}`)
 
     // Convert HTML to PDF using headless browser (like Python version)
-    // browsers used to convert canvas HTML -> PDF (prefer Chrome)
     const browsers = [
       `"C:\\Program Files\\Google\\Chrome\\Application\\chrome.exe"`,
-
       `"C:\\Program Files (x86)\\Google\\Chrome\\Application\\chrome.exe"`,
-
     ]
 
     let pdfCreated = false
@@ -844,17 +989,19 @@ ipcMain.handle("print-canvas", async (event, canvasData) => {
     let printSuccess = false
     let methodUsed = ""
 
+    console.log(`\n🚀 Sending canvas print job to queue...`)
+
     // Try Adobe Reader first
     const adobePath2 = findAdobeReader()
     if (adobePath2) {
       try {
         const adobeCmd = `"${adobePath2}" /t "${tempPdfPath}" "${TARGET_PRINTER_NAME}"`
-
         await execAsync(adobeCmd)
         await new Promise((resolve) => setTimeout(resolve, 3000))
         printSuccess = true
         methodUsed = "Adobe Reader"
         logPrint("✅ Canvas printed via Adobe Reader")
+        console.log(`✅ Canvas sent to print queue via Adobe Reader`)
       } catch (error) {
         logPrint(`⚠ Adobe Reader failed for canvas: ${error.message}`)
       }
@@ -874,6 +1021,7 @@ ipcMain.handle("print-canvas", async (event, canvasData) => {
           printSuccess = true
           methodUsed = "SumatraPDF"
           logPrint("✅ Canvas printed via SumatraPDF")
+          console.log(`✅ Canvas sent to print queue via SumatraPDF`)
         } catch (error) {
           logPrint(`⚠ SumatraPDF failed for canvas: ${error.message}`)
         }
@@ -891,6 +1039,7 @@ ipcMain.handle("print-canvas", async (event, canvasData) => {
         printSuccess = true
         methodUsed = "Windows ShellExecute"
         logPrint("✅ Canvas printed via Windows ShellExecute")
+        console.log(`✅ Canvas sent to print queue via Windows ShellExecute`)
       } catch (error) {
         logPrint(`⚠ Windows ShellExecute failed for canvas: ${error.message}`)
       }
