@@ -17,8 +17,8 @@ contextBridge.exposeInMainWorld("electronAPI", {
   // Printer management
   getDefaultPrinter: () => ipcRenderer.invoke("get-default-printer"),
   getPrintQueue: (printerName) => ipcRenderer.invoke("get-print-queue", printerName),
-  cancelPrintJob: (printerName, jobId) => ipcRenderer.invoke("cancel-print-job", printerName, jobId),
-  restartSpooler: () => ipcRenderer.invoke("restart-spooler"),
+  startPrintMonitoring: (printerName) => ipcRenderer.invoke("start-print-monitoring", printerName),
+  stopPrintMonitoring: () => ipcRenderer.invoke("stop-print-monitoring"),
 
   // CORE PRINTING - RESPECTS ALL USER OPTIONS
   printPdf: (printOptions) => ipcRenderer.invoke("print-pdf", printOptions),
@@ -28,3 +28,5 @@ contextBridge.exposeInMainWorld("electronAPI", {
   getVersion: () => process.versions.electron,
   platform: () => process.platform,
 })
+
+

@@ -1,36 +1,71 @@
 {
   "name": "prinit-electron",
   "version": "1.0.0",
-  "description": "File Transfer Desktop App",
+  "description": "Prinit Desktop Printing App",
   "main": "main.js",
   "scripts": {
     "start": "electron .",
-    "build": "electron-builder",
+    "build": "electron-builder build --win --publish never",
+    "build:dir": "electron-builder --dir",
     "dist": "electron-builder --publish=never",
     "publish": "electron-builder --publish=always"
   },
   "build": {
-    "appId": "com.prinit.desktop",
-    "productName": "Prinit",
+    "appId": "com.Print-IT.desktop",
+    "productName": "Print-IT",
     "directories": {
-      "output": "dist"
+      "output": "dist",
+      "buildResources": "assets"
     },
     "files": [
-      "../dist/**/*",
       "main.js",
       "preload.js",
       "node_modules/**/*",
       "storage/**/*",
-      "prices.json"
+      "prices.json",
+      "logs/**/*",
+      "temp/**/*",
+      "!node_modules/*/{CHANGELOG.md,README.md,README,readme.md,readme}",
+      "!node_modules/*/{test,__tests__,tests,powered-test,example,examples}",
+      "!node_modules/*.d.ts",
+      "!node_modules/.bin",
+      "!**/*.{iml,o,hprof,orig,pyc,pyo,rbc,swp,csproj,sln,xproj}",
+      "!.editorconfig",
+      "!**/._*",
+      "!**/{.DS_Store,.git,.hg,.svn,CVS,RCS,SCCS,.gitignore,.gitattributes}",
+      "!**/{__pycache__,thumbs.db,.flowconfig,.idea,.vs,.nyc_output}",
+      "!**/{appveyor.yml,.travis.yml,circle.yml}",
+      "!**/{npm-debug.log,yarn.lock,.yarn-integrity,.yarn-metadata.json}"
     ],
     "win": {
-      "target": "nsis"
+      "target": [
+        {
+          "target": "nsis",
+          "arch": ["x64"]
+        }
+      ],
+      "icon": "assets/rocket.ico",
+      "artifactName": "${productName}-Setup-${version}.${ext}",
+      "requestedExecutionLevel": "requireAdministrator"
+    },
+    "nsis": {
+      "oneClick": false,
+      "allowToChangeInstallationDirectory": true,
+      "allowElevation": true,
+      "installerIcon": "assets/rocket.ico",
+      "uninstallerIcon": "assets/rocket.ico",
+      "installerHeaderIcon": "assets/rocket.ico",
+      "createDesktopShortcut": true,
+      "createStartMenuShortcut": true,
+      "shortcutName": "Prinit"
     },
     "mac": {
-      "target": "dmg"
+      "target": "dmg",
+      "icon": "assets/rocket.ico"
     },
     "linux": {
-      "target": "AppImage"
+      "target": "AppImage",
+      "icon": "assets/rocket.ico"
     }
   },
   "devDependencies": {
@@ -46,7 +81,7 @@
     "pdf-to-printer": "^5.6.0",
     "pdfjs-dist": "^5.4.54"
   },
-  "keywords": [],
-  "author": "",
+  "keywords": ["printing", "desktop", "electron"],
+  "author": "Prinit Team",
   "license": "ISC"
 }

@@ -1,10 +1,54 @@
-require("dotenv").config({ path: require("path").join(__dirname, "..", ".env") })
-const { app, BrowserWindow, ipcMain, shell } = require("electron")
-const { autoUpdater } = require("electron-updater")
 const path = require("path")
 const fs = require("fs")
+const { app, BrowserWindow, ipcMain, shell } = require("electron")
+const { autoUpdater } = require("electron-updater")
 const { exec } = require("child_process")
 const util = require("util")
+const os = require("os")
+
+// Determine if running in development or production
+const isDev = process.env.NODE_ENV === 'development' || !app.isPackaged
+
+// Load environment variables from .env file in development
+if (isDev) {
+  try {
+    require("dotenv").config({ path: path.join(__dirname, "..", ".env") })
+  } catch (e) {
+    console.log("⚠️ Could not load .env file")
+  }
+}
+
+// Set default FILES_BASE_DIR if not defined
+const FILES_BASE_DIR = process.env.FILES_BASE_DIR || path.join(
+  os.homedir(),
+  "PrinitFiles"
+)
+
+// Ensure the base directory exists
+if (!fs.existsSync(FILES_BASE_DIR)) {
+  fs.mkdirSync(FILES_BASE_DIR, { recursive: true })
+  console.log(`📁 Created base directory: ${FILES_BASE_DIR}`)
+}
+
+console.log(`📁 Using FILES_BASE_DIR: ${FILES_BASE_DIR}`)
+
+// CRITICAL FIX: Define writable directories EARLY - before any other code
+const WRITABLE_TEMP_DIR = path.join(app.getPath('temp'), "prinit-temp")
+const WRITABLE_LOGS_DIR = path.join(app.getPath('userData'), "logs")
+
+// Create writable directories immediately
+if (!fs.existsSync(WRITABLE_TEMP_DIR)) {
+  fs.mkdirSync(WRITABLE_TEMP_DIR, { recursive: true })
+  console.log(`✅ Created writable temp directory: ${WRITABLE_TEMP_DIR}`)
+}
+
+if (!fs.existsSync(WRITABLE_LOGS_DIR)) {
+  fs.mkdirSync(WRITABLE_LOGS_DIR, { recursive: true })
+  console.log(`✅ Created writable logs directory: ${WRITABLE_LOGS_DIR}`)
+}
+
+console.log(`📁 Writable Temp Dir: ${WRITABLE_TEMP_DIR}`)
+console.log(`📁 Writable Logs Dir: ${WRITABLE_LOGS_DIR}`)
 
 let PDFDocument
 try {
@@ -73,18 +117,12 @@ const pathExists = (p) => {
 
 const execAsync = util.promisify(exec)
 
-// Create logs directory
-const logsDir = path.join(__dirname, "logs")
-if (!fs.existsSync(logsDir)) {
-  fs.mkdirSync(logsDir, { recursive: true })
-}
-
 const logPrint = (message) => {
   const timestamp = new Date().toISOString()
   const logMessage = `[${timestamp}] ${message}\n`
   console.log(message)
   try {
-    fs.appendFileSync(path.join(logsDir, "print.log"), logMessage)
+    fs.appendFileSync(path.join(WRITABLE_LOGS_DIR, "print.log"), logMessage)
   } catch (e) {
     console.error("Failed to write to log:", e)
   }
@@ -173,8 +211,8 @@ ipcMain.handle("get-pdf-as-buffer", async (event, filePath) => {
 // SESSION FILE MANAGEMENT
 ipcMain.handle("get-session-files", async (event, sessionId) => {
   try {
-    logPrint(`🔍 Getting files from session folder: ${sessionId}`)
-    const baseDir = process.env.FILES_BASE_DIR
+    logPrint(`📁 Getting files from session folder: ${sessionId}`)
+    const baseDir = FILES_BASE_DIR
     const sessionDir = path.join(baseDir, sessionId)
 
     if (!fs.existsSync(sessionDir)) {
@@ -225,7 +263,7 @@ ipcMain.handle("get-session-files", async (event, sessionId) => {
 ipcMain.handle("download-s3-files", async (event, sessionId, s3Files) => {
   try {
     logPrint(`📥 Downloading ${s3Files.length} files for session ${sessionId}`)
-    const baseDir = process.env.FILES_BASE_DIR
+    const baseDir = FILES_BASE_DIR
     const sessionDir = path.join(baseDir, sessionId)
 
     if (!fs.existsSync(baseDir)) {
@@ -290,7 +328,7 @@ ipcMain.handle("send-sms-invoice", async (event, invoiceData) => {
 // PRINTER DETECTION
 ipcMain.handle("get-default-printer", async (event) => {
   try {
-    logPrint("🖨 Getting default printer...")
+    logPrint("🖨️ Getting default printer...")
     const printerQuery =
       'Get-WmiObject -Class Win32_Printer | Where-Object {$_.Default -eq $true} | Select-Object Name, PrinterStatus | ConvertTo-Json'
     const { stdout } = await execAsync(`powershell -Command "${printerQuery}"`)
@@ -300,7 +338,7 @@ ipcMain.handle("get-default-printer", async (event) => {
       logPrint(`✅ Default printer: ${printer.Name}`)
       return { success: true, defaultPrinter: printer.Name, status: printer.PrinterStatus }
     } else {
-      logPrint("⚠ No default printer found")
+      logPrint("⚠️ No default printer found")
       return { success: false, error: "No default printer found" }
     }
   } catch (error) {
@@ -309,153 +347,7 @@ ipcMain.handle("get-default-printer", async (event) => {
   }
 })
 
-// PRINT JOB MONITORING SYSTEM
-const activePrintJobs = new Map() // Track jobs by unique identifier
-let monitoringInterval = null
-
-// Get current print queue
-async function getPrintQueue(printerName) {
-  try {
-    const printerEscaped = printerName.replace(/'/g, "''")
-    const query = `Get-PrintJob -PrinterName '${printerEscaped}' | Select-Object Id, Name, JobStatus, DocumentName, TotalPages, PagesPrinted, SubmittedTime, Position | ConvertTo-Json`
-    
-    const { stdout } = await execAsync(`powershell -Command "${query}"`)
-    
-    if (stdout && stdout.trim()) {
-      let jobs = JSON.parse(stdout.trim())
-      if (!Array.isArray(jobs)) jobs = [jobs]
-      return jobs
-    }
-    return []
-  } catch (error) {
-    return []
-  }
-}
-
-// Monitor print jobs continuously
-async function monitorPrintQueue(printerName) {
-  try {
-    const jobs = await getPrintQueue(printerName)
-    
-    if (jobs.length > 0) {
-      console.log(`\n${"=".repeat(80)}`)
-      console.log(`📊 PRINT QUEUE STATUS for "${printerName}" - ${new Date().toLocaleTimeString()}`)
-      console.log(`${"=".repeat(80)}`)
-      
-      jobs.forEach((job, index) => {
-        const jobId = job.Id
-        const previousStatus = activePrintJobs.get(jobId)
-        const currentStatus = job.JobStatus
-        
-        // Status change detection
-        if (previousStatus && previousStatus !== currentStatus) {
-          console.log(`\n🔄 JOB STATUS CHANGED:`)
-          console.log(`   Job ID: ${jobId}`)
-          console.log(`   ${previousStatus} → ${currentStatus}`)
-        }
-        
-        // Display job details
-        console.log(`\n📄 Job #${index + 1} (ID: ${jobId})`)
-        console.log(`   Document: ${job.DocumentName || 'Unknown'}`)
-        console.log(`   Status: ${currentStatus}`)
-        console.log(`   Progress: ${job.PagesPrinted || 0}/${job.TotalPages || 0} pages`)
-        console.log(`   Position: ${job.Position} in queue`)
-        console.log(`   Submitted: ${job.SubmittedTime || 'Unknown'}`)
-        
-        // Update tracking
-        activePrintJobs.set(jobId, currentStatus)
-        
-        // Status-specific messages
-        if (currentStatus === 'Printing') {
-          console.log(`   ✅ PRINTING NOW...`)
-        } else if (currentStatus === 'Paused') {
-          console.log(`   ⏸️  PAUSED`)
-        } else if (currentStatus === 'Error') {
-          console.log(`   ❌ ERROR DETECTED`)
-        } else if (currentStatus === 'Deleting') {
-          console.log(`   🗑️  BEING DELETED`)
-        } else if (currentStatus === 'Spooling') {
-          console.log(`   📤 SPOOLING...`)
-        } else if (currentStatus === 'Printed') {
-          console.log(`   ✅ COMPLETED`)
-        }
-      })
-      
-      console.log(`\n${"=".repeat(80)}\n`)
-      
-      // Cleanup completed jobs from tracking
-      const currentJobIds = jobs.map(j => j.Id)
-      for (const [jobId, status] of activePrintJobs.entries()) {
-        if (!currentJobIds.includes(jobId)) {
-          console.log(`✅ Job ${jobId} completed and removed from queue`)
-          activePrintJobs.delete(jobId)
-        }
-      }
-    } else if (activePrintJobs.size > 0) {
-      console.log(`\n✅ All print jobs completed - Queue is now empty`)
-      activePrintJobs.clear()
-    }
-  } catch (error) {
-    console.error(`❌ Error monitoring print queue: ${error.message}`)
-  }
-}
-
-// Start monitoring
-function startPrintMonitoring(printerName) {
-  if (monitoringInterval) {
-    clearInterval(monitoringInterval)
-  }
-  
-  console.log(`\n🚀 Starting print job monitoring for "${printerName}"`)
-  console.log(`⏰ Checking queue every 2 seconds...\n`)
-  
-  // Initial check
-  monitorPrintQueue(printerName)
-  
-  // Set up continuous monitoring
-  monitoringInterval = setInterval(() => {
-    monitorPrintQueue(printerName)
-  }, 2000) // Check every 2 seconds
-}
-
-// Stop monitoring
-function stopPrintMonitoring() {
-  if (monitoringInterval) {
-    clearInterval(monitoringInterval)
-    monitoringInterval = null
-    console.log(`\n⏹️  Print monitoring stopped\n`)
-  }
-}
-
-// IPC handlers for monitoring
-ipcMain.handle("start-print-monitoring", async (event, printerName) => {
-  try {
-    startPrintMonitoring(printerName || TARGET_PRINTER_NAME)
-    return { success: true, message: "Print monitoring started" }
-  } catch (error) {
-    return { success: false, error: error.message }
-  }
-})
-
-ipcMain.handle("stop-print-monitoring", async (event) => {
-  try {
-    stopPrintMonitoring()
-    return { success: true, message: "Print monitoring stopped" }
-  } catch (error) {
-    return { success: false, error: error.message }
-  }
-})
-
-ipcMain.handle("get-print-queue", async (event, printerName) => {
-  try {
-    const jobs = await getPrintQueue(printerName || TARGET_PRINTER_NAME)
-    return { success: true, jobs, count: jobs.length }
-  } catch (error) {
-    return { success: false, error: error.message, jobs: [], count: 0 }
-  }
-})
-
-// CORE PRINTING FUNCTIONS - BASED ON PYTHON VERSION
+// CORE PRINTING FUNCTIONS
 
 // Parse custom page ranges like "1-3,5,7-9" into actual page numbers
 function parsePageRange(pageRangeStr) {
@@ -485,10 +377,10 @@ function parsePageRange(pageRangeStr) {
   return Array.from(pages).sort((a, b) => a - b)
 }
 
-// Create subset PDF for custom page ranges (like Python version)
+// Create subset PDF for custom page ranges - USES WRITABLE TEMP DIR
 async function createTempPdfWithPages(sourcePath, pageRangeStr) {
   if (!PDFDocument) {
-    logPrint("⚠ pdf-lib not available for custom page range")
+    logPrint("⚠️ pdf-lib not available for custom page range")
     return null
   }
 
@@ -504,17 +396,14 @@ async function createTempPdfWithPages(sourcePath, pageRangeStr) {
     if (validPages.length === 0) return null
 
     const outPdf = await PDFDocument.create()
-    const indices = validPages.map((p) => p - 1) // Convert to 0-based
+    const indices = validPages.map((p) => p - 1)
     const copied = await outPdf.copyPages(srcPdf, indices)
     copied.forEach((p) => outPdf.addPage(p))
 
     const outBytes = await outPdf.save()
-    const tempDir = path.join(__dirname, "temp")
-    if (!fs.existsSync(tempDir)) {
-      fs.mkdirSync(tempDir, { recursive: true })
-    }
-
-    const outPath = path.join(tempDir, `subset_${Date.now()}.pdf`)
+    
+    // CRITICAL: Use writable temp directory
+    const outPath = path.join(WRITABLE_TEMP_DIR, `subset_${Date.now()}.pdf`)
     fs.writeFileSync(outPath, Buffer.from(outBytes))
 
     logPrint(`✅ Created temp PDF with pages ${validPages.join(",")}: ${outPath}`)
@@ -525,7 +414,7 @@ async function createTempPdfWithPages(sourcePath, pageRangeStr) {
   }
 }
 
-// Find Adobe Reader (like Python version)
+// Find Adobe Reader
 const findAdobeReader = () => {
   const paths = [
     "C:\\Program Files (x86)\\Adobe\\Acrobat Reader DC\\Reader\\AcroRd32.exe",
@@ -540,16 +429,16 @@ const findAdobeReader = () => {
       return adobePath
     }
   }
-  logPrint("⚠ Adobe Reader not found")
+  logPrint("⚠️ Adobe Reader not found")
   return null
 }
 
-// Find SumatraPDF (like Python version)
+// Find SumatraPDF
 const findSumatraPDF = () => {
   const paths = [
     "C:\\Program Files\\SumatraPDF\\SumatraPDF.exe",
     "C:\\Program Files (x86)\\SumatraPDF\\SumatraPDF.exe",
-    path.join(require("os").homedir(), "AppData\\Local\\SumatraPDF\\SumatraPDF.exe"),
+    path.join(os.homedir(), "AppData\\Local\\SumatraPDF\\SumatraPDF.exe"),
   ]
 
   for (const sumatraPath of paths) {
@@ -558,14 +447,55 @@ const findSumatraPDF = () => {
       return sumatraPath
     }
   }
-  logPrint("⚠ SumatraPDF not found")
+  logPrint("⚠️ SumatraPDF not found")
   return null
 }
 
-// Define the target printer name based on user's screenshot
+// Define the target printer name
 const TARGET_PRINTER_NAME = "HP Smart Tank 710-720 series"
 
-// SIMPLIFIED BUT RELIABLE PDF PRINTING WITH COLOR/DUPLEX SUPPORT
+// Helper function to forcefully kill all SumatraPDF instances
+async function killAllSumatraPDF() {
+  try {
+    await execAsync('taskkill /IM SumatraPDF.exe /F /T')
+    logPrint(`✅ Killed all SumatraPDF instances`)
+    await new Promise((resolve) => setTimeout(resolve, 200))
+  } catch (error) {
+    // Ignore error if process doesn't exist
+    if (!error.message.includes("not found")) {
+      logPrint(`⚠️ Error killing SumatraPDF: ${error.message}`)
+    }
+  }
+}
+
+// Helper function to wait for printer queue to be ready
+async function waitForPrinterReady(maxWaitMs = 5000) {
+  const startTime = Date.now()
+  while (Date.now() - startTime < maxWaitMs) {
+    try {
+      const { stdout } = await execAsync(
+        `powershell -Command "Get-PrintJob -PrinterName '${TARGET_PRINTER_NAME}' | Measure-Object | Select-Object -ExpandProperty Count"`
+      )
+      const queueCount = parseInt(stdout.trim()) || 0
+      
+      if (queueCount === 0) {
+        logPrint(`✅ Printer queue is ready (empty)`)
+        return true
+      }
+      
+      logPrint(`⏳ Waiting for printer... (${queueCount} jobs in queue)`)
+      await new Promise((resolve) => setTimeout(resolve, 500))
+    } catch (error) {
+      // Queue might be inaccessible, continue anyway
+      logPrint(`⚠️ Could not check queue: ${error.message}`)
+      return true
+    }
+  }
+  logPrint(`⚠️ Timeout waiting for printer to be ready`)
+  return false
+}
+
+// PDF PRINTING - IMPROVED HYBRID WITH BETTER QUEUE MANAGEMENT
 ipcMain.handle("print-pdf", async (event, printOptions) => {
   try {
     const {
@@ -577,15 +507,18 @@ ipcMain.handle("print-pdf", async (event, printOptions) => {
       doubleSided = "one-side",
     } = printOptions
 
-    // ensure we have a working targetPath variable
     let targetPath = filePath
 
-    logPrint(`🖨 Starting RELIABLE PDF print for "${TARGET_PRINTER_NAME}" with options: ${JSON.stringify(printOptions)}`)
-    
-    // Start monitoring when print job is initiated
-    startPrintMonitoring(TARGET_PRINTER_NAME)
+    logPrint(`\n${"=".repeat(60)}`)
+    logPrint(`🖨️ NEW PRINT JOB STARTED`)
+    logPrint(`${"=".repeat(60)}`)
+    logPrint(`🖨️ Starting PDF print for "${TARGET_PRINTER_NAME}"`)
+    logPrint(`📄 File: ${path.basename(targetPath)}`)
+    logPrint(`📋 Copies: ${copies}`)
+    logPrint(`📄 Pages: ${pageRange}`)
+    logPrint(`🎨 Color: ${colorMode}`)
+    logPrint(`📑 Duplex: ${doubleSided}`)
 
-    // Normalize doubleSided (accept boolean/string) -> canonical "both-sides" | "one-side"
     let duplexMode = "one-side"
     if (
       doubleSided === true ||
@@ -596,15 +529,11 @@ ipcMain.handle("print-pdf", async (event, printOptions) => {
     ) {
       duplexMode = "both-sides"
     }
-    // Use duplexMode instead of raw doubleSided for logic & logging
-    logPrint(`📄 File: ${path.basename(targetPath)}`)
-    logPrint(`⚙ Settings: ${copies} copies, ${pageRange}, ${colorMode}, ${duplexMode}`)
 
     let printSuccess = false
     let methodUsed = ""
     const tempFiles = []
 
-    // Handle custom page range by creating subset PDF
     const isCustomRange = pageRange === "custom" && customPages.trim().length > 0
     if (isCustomRange) {
       const tempPdf = await createTempPdfWithPages(targetPath, customPages)
@@ -615,16 +544,17 @@ ipcMain.handle("print-pdf", async (event, printOptions) => {
       }
     }
 
-    // Method 1: SumatraPDF with SIMPLE but EFFECTIVE settings
+    // Kill any existing SumatraPDF instances before starting
+    await killAllSumatraPDF()
+
+    // Method 1: SumatraPDF with IMPROVED HYBRID approach
     const sumatraPath = findSumatraPDF()
     if (sumatraPath && !printSuccess) {
       try {
-        logPrint("🔄 Trying SumatraPDF with RELIABLE settings...")
+        logPrint("\n🔄 Using SumatraPDF with improved queue management...")
 
-        // Build SumatraPDF command with proper settings
-        let sumatraCmd = `"${sumatraPath}" -print-to "${TARGET_PRINTER_NAME}" "${targetPath}"`
+        let sumatraCmd = `"${sumatraPath}" -silent -print-to "${TARGET_PRINTER_NAME}" "${targetPath}"`
 
-        // Add print settings - SIMPLE but EFFECTIVE
         const settings = []
         if (duplexMode === "both-sides") {
           settings.push("duplex")
@@ -636,107 +566,133 @@ ipcMain.handle("print-pdf", async (event, printOptions) => {
           sumatraCmd += ` -print-settings "${settings.join(",")}"`
         }
 
-        logPrint(`🖨 SumatraPDF command: ${sumatraCmd}`)
-        console.log(`\n🚀 Sending print job to queue...`)
+        logPrint(`🖨️ Command: ${sumatraCmd}`)
+        console.log(`\n🚀 Sending ${copies} copy/copies to print queue...\n`)
 
         for (let copy = 1; copy <= copies; copy++) {
-          const { stdout, stderr } = await execAsync(sumatraCmd)
-          logPrint(`✅ SumatraPDF copy ${copy}/${copies} executed`)
-          console.log(`✅ Copy ${copy}/${copies} sent to print queue`)
-          if (stderr) logPrint(`⚠ SumatraPDF stderr: ${stderr}`)
-          if (copy < copies) {
-            await new Promise((resolve) => setTimeout(resolve, 10000))
+          try {
+            logPrint(`\n--- Copy ${copy}/${copies} ---`)
+            
+            // Execute print command
+            const { stdout, stderr } = await execAsync(sumatraCmd)
+            if (stderr) logPrint(`⚠️ stderr: ${stderr}`)
+            
+            logPrint(`✅ Copy ${copy}/${copies} command executed`)
+            console.log(`✅ Copy ${copy}/${copies} sent to queue`)
+            
+            // Wait for the job to start spooling (shorter wait)
+            await new Promise((resolve) => setTimeout(resolve, 400))
+            
+            // Kill SumatraPDF to release lock immediately
+            await killAllSumatraPDF()
+            
+            // Wait for printer to be ready before next job (if not last copy)
+            if (copy < copies) {
+              logPrint(`⏳ Waiting for printer to be ready for next copy...`)
+              await waitForPrinterReady(3000)
+              await new Promise((resolve) => setTimeout(resolve, 500))
+            }
+          } catch (execError) {
+            logPrint(`❌ Error spooling copy ${copy}: ${execError.message}`)
+            throw execError
           }
         }
 
-        await new Promise((resolve) => setTimeout(resolve, 2000))
+        // Final wait to ensure all jobs are in queue
+        await new Promise((resolve) => setTimeout(resolve, 1000))
         printSuccess = true
-        methodUsed = "SumatraPDF"
-        logPrint("✅ SumatraPDF print successful")
+        methodUsed = "SumatraPDF (Improved Hybrid)"
+        logPrint("\n✅ All copies successfully sent to print queue")
+        console.log(`\n✅ All ${copies} copies queued successfully!\n`)
       } catch (error) {
-        logPrint(`⚠ SumatraPDF failed: ${error.message}`)
+        logPrint(`⚠️ SumatraPDF failed: ${error.message}`)
       }
     }
 
-    // Method: Windows ShellExecute - MOST RELIABLE
+    // Method 2: Windows ShellExecute - FALLBACK
     if (!printSuccess) {
       try {
-        logPrint("🔄 Trying Windows ShellExecute 'PrintTo' - MOST RELIABLE...")
+        logPrint("\n🔄 Trying Windows ShellExecute as fallback...")
 
         const escapedTargetPath = targetPath.replace(/'/g, "''")
         const escapedPrinterName = TARGET_PRINTER_NAME.replace(/'/g, "''")
 
         const shellCmd = `powershell -Command "Start-Process -FilePath '${escapedTargetPath}' -Verb PrintTo -ArgumentList '${escapedPrinterName}' -WindowStyle Hidden"`
-        logPrint(`🖨 ShellExecute command: ${shellCmd}`)
-        console.log(`\n🚀 Sending print job to queue...`)
+        logPrint(`🖨️ Command: ${shellCmd}`)
+        console.log(`\n🚀 Sending ${copies} copy/copies to print queue...\n`)
 
         for (let copy = 1; copy <= copies; copy++) {
-          const { stdout, stderr } = await execAsync(shellCmd)
-          logPrint(`✅ ShellExecute copy ${copy}/${copies} executed`)
-          console.log(`✅ Copy ${copy}/${copies} sent to print queue`)
-          if (stderr) logPrint(`⚠ ShellExecute stderr: ${stderr}`)
-          if (copy < copies) {
-            await new Promise((resolve) => setTimeout(resolve, 2000))
+          try {
+            const { stdout, stderr } = await execAsync(shellCmd)
+            logPrint(`✅ ShellExecute copy ${copy}/${copies} sent`)
+            console.log(`✅ Copy ${copy}/${copies} queued`)
+            if (stderr) logPrint(`⚠️ stderr: ${stderr}`)
+            
+            if (copy < copies) {
+              await new Promise((resolve) => setTimeout(resolve, 1500))
+            }
+          } catch (execError) {
+            logPrint(`❌ Error spooling copy ${copy}: ${execError.message}`)
+            throw execError
           }
         }
 
-        await new Promise((resolve) => setTimeout(resolve, 2000))
+        await new Promise((resolve) => setTimeout(resolve, 1500))
         printSuccess = true
         methodUsed = "Windows ShellExecute"
         logPrint("✅ Windows ShellExecute print successful")
+        console.log(`\n✅ All ${copies} copies queued successfully!\n`)
       } catch (error) {
-        logPrint(`⚠ Windows ShellExecute failed: ${error.message}`)
+        logPrint(`⚠️ Windows ShellExecute failed: ${error.message}`)
       }
     }
 
-    // APPLY COLOR/DUPLEX SETTINGS AFTER PRINTING (if possible)
+    // APPLY COLOR/DUPLEX SETTINGS AFTER PRINTING
     if (printSuccess) {
       try {
-        logPrint(`🎨 Attempting to apply ${colorMode} and ${duplexMode} settings to "${TARGET_PRINTER_NAME}" post-print...`)
+        logPrint(`\n🎨 Applying printer settings (${colorMode}, ${duplexMode})...`)
 
-        // Try to set color mode
         if (colorMode === "bw") {
           try {
             await execAsync(
               `powershell -Command "Set-PrintConfiguration -PrinterName '${TARGET_PRINTER_NAME}' -Color $false"`,
             )
-            logPrint("✅ Post-print: B&W mode applied to printer")
+            logPrint("✅ B&W mode applied")
           } catch (e) {
-            logPrint(`⚠ Post-print color setting failed for "${TARGET_PRINTER_NAME}": ${e.message}`)
+            logPrint(`⚠️ Color setting failed: ${e.message}`)
           }
         } else {
           try {
             await execAsync(
               `powershell -Command "Set-PrintConfiguration -PrinterName '${TARGET_PRINTER_NAME}' -Color $true"`,
             )
-            logPrint("✅ Post-print: Color mode applied to printer")
+            logPrint("✅ Color mode applied")
           } catch (e) {
-            logPrint(`⚠ Post-print color setting failed for "${TARGET_PRINTER_NAME}": ${e.message}`)
+            logPrint(`⚠️ Color setting failed: ${e.message}`)
           }
         }
 
-        // Try to set duplex mode
         if (duplexMode === "both-sides") {
           try {
             await execAsync(
               `powershell -Command "Set-PrintConfiguration -PrinterName '${TARGET_PRINTER_NAME}' -DuplexingMode TwoSidedLongEdge"`,
             )
-            logPrint("✅ Post-print: Duplex mode applied to printer")
+            logPrint("✅ Duplex mode applied")
           } catch (e) {
-            logPrint(`⚠ Post-print duplex setting failed for "${TARGET_PRINTER_NAME}": ${e.message}`)
+            logPrint(`⚠️ Duplex setting failed: ${e.message}`)
           }
         } else {
           try {
             await execAsync(
               `powershell -Command "Set-PrintConfiguration -PrinterName '${TARGET_PRINTER_NAME}' -DuplexingMode OneSided"`,
             )
-            logPrint("✅ Post-print: Single-sided mode applied to printer")
+            logPrint("✅ Single-sided mode applied")
           } catch (e) {
-            logPrint(`⚠ Post-print single-sided setting failed for "${TARGET_PRINTER_NAME}": ${e.message}`)
+            logPrint(`⚠️ Single-sided setting failed: ${e.message}`)
           }
         }
       } catch (e) {
-        logPrint(`⚠ Overall post-print configuration failed for "${TARGET_PRINTER_NAME}": ${e.message}`)
+        logPrint(`⚠️ Overall printer configuration failed: ${e.message}`)
       }
     }
 
@@ -747,22 +703,21 @@ ipcMain.handle("print-pdf", async (event, printOptions) => {
           try {
             if (fs.existsSync(tempFile)) {
               fs.unlinkSync(tempFile)
-              logPrint(`🗑 Cleaned up temp file: ${tempFile}`)
+              logPrint(`🗑️ Cleaned up: ${tempFile}`)
             }
           } catch (e) {
-            logPrint(`⚠ Failed to clean temp file: ${e.message}`)
+            logPrint(`⚠️ Failed to clean temp file: ${e.message}`)
           }
         })
-      }, 30000) // 30 seconds delay
+      }, 30000)
     }
 
     if (printSuccess) {
-      logPrint(
-        `✅ PDF print completed for "${TARGET_PRINTER_NAME}" using: ${methodUsed} with ${colorMode} mode and ${duplexMode} setting`,
-      )
+      logPrint(`\n✅ PRINT JOB COMPLETED using ${methodUsed}`)
+      logPrint(`${"=".repeat(60)}\n`)
       return {
         success: true,
-        message: `PDF printed successfully to "${TARGET_PRINTER_NAME}" using ${methodUsed} in ${colorMode} mode with ${duplexMode} setting`,
+        message: `PDF printed successfully using ${methodUsed}`,
         method: methodUsed,
         copies,
         pageRange,
@@ -771,11 +726,12 @@ ipcMain.handle("print-pdf", async (event, printOptions) => {
       }
     } else {
       throw new Error(
-        `All PDF print methods failed for "${TARGET_PRINTER_NAME}" - ensure Adobe Reader or SumatraPDF is installed and the printer name is correct.`
+        `All PDF print methods failed for "${TARGET_PRINTER_NAME}"`
       )
     }
   } catch (error) {
-    logPrint(`❌ Error in PDF printing for "${TARGET_PRINTER_NAME}": ${error.message}`)
+    logPrint(`\n❌ PRINT JOB FAILED: ${error.message}`)
+    logPrint(`${"=".repeat(60)}\n`)
     return {
       success: false,
       error: error.message,
@@ -783,13 +739,14 @@ ipcMain.handle("print-pdf", async (event, printOptions) => {
   }
 })
 
-// CANVAS PRINTING - BASED ON PYTHON VERSION
+// CANVAS PRINTING - FIXED WITH PROPER WRITABLE TEMP DIR
 ipcMain.handle("print-canvas", async (event, canvasData) => {
   try {
-    logPrint(`🖨 Starting canvas print for "${TARGET_PRINTER_NAME}": ${canvasData && canvasData.pageData ? canvasData.pageData.id || "" : ""}`)
-    
-    // Start monitoring when print job is initiated
-    startPrintMonitoring(TARGET_PRINTER_NAME)
+    logPrint(`\n${"=".repeat(60)}`)
+    logPrint(`🖨️ NEW CANVAS PRINT JOB STARTED`)
+    logPrint(`${"=".repeat(60)}`)
+    logPrint(`🖨️ Starting canvas print for "${TARGET_PRINTER_NAME}"`)
+    logPrint(`📁 Using writable temp dir: ${WRITABLE_TEMP_DIR}`)
 
     const { pageData, colorMode } = canvasData || {}
     if (!pageData || !Array.isArray(pageData.items) || pageData.items.length === 0) {
@@ -799,23 +756,21 @@ ipcMain.handle("print-canvas", async (event, canvasData) => {
     logPrint(`🎨 Color mode: ${colorMode}`)
     logPrint(`📄 Canvas items: ${pageData.items.length}`)
 
-    const tempDir = path.join(__dirname, "temp")
-    if (!fs.existsSync(tempDir)) {
-      fs.mkdirSync(tempDir, { recursive: true })
-    }
-
+    // CRITICAL FIX: Use writable temp directory
     const timestamp = Date.now()
-    const tempHtmlPath = path.join(tempDir, `canvas_${timestamp}.html`)
-    const tempPdfPath = path.join(tempDir, `canvas_${timestamp}.pdf`)
+    const tempHtmlPath = path.join(WRITABLE_TEMP_DIR, `canvas_${timestamp}.html`)
+    const tempPdfPath = path.join(WRITABLE_TEMP_DIR, `canvas_${timestamp}.pdf`)
 
-    // Build HTML content with items (like Python version)
+    logPrint(`📄 Temp HTML path: ${tempHtmlPath}`)
+    logPrint(`📄 Temp PDF path: ${tempPdfPath}`)
+
+    // Build HTML content with items
     const buildItemsHtml = () => {
       try {
         if (!Array.isArray(pageData.items)) return ""
         return pageData.items
           .map((item, idx) => {
             try {
-              // Resolve image source (prefer dataUrl, fallback to local file)
               let imgSrc = ""
               if (item && item.dataUrl && typeof item.dataUrl === "string" && item.dataUrl.startsWith("data:")) {
                 imgSrc = item.dataUrl
@@ -829,18 +784,16 @@ ipcMain.handle("print-canvas", async (event, canvasData) => {
                 else if (["webp"].includes(ext)) mime = "image/webp"
                 imgSrc = `data:${mime};base64,${buf.toString("base64")}`
               } else {
-                logPrint(`⚠ [buildItemsHtml] missing src for item index ${idx} id=${item && item.id}`)
+                logPrint(`⚠️ [buildItemsHtml] missing src for item index ${idx} id=${item && item.id}`)
                 return ""
               }
 
-              // numeric safety
               const left = Number(item.x) || 0
               const top = Number(item.y) || 0
               const width = Number(item.width) || 100
               const height = Number(item.height) || 100
               const rotation = Number(item.rotation) || 0
 
-              // container style
               const containerStyle = [
                 "position: absolute",
                 `left: ${left}px`,
@@ -853,7 +806,6 @@ ipcMain.handle("print-canvas", async (event, canvasData) => {
                 "display: block",
               ].join("; ")
 
-              // inner image transforms (scale/rotate) if editor stores them
               const imgTransforms = []
               if (typeof item.scaleX === "number" || typeof item.scaleY === "number") {
                 const sx = typeof item.scaleX === "number" ? item.scaleX : 1
@@ -865,12 +817,10 @@ ipcMain.handle("print-canvas", async (event, canvasData) => {
               }
               const imgTransformCss = imgTransforms.length ? `transform: ${imgTransforms.join(" ")}; transform-origin: center center;` : ""
 
-              // object-fit / position - default to 'cover' to match editor crop/zoom behaviour
               const objectFit = item.objectFit || "cover"
               const objectPosition = item.objectPosition || "center center"
               const bwFilter = colorMode === "bw" ? "filter: grayscale(100%);" : ""
 
-              // escape alt
               const rawAlt = (item.file && item.file.name) || `image-${idx}`
               const alt = String(rawAlt).replace(/'/g, "&#39;").replace(/"/g, "&quot;")
 
@@ -900,167 +850,219 @@ ipcMain.handle("print-canvas", async (event, canvasData) => {
     }
 
     // Generate HTML with proper styling
-    const htmlContent = `
-      <!DOCTYPE html>
-      <html>
-      <head>
-        <meta charset="UTF-8">
-        <title>Canvas Print Job</title>
-        <style>
-          @page { 
-            size: A4; 
-            margin: 0; 
-          }
-          @media print {
-            body { 
-              margin: 0; 
-              padding: 0; 
-              -webkit-print-color-adjust: exact; 
-              color-adjust: exact; 
-            }
-          }
-          body { 
-            margin: 0; 
-            padding: 20px; 
-            font-family: Arial, sans-serif; 
-            background: white;
-          }
-          .canvas-container { 
-            width: 788px; 
-            height: 1086px; 
-            position: relative; 
-            background: white;
-            ${colorMode === "bw" ? "filter: grayscale(100%);" : ""}
-          }
-          .canvas-item { 
-            position: absolute;
-            overflow: hidden;
-            -webkit-backface-visibility: hidden;
-          }
-          .canvas-item img {
-            display: block;
-            width: 100%;
-            height: 100%;
-            object-fit: cover; /* default fallback */
-            object-position: center center;
-          }
-        </style>
-      </head>
-      <body>
-        <div class="canvas-container">
-          ${buildItemsHtml()}
-        </div>
-      </body>
-      </html>
-    `
-
-    fs.writeFileSync(tempHtmlPath, htmlContent, "utf8")
-    logPrint(`✅ Created HTML file: ${tempHtmlPath}`)
-
-    // Convert HTML to PDF using headless browser (like Python version)
-    const browsers = [
-      `"C:\\Program Files\\Google\\Chrome\\Application\\chrome.exe"`,
-      `"C:\\Program Files (x86)\\Google\\Chrome\\Application\\chrome.exe"`,
-    ]
-
-    let pdfCreated = false
-    for (const browser of browsers) {
-      try {
-        const command = `${browser} --headless=new --disable-gpu --print-to-pdf="${tempPdfPath}" --no-margins "file:///${tempHtmlPath.replace(/\\/g, "/")}"` 
-        logPrint(`🔄 Converting to PDF: ${command}`)
-        await execAsync(command)
-
-        if (fs.existsSync(tempPdfPath)) {
-          pdfCreated = true
-          logPrint("✅ PDF created successfully")
-          break
-        }
-      } catch (browserError) {
-        logPrint(`⚠ ${browser} failed: ${browserError.message}`)
-        continue
+    const htmlContent = `<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>Canvas Print Job</title>
+  <style>
+    @page { 
+      size: A4; 
+      margin: 0; 
+    }
+    @media print {
+      body { 
+        margin: 0; 
+        padding: 0; 
+        -webkit-print-color-adjust: exact; 
+        color-adjust: exact; 
       }
+    }
+    body { 
+      margin: 0; 
+      padding: 20px; 
+      font-family: Arial, sans-serif; 
+      background: white;
+    }
+    .canvas-container { 
+      width: 788px; 
+      height: 1086px; 
+      position: relative; 
+      background: white;
+      ${colorMode === "bw" ? "filter: grayscale(100%);" : ""}
+    }
+    .canvas-item { 
+      position: absolute;
+      overflow: hidden;
+      -webkit-backface-visibility: hidden;
+    }
+    .canvas-item img {
+      display: block;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      object-position: center center;
+    }
+  </style>
+</head>
+<body>
+  <div class="canvas-container">
+    ${buildItemsHtml()}
+  </div>
+</body>
+</html>`
+
+    // Write HTML file to writable temp directory
+    try {
+      fs.writeFileSync(tempHtmlPath, htmlContent, "utf8")
+      logPrint(`✅ Created HTML file: ${tempHtmlPath}`)
+      logPrint(`📄 HTML file size: ${fs.statSync(tempHtmlPath).size} bytes`)
+      
+      // Verify file was created
+      if (!fs.existsSync(tempHtmlPath)) {
+        throw new Error(`HTML file was not created at: ${tempHtmlPath}`)
+      }
+    } catch (writeError) {
+      logPrint(`❌ Failed to write HTML file: ${writeError.message}`)
+      throw new Error(`Failed to create HTML file: ${writeError.message}`)
+    }
+
+    // Find Chrome executable
+    const findChrome = () => {
+      const paths = [
+        "C:\\Program Files\\Google\\Chrome\\Application\\chrome.exe",
+        "C:\\Program Files (x86)\\Google\\Chrome\\Application\\chrome.exe",
+        path.join(os.homedir(), "AppData\\Local\\Google\\Chrome\\Application\\chrome.exe"),
+      ]
+      
+      for (const chromePath of paths) {
+        if (fs.existsSync(chromePath)) {
+          logPrint(`✅ Found Chrome: ${chromePath}`)
+          return chromePath
+        }
+      }
+      logPrint("⚠️ Chrome not found in standard locations")
+      return null
+    }
+
+    const chromePath = findChrome()
+    
+    if (!chromePath) {
+      throw new Error("Google Chrome not found. Please install Chrome to print canvas layouts.")
+    }
+
+    // Convert HTML to PDF using Chrome headless
+    let pdfCreated = false
+    try {
+      // Normalize paths for file:// URL - Windows paths need forward slashes
+      const normalizedHtmlPath = tempHtmlPath.replace(/\\/g, "/")
+      const fileUrl = `file:///${normalizedHtmlPath}`
+      
+      logPrint(`🔄 Converting HTML to PDF...`)
+      logPrint(`📄 Source URL: ${fileUrl}`)
+      logPrint(`📄 Output PDF: ${tempPdfPath}`)
+      
+      // Use proper Chrome headless command with timeout
+      const command = `"${chromePath}" --headless=new --disable-gpu --no-sandbox --disable-setuid-sandbox --disable-dev-shm-usage --print-to-pdf="${tempPdfPath}" --no-margins "${fileUrl}"`
+      logPrint(`🖨️ Chrome command: ${command}`)
+      
+      const { stdout, stderr } = await execAsync(command, { 
+        timeout: 15000,
+        windowsHide: true 
+      })
+      
+      if (stdout) logPrint(`Chrome stdout: ${stdout}`)
+      if (stderr) logPrint(`Chrome stderr: ${stderr}`)
+      
+      // Wait for file to be written
+      await new Promise((resolve) => setTimeout(resolve, 1500))
+
+      // Verify PDF was created
+      if (fs.existsSync(tempPdfPath)) {
+        const pdfSize = fs.statSync(tempPdfPath).size
+        if (pdfSize > 0) {
+          logPrint(`✅ PDF created successfully (${pdfSize} bytes)`)
+          pdfCreated = true
+        } else {
+          logPrint(`❌ PDF file is empty: ${tempPdfPath}`)
+        }
+      } else {
+        logPrint(`❌ PDF file was not created at: ${tempPdfPath}`)
+      }
+    } catch (browserError) {
+      logPrint(`❌ Chrome conversion failed: ${browserError.message}`)
+      if (browserError.stdout) logPrint(`stdout: ${browserError.stdout}`)
+      if (browserError.stderr) logPrint(`stderr: ${browserError.stderr}`)
     }
 
     if (!pdfCreated) {
-      throw new Error("Failed to generate PDF from canvas HTML")
+      throw new Error("Failed to generate PDF from canvas HTML. Ensure Chrome is installed and accessible.")
     }
 
-    // Print the generated PDF using the same methods as PDF printing
+    // Kill any existing SumatraPDF instances before printing
+    await killAllSumatraPDF()
+
+    // Print the generated PDF using improved hybrid approach
     let printSuccess = false
     let methodUsed = ""
 
-    console.log(`\n🚀 Sending canvas print job to queue...`)
+    console.log(`\n🚀 Sending canvas to print queue...\n`)
 
-    // Try Adobe Reader first
-    const adobePath2 = findAdobeReader()
-    if (adobePath2) {
+    const sumatraPath = findSumatraPDF()
+    if (sumatraPath) {
       try {
-        const adobeCmd = `"${adobePath2}" /t "${tempPdfPath}" "${TARGET_PRINTER_NAME}"`
-        await execAsync(adobeCmd)
-        await new Promise((resolve) => setTimeout(resolve, 3000))
-        printSuccess = true
-        methodUsed = "Adobe Reader"
-        logPrint("✅ Canvas printed via Adobe Reader")
-        console.log(`✅ Canvas sent to print queue via Adobe Reader`)
-      } catch (error) {
-        logPrint(`⚠ Adobe Reader failed for canvas: ${error.message}`)
-      }
-    }
-
-    // Try SumatraPDF
-    if (!printSuccess) {
-      const sumatraPath2 = findSumatraPDF()
-      if (sumatraPath2) {
-        try {
-          let sumatraCmd = `"${sumatraPath2}" -print-to "${TARGET_PRINTER_NAME}" "${tempPdfPath}"`
-          if (colorMode === "bw") {
-            sumatraCmd += ` -print-settings "monochrome"`
-          }
-          await execAsync(sumatraCmd)
-          await new Promise((resolve) => setTimeout(resolve, 3000))
-          printSuccess = true
-          methodUsed = "SumatraPDF"
-          logPrint("✅ Canvas printed via SumatraPDF")
-          console.log(`✅ Canvas sent to print queue via SumatraPDF`)
-        } catch (error) {
-          logPrint(`⚠ SumatraPDF failed for canvas: ${error.message}`)
+        logPrint(`\n🔄 Using SumatraPDF to print canvas PDF...`)
+        let sumatraCmd = `"${sumatraPath}" -silent -print-to "${TARGET_PRINTER_NAME}" "${tempPdfPath}"`
+        if (colorMode === "bw") {
+          sumatraCmd += ` -print-settings "monochrome"`
         }
+        
+        logPrint(`🖨️ Executing: ${sumatraCmd}`)
+        await execAsync(sumatraCmd)
+        
+        // Wait for job to start spooling
+        await new Promise((resolve) => setTimeout(resolve, 400))
+        
+        // Kill SumatraPDF to release printer lock
+        await killAllSumatraPDF()
+        
+        await new Promise((resolve) => setTimeout(resolve, 500))
+        printSuccess = true
+        methodUsed = "SumatraPDF"
+        logPrint("✅ Canvas printed via SumatraPDF")
+        console.log(`✅ Canvas sent to print queue successfully!\n`)
+      } catch (error) {
+        logPrint(`⚠️ SumatraPDF failed for canvas: ${error.message}`)
       }
     }
 
-    // Try Windows ShellExecute
+    // Fallback to Windows ShellExecute
     if (!printSuccess) {
       try {
+        logPrint(`\n🔄 Using Windows ShellExecute as fallback...`)
         const escapedTempPdfPath = tempPdfPath.replace(/'/g, "''")
         const escapedPrinterName = TARGET_PRINTER_NAME.replace(/'/g, "''")
         const shellCmd = `powershell -Command "Start-Process -FilePath '${escapedTempPdfPath}' -Verb PrintTo -ArgumentList '${escapedPrinterName}' -WindowStyle Hidden"`
+        
+        logPrint(`🖨️ Executing: ${shellCmd}`)
         await execAsync(shellCmd)
-        await new Promise((resolve) => setTimeout(resolve, 3000))
+        await new Promise((resolve) => setTimeout(resolve, 1500))
         printSuccess = true
         methodUsed = "Windows ShellExecute"
         logPrint("✅ Canvas printed via Windows ShellExecute")
-        console.log(`✅ Canvas sent to print queue via Windows ShellExecute`)
+        console.log(`✅ Canvas sent to print queue successfully!\n`)
       } catch (error) {
-        logPrint(`⚠ Windows ShellExecute failed for canvas: ${error.message}`)
+        logPrint(`⚠️ Windows ShellExecute failed for canvas: ${error.message}`)
       }
     }
 
     // Cleanup temp files after delay
     setTimeout(() => {
       try {
-        ;[tempHtmlPath, tempPdfPath].forEach((file) => {
+        [tempHtmlPath, tempPdfPath].forEach((file) => {
           if (file && fs.existsSync(file)) {
             fs.unlinkSync(file)
-            logPrint(`🗑 Cleaned up: ${file}`)
+            logPrint(`🗑️ Cleaned up: ${file}`)
           }
         })
       } catch (cleanupError) {
-        logPrint(`⚠ Cleanup error: ${cleanupError.message}`)
+        logPrint(`⚠️ Cleanup error: ${cleanupError.message}`)
       }
-    }, 30000) // 30 seconds delay
+    }, 30000)
 
     if (printSuccess) {
-      logPrint(`✅ Canvas print completed using: ${methodUsed}`)
+      logPrint(`\n✅ CANVAS PRINT COMPLETED using ${methodUsed}`)
+      logPrint(`${"=".repeat(60)}\n`)
       return {
         success: true,
         message: `Canvas printed successfully using ${methodUsed}`,
@@ -1068,13 +1070,17 @@ ipcMain.handle("print-canvas", async (event, canvasData) => {
         colorMode,
       }
     } else {
-      throw new Error("Canvas print failed")
+      throw new Error("Canvas print failed - ensure SumatraPDF or Chrome is installed")
     }
   } catch (error) {
-    logPrint(`❌ Error in canvas printing: ${error.message}`)
+    logPrint(`\n❌ CANVAS PRINT FAILED: ${error.message}`)
+    logPrint(`${"=".repeat(60)}\n`)
     return {
       success: false,
       error: error.message,
     }
   }
 })
+
+
+
