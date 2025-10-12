@@ -660,11 +660,16 @@ const FileTransferPage = () => {
         setPrintingInProgress(false)
         setPrintProgress({ currentJob: "", completed: 0, total: 0, status: "idle" })
         setShowCart(false)
+        
+        // Reload the entire page after printing is complete
+        window.location.reload()
       }, 3000)
     } catch (error) {
       console.error("❌ Print shop order failed:", error)
       setPrintingInProgress(false)
       setPaymentProcessing(false)
+      window.location.reload()
+
     }
   }
 
@@ -989,7 +994,7 @@ const FileTransferPage = () => {
                       setMobileNumber(e.target.value)
                       setMobileError("")
                     }}
-                    placeholder="Enter 10-digit mobile number"
+                    placeholder="Enter mobile number"
                     className="mobile-input"
                     maxLength="10"
                     disabled={paymentProcessing || printingInProgress}
@@ -1019,7 +1024,6 @@ const FileTransferPage = () => {
 
               {cartItems.length > 0 && (
                 <div className="checkout-section">
-                  <h class="above5">Min Order ABOVE : 5 rs</h>
                   <div className="checkout-details">
                     <div className="detail-row">
                       <span>Total Items:</span>
@@ -1053,6 +1057,10 @@ const FileTransferPage = () => {
           </div>
         </div>
       )}
+
+
+
+      
 
 
 

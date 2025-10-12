@@ -1,3 +1,4 @@
+/* Hero Section Styles */
 .hero-section {
   min-height: 100vh;
   background: #111111;
@@ -23,666 +24,35 @@
 .hero-container {
   max-width: 1400px;
   margin: 0 auto;
-  padding: 20px 40px; /* reduce top/bottom page padding */
+  padding: 20px 40px;
   width: 100%;
   position: relative;
   z-index: 1;
 }
 
-/* row layout: hero content + offer card */
+/* Row layout: hero content + offer card */
 .hero-row {
   display: flex;
   align-items: center;
   gap: 28px;
-  width: 100%;           /* ensure row fits container */
+  width: 115%;
   box-sizing: border-box;
-  margin-left: 0;        /* remove earlier negative offset */
-  /* remove fixed height so children control layout */
+  margin-left: -110px;
+  margin-top: -110px;
 }
 
-/* hero content: allow it to take remaining space and be compact */
+/* Hero content */
 .hero-content {
   flex: 1 1 auto;
   background: #444;
   border-radius: 12px;
-  padding: 36px 44px;      /* a bit more padding for larger box */
-  height: 520px;           /* explicit height you asked for */
-  min-height: 520px;       /* ensure it doesn't shrink below this */
-  max-width: calc(100% - 360px); /* leave space for offer-card (320px + gap) */
+  padding: 36px 44px;
+  height: 520px;
+  min-height: 420px;
+  max-width: calc(100% - 360px);
   box-sizing: border-box;
   display: flex;
   align-items: center;
-}
-
-.hero-text {
-  flex: 1 1 60%;
-  padding-right: 12px;
-  line-height: 1.02;
-}
-
-.hero-title {
-  font-size: 5.2rem;
-  font-weight: 600;
-  line-height: 0.9;
-  margin-bottom: 1.5rem;
-  letter-spacing: -0.02em;
-}
-
-.title-main {
-  display: block;
-  color: white;
-  margin-bottom: 0.5rem;
-}
-
-.title-gradient {
-  display: block;
-  background: #7A7FEE;
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
-}
-
-.hero-description {
-  font-size: 1.25rem;
-  line-height: 1.6;
-  color: rgba(255, 255, 255, 0.8);
-  margin-bottom: 2.5rem;
-  max-width: 540px;
-}
-
-/* Added styles for hero actions container and loading states */
-.hero-actions {
-  display: flex;
-  flex-direction: row;
-  gap: 1.5rem;
-  align-items: flex-start;
-}
-
-.hero-button {
-      background: #7A7FEE;
-    color: white;
-    border: none;
-    padding: 1rem 1.5rem;
-    font-size: 1.525rem;
-    font-weight: 600;
-    border-radius: 12px;
-    cursor: pointer;
-    transition: all 0.3s 
-ease;
-    box-shadow: 0 4px 20px rgba(139, 92, 246, 0.3);
-    position: relative;
-    overflow: hidden;
-    min-width: 209px;
-    min-height: 71px;
-    display: flex
-;
-    align-items: center;
-    justify-content: center;
-}
-
-.hero-button.loading {
-  cursor: not-allowed;
-  opacity: 0.8;
-}
-
-.loading-spinner {
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-}
-
-.spinner {
-  width: 20px;
-  height: 20px;
-  border: 2px solid rgba(255, 255, 255, 0.3);
-  border-top: 2px solid white;
-  border-radius: 50%;
-  animation: spin 1s linear infinite;
-}
-
-@keyframes spin {
-  0% {
-    transform: rotate(0deg);
-  }
-  100% {
-    transform: rotate(360deg);
-  }
-}
-
-/* Added session info and refresh button styles */
-.session-info {
-    display: flex;
-    align-items: center;
-    gap: 1rem;
-    padding: 0.75rem 0.25rem;
-    background: rgba(255, 255, 255, 0.1);
-    border-radius: 8px;
-    backdrop-filter: blur(10px);
-    border: 1px solid rgba(255, 255, 255, 0.2);
-    width: 337px;
-    height: 70px;
-}
-
-.session-label {
-  color: rgba(255, 255, 255, 0.7);
-  font-size: 1.275rem;
-  font-weight: 500;
-}
-
-.session-identity {
-  color: white;
-  font-size: 0.975rem;
-  font-weight: 500;
-  font-family: monospace;
-  background: rgba(0, 0, 0, 100);
-  padding: 0.25rem 0.5rem;
-  border-radius: 4px;
-}
-
-.refresh-button {
-  display: flex;
-  align-items: center;
-  gap: 0.375rem;
-  background: green;
-  color: white;
-  border: none;
-  padding: 0.5rem 0.75rem;
-  border-radius: 6px;
-  font-size: 0.85rem;
-  font-weight: 500;
-  cursor: pointer;
-  transition: all 0.2s ease;
-}
-
-.refresh-button:hover {
-  background: rgba(255, 255, 255, 100);
-  color: green;
-  transform: translateY(-1px);
-}
-
-.refresh-button svg {
-  transition: transform 0.3s ease;
-}
-
-.refresh-button:hover svg {
-  transform: rotate(180deg);
-}
-
-.hero-visual {
-  flex: 0 0 220px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-/* Offer card as a normal flex sibling (side-by-side with hero-content) */
-.offer-card-wrapper {
-  position: static;           /* ensure it's in normal flow */
-  flex: 0 0 320px;           /* fixed column width */
-  display: flex;
-  align-items: flex-start;
-  justify-content: center;
-  width: 320px;
-  margin-left: 20px;         /* spacing between hero-content and card */
-  box-sizing: border-box;
-  z-index: 2;
-}
-
-.offer-card-wrapper .offer-card {
-  margin: 0;
-}
-
-.qr-code-container {
-  position: relative;
-  display: inline-block;
-}
-
-.qr-frame {
-  position: relative;
-  display: inline-block;
-  border-radius: 10px;
-  padding: 8px;
-}
-
-.qr-code-image {
-  display: block;
-  width: 220px;
-  height: 220px;
-  object-fit: contain;
-  background: #fff;
-  border-radius: 8px;
-  box-shadow: 0 8px 20px rgba(0,0,0,0.45);
-}
-
-.qr-corner {
-  position: absolute;
-  width: 44px;
-  height: 44px;
-  pointer-events: none;
-}
-
-/* two bars composing the rounded L-shape */
-.qr-corner::before,
-.qr-corner::after {
-  content: "";
-  position: absolute;
-  background: rgba(255,255,255,0.06);
-  border-radius: 8px;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.45) inset;
-}
-
-/* top-left */
-.qr-corner.tl { top: -12px; left: -12px; transform: none; }
-.qr-corner.tl::before { /* horizontal bar */
-  left: 4px; top: 4px;
-  width: 28px; height: 6px;
-  border-top-left-radius: 8px; border-top-right-radius: 8px;
-}
-.qr-corner.tl::after { /* vertical bar */
-  left: 4px; top: 4px;
-  width: 6px; height: 28px;
-  border-top-left-radius: 8px; border-bottom-left-radius: 8px;
-}
-
-/* top-right */
-.qr-corner.tr { top: -12px; right: -12px; }
-.qr-corner.tr::before {
-  right: 4px; top: 4px;
-  width: 28px; height: 6px;
-  border-top-left-radius: 8px; border-top-right-radius: 8px;
-}
-.qr-corner.tr::after {
-  right: 4px; top: 4px;
-  width: 6px; height: 28px;
-  border-top-right-radius: 8px; border-bottom-right-radius: 8px;
-}
-
-/* bottom-left */
-.qr-corner.bl { bottom: -12px; left: -12px; }
-.qr-corner.bl::before {
-  left: 4px; bottom: 4px;
-  width: 28px; height: 6px;
-  border-bottom-left-radius: 8px; border-bottom-right-radius: 8px;
-}
-.qr-corner.bl::after {
-  left: 4px; bottom: 4px;
-  width: 6px; height: 28px;
-  border-top-left-radius: 8px; border-bottom-left-radius: 8px;
-}
-
-/* bottom-right */
-.qr-corner.br { bottom: -12px; right: -12px; }
-.qr-corner.br::before {
-  right: 4px; bottom: 4px;
-  width: 28px; height: 6px;
-  border-bottom-left-radius: 8px; border-bottom-right-radius: 8px;
-}
-.qr-corner.br::after {
-  right: 4px; bottom: 4px;
-  width: 6px; height: 28px;
-  border-top-right-radius: 8px; border-bottom-right-radius: 8px;
-}
-
-/* tweak for smaller screens */
-@media (max-width: 520px) {
-  .qr-code-image { width: 160px; height: 160px; }
-  .qr-corner { width: 36px; height: 36px; }
-  .qr-corner::before, .qr-corner::after { border-radius: 6px; }
-}
-
-.pricing {
-  background-color: red;
-}
-
-@keyframes loading {
-  0% {
-    background-position: 200% 0;
-  }
-  100% {
-    background-position: -200% 0;
-  }
-}
-
-/* new row wrapper to keep hero-content and offer card side-by-side */
-.hero-row {
-  display: flex;
-  align-items: center;
-  gap: 28px;
-  width: 120%;           /* ensure row fits container */
-  box-sizing: border-box;
-  margin-left: -110px;        /* remove earlier negative offset */
-  /* remove fixed height so children control layout */
-}
-
-/* hero content: allow it to take remaining space and be compact */
-.hero-content {
-  flex: 1 1 auto;
-  background: #444;       /* keep your grey */
-  border-radius: 12px;
-  padding: 36px 44px;     /* a bit more padding for larger box */
-  height: 520px;           /* explicit height you asked for */
-  min-height: 420px;      /* ensure it doesn't shrink below this */
-  max-width: calc(100% - 360px); /* leave space for offer-card (320px + gap) */
-  box-sizing: border-box;
-  display: flex;
-  align-items: center; 
-     /* center internal content vertically */
-}
-
-.hero-text {
-  flex: 1 1 60%;
-  padding-right: 12px;
-  line-height: 1.02;
-}
-
-.hero-title {
-  font-size: 5.2rem;
-  font-weight: 600;
-  line-height: 0.9;
-  margin-bottom: 1.5rem;
-  letter-spacing: -0.02em;
-}
-
-.title-main {
-  display: block;
-  color: white;
-  margin-bottom: 0.5rem;
-}
-
-.title-gradient {
-  display: block;
-  background: #7A7FEE;
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
-}
-
-.hero-description {
-  font-size: 1.25rem;
-  line-height: 1.6;
-  color: rgba(255, 255, 255, 0.8);
-  margin-bottom: 2.5rem;
-  max-width: 540px;
-}
-
-/* Added styles for hero actions container and loading states */
-.hero-actions {
-  display: flex;
-  flex-direction: row;
-  gap: 1.5rem;
-  align-items: flex-start;
-}
-
-.hero-button {
-      background: linear-gradient(135deg, #8b5cf6, #8e55f7);
-    color: white;
-    border: none;
-    padding: 1rem 2.5rem;
-    font-size: 1.525rem;
-    font-weight: 600;
-    border-radius: 12px;
-    cursor: pointer;
-    transition: all 0.3s 
-ease;
-    box-shadow: 0 4px 20px rgba(139, 92, 246, 0.3);
-    position: relative;
-    overflow: hidden;
-    min-width: 209px;
-    min-height: 71px;
-    display: flex
-;
-    align-items: center;
-    justify-content: center;
-}
-
-.hero-button.loading {
-  cursor: not-allowed;
-  opacity: 0.8;
-}
-
-.loading-spinner {
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-}
-
-.spinner {
-  width: 20px;
-  height: 20px;
-  border: 2px solid rgba(255, 255, 255, 0.3);
-  border-top: 2px solid white;
-  border-radius: 50%;
-  animation: spin 1s linear infinite;
-}
-
-@keyframes spin {
-  0% {
-    transform: rotate(0deg);
-  }
-  100% {
-    transform: rotate(360deg);
-  }
-}
-
-/* Added session info and refresh button styles */
-.session-info {
-    display: flex;
-    align-items: center;
-    gap: 1rem;
-    padding: 0.75rem 0.25rem;
-    background: rgba(255, 255, 255, 0.1);
-    border-radius: 8px;
-    backdrop-filter: blur(10px);
-    border: 1px solid rgba(255, 255, 255, 0.2);
-    width: 337px;
-    height: 70px;
-}
-
-.session-label {
-  color: rgba(255, 255, 255, 0.7);
-  font-size: 1.275rem;
-  font-weight: 500;
-}
-
-.session-identity {
-  color: white;
-  font-size: 0.975rem;
-  font-weight: 500;
-  font-family: monospace;
-  background: rgba(0, 0, 0, 100);
-  padding: 0.25rem 0.5rem;
-  border-radius: 4px;
-}
-
-.refresh-button {
-  display: flex;
-  align-items: center;
-  gap: 0.375rem;
-  background: green;
-  color: white;
-  border: none;
-  padding: 0.5rem 0.75rem;
-  border-radius: 6px;
-  font-size: 0.85rem;
-  font-weight: 500;
-  cursor: pointer;
-  transition: all 0.2s ease;
-}
-
-.refresh-button:hover {
-  background: rgba(255, 255, 255, 100);
-  color: green;
-  transform: translateY(-1px);
-}
-
-.refresh-button svg {
-  transition: transform 0.3s ease;
-}
-
-.refresh-button:hover svg {
-  transform: rotate(180deg);
-}
-
-.hero-visual {
-  flex: 0 0 220px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-/* Offer card as a normal flex sibling (side-by-side with hero-content) */
-.offer-card-wrapper {
-  position: static;           /* ensure it's in normal flow */
-  flex: 0 0 320px;           /* fixed column width */
-  display: flex;
-  align-items: flex-start;
-  justify-content: center;
-  width: 320px;
-  margin-left: 20px;         /* spacing between hero-content and card */
-  box-sizing: border-box;
-  z-index: 2;
-}
-
-.offer-card-wrapper .offer-card {
-  margin: 0;
-}
-
-.qr-code-container {
-  position: relative;
-  display: inline-block;
-}
-
-.qr-frame {
-  position: relative;
-  display: inline-block;
-  border-radius: 10px;
-  padding: 8px;
-}
-
-.qr-code-image {
-  display: block;
-  width: 220px;
-  height: 220px;
-  object-fit: contain;
-  background: #fff;
-  border-radius: 8px;
-  box-shadow: 0 8px 20px rgba(0,0,0,0.45);
-}
-
-.qr-corner {
-  position: absolute;
-  width: 44px;
-  height: 44px;
-  pointer-events: none;
-}
-
-/* two bars composing the rounded L-shape */
-.qr-corner::before,
-.qr-corner::after {
-  content: "";
-  position: absolute;
-  background: rgba(255,255,255,0.06);
-  border-radius: 8px;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.45) inset;
-}
-
-/* top-left */
-.qr-corner.tl { top: -12px; left: -12px; transform: none; }
-.qr-corner.tl::before { /* horizontal bar */
-  left: 4px; top: 4px;
-  width: 28px; height: 6px;
-  border-top-left-radius: 8px; border-top-right-radius: 8px;
-}
-.qr-corner.tl::after { /* vertical bar */
-  left: 4px; top: 4px;
-  width: 6px; height: 28px;
-  border-top-left-radius: 8px; border-bottom-left-radius: 8px;
-}
-
-/* top-right */
-.qr-corner.tr { top: -12px; right: -12px; }
-.qr-corner.tr::before {
-  right: 4px; top: 4px;
-  width: 28px; height: 6px;
-  border-top-left-radius: 8px; border-top-right-radius: 8px;
-}
-.qr-corner.tr::after {
-  right: 4px; top: 4px;
-  width: 6px; height: 28px;
-  border-top-right-radius: 8px; border-bottom-right-radius: 8px;
-}
-
-/* bottom-left */
-.qr-corner.bl { bottom: -12px; left: -12px; }
-.qr-corner.bl::before {
-  left: 4px; bottom: 4px;
-  width: 28px; height: 6px;
-  border-bottom-left-radius: 8px; border-bottom-right-radius: 8px;
-}
-.qr-corner.bl::after {
-  left: 4px; bottom: 4px;
-  width: 6px; height: 28px;
-  border-top-left-radius: 8px; border-bottom-left-radius: 8px;
-}
-
-/* bottom-right */
-.qr-corner.br { bottom: -12px; right: -12px; }
-.qr-corner.br::before {
-  right: 4px; bottom: 4px;
-  width: 28px; height: 6px;
-  border-bottom-left-radius: 8px; border-bottom-right-radius: 8px;
-}
-.qr-corner.br::after {
-  right: 4px; bottom: 4px;
-  width: 6px; height: 28px;
-  border-top-right-radius: 8px; border-bottom-right-radius: 8px;
-}
-
-/* tweak for smaller screens */
-@media (max-width: 520px) {
-  .qr-code-image { width: 160px; height: 160px; }
-  .qr-corner { width: 36px; height: 36px; }
-  .qr-corner::before, .qr-corner::after { border-radius: 6px; }
-}
-
-.pricing {
-  background-color: red;
-}
-
-@keyframes loading {
-  0% {
-    background-position: 200% 0;
-  }
-  100% {
-    background-position: -200% 0;
-  }
-}
-
-/* new row wrapper to keep hero-content and offer card side-by-side */
-.hero-row {
-  display: flex;
-  align-items: center;
-  gap: 28px;
-  width: 115%;           /* ensure row fits container */
-  box-sizing: border-box;
-  margin-left: -110px;        /* remove earlier negative offset */
-  /* remove fixed height so children control layout */
-  margin-top:-110px;
-}
-
-/* hero content: allow it to take remaining space and be compact */
-.hero-content {
-  flex: 1 1 auto;
-  background: #444;       /* keep your grey */
-  border-radius: 12px;
-  padding: 36px 44px;     /* a bit more padding for larger box */
-  height: 520px;           /* explicit height you asked for */
-  min-height: 420px;      /* ensure it doesn't shrink below this */
-  max-width: calc(100% - 360px); /* leave space for offer-card (320px + gap) */
-  box-sizing: border-box;
-  display: flex;
-  align-items: center; 
-     /* center internal content vertically */
 }
 
 .hero-text {
@@ -707,7 +77,7 @@ ease;
 
 .title-gradient {
   display: block;
-  background: #7A7FEE;
+  background: #21da49;
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
@@ -721,7 +91,7 @@ ease;
   max-width: 540px;
 }
 
-/* Added styles for hero actions container and loading states */
+/* Hero actions container */
 .hero-actions {
   display: flex;
   flex-direction: row;
@@ -730,25 +100,27 @@ ease;
 }
 
 .hero-button {
-      background: #7A7FEE;
-    color: white;
-    border: none;
-    padding: 1rem 1.5rem;
-    font-size: 1.525rem;
-    font-weight: 600;
-    border-radius: 12px;
-    cursor: pointer;
-    transition: all 0.3s 
-ease;
-    box-shadow: 0 4px 20px rgba(139, 92, 246, 0.3);
-    position: relative;
-    overflow: hidden;
-    min-width: 209px;
-    min-height: 71px;
-    display: flex
-;
-    align-items: center;
-    justify-content: center;
+  background: #7A7FEE;
+  color: white;
+  border: none;
+  padding: 1rem 1.5rem;
+  font-size: 1.525rem;
+  font-weight: 600;
+  border-radius: 12px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 20px rgba(139, 92, 246, 0.3);
+  position: relative;
+  overflow: hidden;
+  min-width: 209px;
+  min-height: 71px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.hero-button:hover{
+  scale:1.12;
 }
 
 .hero-button.loading {
@@ -780,19 +152,18 @@ ease;
   }
 }
 
-/* Added session info and refresh button styles */
+/* Session info */
 .session-info {
-       display: flex
-;
-    align-items: center;
-    gap: 1rem;
-    padding: 0.75rem 0.95rem;
-    background: rgb(0 0 0);
-    border-radius: 8px;
-    backdrop-filter: blur(10px);
-    border: 1px solid rgba(255, 255, 255, 0.2);
-    width: 364px;
-    height: 84px;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 0.75rem 0.95rem;
+  background: rgb(0 0 0);
+  border-radius: 8px;
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  width: 364px;
+  height: 84px;
 }
 
 .session-label {
@@ -824,10 +195,11 @@ ease;
   font-weight: 500;
   cursor: pointer;
   transition: all 0.2s ease;
+  position:fixed;
+  margin-left:230px;
 }
 
 .refresh-button:hover {
-  color: green;
   transform: translateY(-1px);
 }
 
@@ -846,27 +218,27 @@ ease;
   justify-content: center;
 }
 
-/* Offer card as a normal flex sibling (side-by-side with hero-content) */
+/* Offer card */
 .offer-card-wrapper {
-  position: static;           /* ensure it's in normal flow */
-  flex: 0 0 320px;           /* fixed column width */
+  position: static;
+  flex: 0 0 320px;
   display: flex;
   align-items: flex-start;
   justify-content: center;
   width: 320px;
-  margin-left: 20px;         /* spacing between hero-content and card */
+  margin-left: 20px;
   box-sizing: border-box;
   z-index: 2;
 }
 
 .offer-card-wrapper .offer-card {
-
-  width:550px;
-  height:635px;
-  margin-left:100px;
+  width: 550px;
+  height: 635px;
+  margin-left: 100px;
   border-radius: 50px;
 }
 
+/* QR Code */
 .qr-code-container {
   position: relative;
   display: inline-block;
@@ -896,7 +268,6 @@ ease;
   pointer-events: none;
 }
 
-/* two bars composing the rounded L-shape */
 .qr-corner::before,
 .qr-corner::after {
   content: "";
@@ -906,84 +277,162 @@ ease;
   box-shadow: 0 2px 8px rgba(0,0,0,0.45) inset;
 }
 
-/* top-left */
-.qr-corner.tl { top: -12px; left: -12px; transform: none; }
-.qr-corner.tl::before { /* horizontal bar */
-  left: 4px; top: 4px;
-  width: 28px; height: 6px;
-  border-top-left-radius: 8px; border-top-right-radius: 8px;
-}
-.qr-corner.tl::after { /* vertical bar */
-  left: 4px; top: 4px;
-  width: 6px; height: 28px;
-  border-top-left-radius: 8px; border-bottom-left-radius: 8px;
+/* QR Corner positions */
+.qr-corner.tl { 
+  top: -12px; 
+  left: -12px; 
+  transform: none; 
 }
 
-/* top-right */
-.qr-corner.tr { top: -12px; right: -12px; }
+.qr-corner.tl::before {
+  left: 4px; 
+  top: 4px;
+  width: 28px; 
+  height: 6px;
+  border-top-left-radius: 8px; 
+  border-top-right-radius: 8px;
+}
+
+.qr-corner.tl::after {
+  left: 4px; 
+  top: 4px;
+  width: 6px; 
+  height: 28px;
+  border-top-left-radius: 8px; 
+  border-bottom-left-radius: 8px;
+}
+
+.qr-corner.tr { 
+  top: -12px; 
+  right: -12px; 
+}
+
 .qr-corner.tr::before {
-  right: 4px; top: 4px;
-  width: 28px; height: 6px;
-  border-top-left-radius: 8px; border-top-right-radius: 8px;
+  right: 4px; 
+  top: 4px;
+  width: 28px; 
+  height: 6px;
+  border-top-left-radius: 8px; 
+  border-top-right-radius: 8px;
 }
+
 .qr-corner.tr::after {
-  right: 4px; top: 4px;
-  width: 6px; height: 28px;
-  border-top-right-radius: 8px; border-bottom-right-radius: 8px;
+  right: 4px; 
+  top: 4px;
+  width: 6px; 
+  height: 28px;
+  border-top-right-radius: 8px; 
+  border-bottom-right-radius: 8px;
 }
 
-/* bottom-left */
-.qr-corner.bl { bottom: -12px; left: -12px; }
+.qr-corner.bl { 
+  bottom: -12px; 
+  left: -12px; 
+}
+
 .qr-corner.bl::before {
-  left: 4px; bottom: 4px;
-  width: 28px; height: 6px;
-  border-bottom-left-radius: 8px; border-bottom-right-radius: 8px;
+  left: 4px; 
+  bottom: 4px;
+  width: 28px; 
+  height: 6px;
+  border-bottom-left-radius: 8px; 
+  border-bottom-right-radius: 8px;
 }
+
 .qr-corner.bl::after {
-  left: 4px; bottom: 4px;
-  width: 6px; height: 28px;
-  border-top-left-radius: 8px; border-bottom-left-radius: 8px;
+  left: 4px; 
+  bottom: 4px;
+  width: 6px; 
+  height: 28px;
+  border-top-left-radius: 8px; 
+  border-bottom-left-radius: 8px;
 }
 
-/* bottom-right */
-.qr-corner.br { bottom: -12px; right: -12px; }
+.qr-corner.br { 
+  bottom: -12px; 
+  right: -12px; 
+}
+
 .qr-corner.br::before {
-  right: 4px; bottom: 4px;
-  width: 28px; height: 6px;
-  border-bottom-left-radius: 8px; border-bottom-right-radius: 8px;
+  right: 4px; 
+  bottom: 4px;
+  width: 28px; 
+  height: 6px;
+  border-bottom-left-radius: 8px; 
+  border-bottom-right-radius: 8px;
 }
+
 .qr-corner.br::after {
-  right: 4px; bottom: 4px;
-  width: 6px; height: 28px;
-  border-top-right-radius: 8px; border-bottom-right-radius: 8px;
+  right: 4px; 
+  bottom: 4px;
+  width: 6px; 
+  height: 28px;
+  border-top-right-radius: 8px; 
+  border-bottom-right-radius: 8px;
 }
 
-/* tweak for smaller screens */
-@media (max-width: 520px) {
-  .qr-code-image { width: 160px; height: 160px; }
-  .qr-corner { width: 36px; height: 36px; }
-  .qr-corner::before, .qr-corner::after { border-radius: 6px; }
+/* Pricing */
+.pricing {
+  background-color: red;
 }
 
-/* Responsive: stack layout on small screens (keep normal flow) */
-@media (max-width: 920px) {
-  .hero-content {
-    flex-direction: column;
-    padding: 28px;
-    min-height: auto;
+/* Loading animation */
+@keyframes loading {
+  0% {
+    background-position: 200% 0;
   }
-
-  .hero-visual { order: 2; margin-top: 12px; }
-  .hero-text { order: 1; }
-  .offer-card-wrapper {
-    position: static;
-    transform: none;
-    width: 100%;
-    margin-top: 18px;
-    right: auto;
+  100% {
+    background-position: -200% 0;
   }
 }
 
+/* Processing file row */
+.processing-file-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 8px 10px;
+  background: #06060a;
+  border-radius: 8px;
+  border: 1px solid rgba(255,255,255,0.02);
+  color: #dbe8ff;
+  font-size: 20px;
+  gap: 12px;
+}
+
+.processing-file-left {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  min-width: 0;
+  overflow: hidden;
+}
+
+.processing-file-icon {
+  width: 36px;
+  height: 36px;
+  object-fit: contain;
+  flex: 0 0 36px;
+  display: block;
+}
+
+.processing-file-name {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  display: block;
+  font-size: 1rem;
+  color: inherit;
+}
+
+.processing-file-size {
+  color: #98a3b8;
+  font-size: 12px;
+  flex: 0 0 auto;
+  margin-left: 12px;
+}
+
+/* Responsive styles */
 @media (max-width: 1024px) {
   .hero-content {
     flex-direction: column;
@@ -1000,7 +449,6 @@ ease;
     padding: 0 2rem;
   }
 
-  /* Added responsive styles for hero actions */
   .hero-actions {
     align-items: center;
   }
@@ -1018,6 +466,31 @@ ease;
   .offer-card {
     width: 100%;
     max-width: 360px;
+  }
+}
+
+@media (max-width: 920px) {
+  .hero-content {
+    flex-direction: column;
+    padding: 28px;
+    min-height: auto;
+  }
+
+  .hero-visual { 
+    order: 2; 
+    margin-top: 12px; 
+  }
+
+  .hero-text { 
+    order: 1; 
+  }
+
+  .offer-card-wrapper {
+    position: static;
+    transform: none;
+    width: 100%;
+    margin-top: 18px;
+    right: auto;
   }
 }
 
@@ -1054,53 +527,19 @@ ease;
   }
 }
 
+@media (max-width: 520px) {
+  .qr-code-image { 
+    width: 160px; 
+    height: 160px; 
+  }
 
+  .qr-corner { 
+    width: 36px; 
+    height: 36px; 
+  }
 
-.processing-file-row {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 8px 10px;
-  background: #06060a;
-  border-radius: 8px;
-  border: 1px solid rgba(255,255,255,0.02);
-  color: #dbe8ff;
-  font-size: 20px;
-  gap: 12px;
-}
-
-/* left group: icon + name */
-.processing-file-left {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  min-width: 0; /* allow truncation */
-  overflow: hidden;
-}
-
-/* file icon */
-.processing-file-icon {
-  width: 36px;
-  height: 36px;
-  object-fit: contain;
-  flex: 0 0 36px;
-  display: block;
-}
-
-/* filename: truncated when long */
-.processing-file-name {
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-  display: block;
-  font-size: 1rem;
-  color: inherit;
-}
-
-/* size / meta on the right */
-.processing-file-size {
-  color: #98a3b8;
-  font-size: 12px;
-  flex: 0 0 auto;
-  margin-left: 12px;
+  .qr-corner::before, 
+  .qr-corner::after { 
+    border-radius: 6px; 
+  }
 }

@@ -1,3 +1,7 @@
+/* ========================================
+   BASE & LAYOUT
+   ======================================== */
+
 .file-transfer-page {
   min-height: 100vh;
   background: #111111;
@@ -7,9 +11,10 @@
   overflow-x: hidden;
 }
 
-/* hi hell0 */
+/* ========================================
+   NAVIGATION BAR
+   ======================================== */
 
-/* Navigation Bar */
 .file-transfer-page .navbar {
   background: #111111;
   color: white;
@@ -25,96 +30,6 @@
   box-sizing: border-box;
 }
 
-/* Updated section toggle to modern rounded pill design */
-.file-transfer-page .section-toggle {
-  position: fixed;
-  top: 57px;
-  left: 0;
-  width: 25%;
-  max-width: 460px;
-  z-index: 0;
-  background: #303030;
-  padding: 8px;
-  display: flex;
-
-  margin-top: 7px;
-  margin-left: 0px;
-  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
-}
-
-.file-transfer-page .toggle-btn {
-  flex: 1;
-  background: #303030;
-  color: #ffffff;
-  border: none;
-  padding: 12px 24px;
-  font-size: 1rem;
-  font-weight: 600;
-  cursor: pointer;
-  transition: all 0.3s ease-in-out;
-  border-radius: 20px;
-  position: relative;
-}
-
-.file-transfer-page .toggle-btn.active {
-  background: #f5f5f5;
-  color: #000000;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
-}
-
-.file-transfer-page .toggle-btn:not(.active):hover {
-  background: rgba(221, 106, 106, 0.05);
-  color: #ffffff;
-}
-
-/* Updated container positioning to align properly with fixed toggle section */
-/* Container - 25% width - FIXED GAPS */
-.file-transfer-page .container {
-  width: 2060px;
-
-  background: rgba(255, 255, 255, 0.95);
-  backdrop-filter: blur(10px);
-
-  position: fixed;
-  left: 0;
-  top: 130px; /* Reduced gap - align closer to toggle section */
-  /* Adjusted height accordingly */
-  overflow-y: auto;
-  box-sizing: border-box;
-  display: flex;
-  flex-direction: column;
-  gap: 2rem;
-  border-right: 1px solid #ffffff; /* Changed to black border to match navigation */
-}
-
-/* Integrated FilePage Section - 75% width - FIXED GAPS */
-.file-transfer-page .integrated-files-section {
-  position: fixed;
-  right: 0;
-  top: 62px; /* Align with navbar bottom - no gap */
-  width: 1560px;
-  height: 100vh; /* Full height from navbar bottom */
-  background: #ffffff;
-  color: #000000;
-  overflow: hidden;
-  margin-left: 474px;
-  padding: 0px;
-  box-sizing: border-box;
-}
-
-/* Added paper shop content styling */
-.file-transfer-page .paper-shop-content {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  height: 140%;
-  color: #7f8c8d;
-  font-size: 1.2rem;
-  font-weight: 500;
-  margin-top: 30px;
-}
-
-/* Nav Content */
 .file-transfer-page .nav-content {
   display: flex;
   justify-content: flex-start;
@@ -125,10 +40,16 @@
   position: relative;
 }
 
-.file-transfer-page .logo {
+.file-transfer-page .logo,
+.file-transfer-page .nav-logo {
   display: flex;
   align-items: center;
   gap: 8px;
+}
+
+.file-transfer-page .nav-logo {
+  gap: 0.5rem;
+  order: 2;
 }
 
 .file-transfer-page .logo-icon {
@@ -142,6 +63,17 @@
   font-size: 18px;
   font-weight: 600;
   color: #ededed;
+}
+
+.file-transfer-page .app-logo {
+  height: 50px;
+  margin-top: -10px;
+}
+
+.file-transfer-page .navi_moto {
+  width: 5px;
+  height: 20px;
+  filter: brightness(0) invert(1);
 }
 
 .file-transfer-page .nav-status {
@@ -186,7 +118,6 @@
   border: 1px solid rgba(231, 76, 60, 0.3);
 }
 
-/* Modern Clock Styles for Nav Bar */
 .file-transfer-page .nav-clock {
   font-family: "Share Tech Mono", monospace;
   color: #daf6ff;
@@ -199,6 +130,7 @@
   margin: 0 1rem;
   order: 1;
 }
+
 .file-transfer-page .nav-clock .time {
   letter-spacing: 0.05em;
   font-size: 1.5rem;
@@ -206,2007 +138,98 @@
   margin: 0;
 }
 
-/* QR Code Section - Top of container */
-.file-transfer-page .qr-section {
+/* ========================================
+   SECTION TOGGLE
+   ======================================== */
+
+.file-transfer-page .section-toggle {
+  position: fixed;
+  top: 57px;
+  left: 0;
+  width: 25%;
+  max-width: 460px;
+  z-index: 0;
+  background: #303030;
+  padding: 8px;
   display: flex;
-  flex-direction: column;
-  align-items: center;
+  margin-top: 7px;
+  margin-left: 0px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
 }
 
-.file-transfer-page .qr-section h2 {
-  font-size: 1.4rem;
-  font-weight: 620;
-  margin: -1rem 0 1rem 0;
-  color: #000000;
-  text-align: center;
-}
-
-.file-transfer-page .qr-container {
-  display: flex;
-  justify-content: center;
-  margin-bottom: 1rem;
-}
-
-.file-transfer-page .starting-section {
-  height: 500px;
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  margin-bottom: 2rem;
-  background-color: #0056b3;
-}
-
-.file-transfer-page .qr-code {
-  border-radius: 12px;
-  box-shadow: 0 8px 25px rgba(255, 255, 255, 0.1);
-  background: white;
-  padding: 0.5rem;
-  width: 270px;
-  height: 270px;
-}
-
-.file-transfer-page .qr-placeholder {
-  width: 250px;
-  height: 250px;
-  background: #ecf0f1;
-  border-radius: 12px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  color: #ffffff;
-  font-weight: 600;
-}
-
-
-@keyframes spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
-}
-
-
-
-
-/* PDF File Styles */
-.file-transfer-page .file-item.pdf-file {
-  background: #fff3e0;
-  border-color: #ff9800;
-  position: relative;
-}
-
-.file-transfer-page .file-item.pdf-file:hover {
-  background: #ffe0b2;
-  border-color: #f57c00;
-  box-shadow: 0 4px 12px rgba(255, 152, 0, 0.2);
-}
-
-.file-transfer-page .pdf-badge {
-  background: #ff5722;
-  color: white;
-  padding: 2px 6px;
-  border-radius: 4px;
-  font-size: 0.7rem;
-  font-weight: 600;
-  margin-left: 8px;
-  text-transform: uppercase;
-}
-
-.file-transfer-page .pdf-hint {
-  color: #ff5722 !important;
-  font-weight: 500;
-  font-size: 0.75rem;
-  margin-top: 4px;
-  font-style: italic;
-}
-
-/* Selection mode styles */
-.file-transfer-page .file-item.selectable {
-  cursor: pointer;
-  position: relative;
-}
-
-.file-transfer-page .file-item.selectable:hover {
-  background: #e8f4fd;
-  border-color: #2196f3;
-}
-
-.file-transfer-page .file-item.selected {
-  background: #e3f2fd;
-  border-color: #1976d2;
-  box-shadow: 0 2px 8px rgba(25, 118, 210, 0.3);
-}
-
-.file-transfer-page .file-checkbox {
-  position: absolute;
-  top: 8px;
-  right: 8px;
-  width: 20px;
-  height: 20px;
-  accent-color: #1976d2;
-}
-
-.file-transfer-page .selection-controls {
-  padding: 1rem;
-  border-top: 2px solid #e0e0e0;
-  background: #f8f9fa;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  gap: 1rem;
-}
-
-.file-transfer-page .selected-count {
-  font-size: 0.9rem;
-  color: #666;
-  font-weight: 500;
-}
-
-.file-transfer-page .next-btn {
-  background: #1976d2;
-  color: white;
-  border: none;
-  padding: 0.75rem 1.5rem;
-  border-radius: 6px;
-  cursor: pointer;
-  font-weight: 600;
-  transition: all 0.3s ease;
-}
-
-.file-transfer-page .next-btn:hover:not(:disabled) {
-  background: #1565c0;
-}
-
-.file-transfer-page .next-btn:disabled {
-  background: #ccc;
-  cursor: not-allowed;
-  transform: none;
-}
-
-.file-transfer-page .clear-selection-btn {
-  background: transparent;
-  color: #666;
-  border: 1px solid #ddd;
-  padding: 0.5rem 1rem;
-  border-radius: 4px;
-  cursor: pointer;
-  font-size: 0.85rem;
-}
-
-.file-transfer-page .clear-selection-btn:hover {
-  background: #f5f5f5;
-}
-
-/* Modern dark-themed file cards styling */
-.file-transfer-page .modern-files-list {
-  display: flex;
-  flex-direction: column;
-  gap: 1rem;
-  margin-bottom: 1.5rem;
-}
-
-.file-transfer-page .modern-file-card {
-  background: #ffffff;
-  border: 1px solid #e0e0e0;
-  border-radius: 8px;
-  padding: 0.75rem 1rem;
-  display: flex;
-  align-items: center;
-  gap: 0.75rem;
-  transition: all 0.3s ease;
-  color: #2c3e50;
-  height: 60px;
-  box-sizing: border-box;
-}
-
-.file-transfer-page .modern-file-card:hover {
-  background: #f8f9fa;
-  border-color: #3498db;
-  transform: translateY(-1px);
-  box-shadow: 0 2px 8px rgba(52, 152, 219, 0.15);
-}
-
-.file-transfer-page .file-icon-container {
-  flex-shrink: 0;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.file-transfer-page .pdf-icon {
-  color: #e74c3c;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.file-transfer-page .image-icon {
-  color: #3498db;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.file-transfer-page .file-details {
+.file-transfer-page .toggle-btn {
   flex: 1;
-  min-width: 0;
-  display: flex;
-  align-items: center;
-}
-
-/* Updated file name styling with truncation for equal card sizes */
-.file-transfer-page .file-details .file-name {
-  font-size: 0.95rem;
-  font-weight: 500;
-  color: #2c3e50;
-  margin: 0;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  max-width: 100%;
-}
-
-/* Removed upload status styles as they're no longer needed */
-.file-transfer-page .upload-status {
-  display: none;
-}
-
-.file-transfer-page .upload-status .status-text {
-  display: none;
-}
-
-.file-transfer-page .upload-status .check-icon {
-  display: none;
-}
-
-/* Modern Next button styling */
-.file-transfer-page .next-button-container {
-  display: flex;
-  justify-content: center;
-  padding: 1rem 0;
-  border-top: 1px solid #e0e0e0;
-  background: #f8f9fa;
-}
-
-.file-transfer-page .modern-next-btn {
-  /* in scss with just one variable i can change opacity with rgba(variable, opacity) but in css it's not possible so i have used three seperate variables */
-  /* with hue-rotate color can be changed */
-  --main-color: rgb(46, 213, 115);
-  --main-bg-color: rgba(46, 213, 116, 0.36);
-  --pattern-color: rgba(46, 213, 116, 0.073);
-
-  /* change this rotation value */
-  filter: hue-rotate(0deg);
-
+  background: #303030;
+  color: #ffffff;
+  border: none;
+  padding: 12px 24px;
+  font-size: 1rem;
+  font-weight: 600;
   cursor: pointer;
-  text-transform: uppercase;
-  letter-spacing: 0.5rem;
-  background: radial-gradient(circle, var(--main-bg-color) 0%, rgba(0, 0, 0, 0) 95%),
-    linear-gradient(var(--pattern-color) 1px, transparent 1px),
-    linear-gradient(to right, var(--pattern-color) 1px, transparent 1px);
-  background-size: cover, 15px 15px, 15px 15px;
-  background-position: center center, center center, center center;
-  border-image: radial-gradient(circle, var(--main-color) 0%, rgba(0, 0, 0, 0) 100%) 1;
-  border-width: 1px 0 1px 0;
-  color: var(--main-color);
-  padding: 1rem 3rem;
-  font-weight: 700;
-  font-size: 1.5rem;
-  transition: background-size 0.2s ease-in-out;
-  border-radius: 0;
-  min-width: 120px;
+  transition: all 0.3s ease-in-out;
+  border-radius: 20px;
+  position: relative;
 }
 
-.file-transfer-page .modern-next-btn:hover:not(:disabled) {
-  background-size: cover, 10px 10px, 10px 10px;
+.file-transfer-page .toggle-btn.active {
+  background: #f5f5f5;
+  color: #000000;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
 }
 
-.file-transfer-page .modern-next-btn:active {
-  filter: hue-rotate(250deg);
+.file-transfer-page .toggle-btn:not(.active):hover {
+  background: rgba(221, 106, 106, 0.05);
+  color: #ffffff;
 }
 
-.file-transfer-page .modern-next-btn:disabled {
-  opacity: 0.5;
-  cursor: not-allowed;
-}
+/* ========================================
+   CONTAINER & SECTIONS
+   ======================================== */
 
-/* Added product cards styling for paper shop section */
-.file-transfer-page .product-cards-container {
+.file-transfer-page .container {
+  width: 2060px;
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(10px);
+  position: fixed;
+  left: 0;
+  top: 130px;
+  overflow-y: auto;
+  box-sizing: border-box;
   display: flex;
   flex-direction: column;
   gap: 2rem;
-  padding: 0rem 1.5rem;
-  height: 100%;
-  overflow-y: auto;
-  max-height: calc(100vh - 200px);
-  margin-top: 100px;
+  border-right: 1px solid #ffffff;
 }
 
-.file-transfer-page .product-cards-container::-webkit-scrollbar {
-  width: 0px;
-}
-
-.file-transfer-page .product-cards-container::-webkit-scrollbar-track {
-  background: #ffffff;
-}
-
-.file-transfer-page .product-cards-container::-webkit-scrollbar-thumb {
-  background: #ffffff;
-  border-radius: 4px;
-}
-
-.file-transfer-page .product-cards-container::-webkit-scrollbar-thumb:hover {
-  background: #ffffff;
-}
-
-.file-transfer-page .product-card {
-  width: 100%;
-  background: #fff;
-  border-radius: 12px;
-  transition: 0.3s;
-  font-family: "Segoe UI", sans-serif;
-  overflow: hidden;
-  position: relative;
-  cursor: pointer;
-  /* Increased minimum height from 280px to 380px for better proportions */
-  min-height: 480px;
-  border-color: #e8e3e3;
-  border-width: 0.01px;
-  border-style: solid;
-}
-
-.file-transfer-page .product-card:hover {
-  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
-}
-
-.file-transfer-page .product-badge {
-  position: absolute;
-  top: 12px;
-  right: 12px;
-  background: linear-gradient(to right, rgba(169, 3, 41, 1) 0%, rgba(196, 72, 72, 1) 44%, rgba(170, 34, 56, 1) 100%);
-  color: #fff;
-  padding: 6px 12px;
-  font-size: 10px;
-  font-weight: 600;
-  letter-spacing: 1px;
-  text-transform: uppercase;
-  border-radius: 8px;
-  z-index: 10;
-}
-
-.file-transfer-page .product-tilt {
-  overflow: hidden;
-  height: 300px;
-}
-
-.file-transfer-page .product-img {
-  /* Increased height from 160px to 200px for better image display */
-  height: 400px;
-  overflow: hidden;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background: #ffffff;
-  padding: 1rem;
-}
-
-.file-transfer-page .product-img img {
-  /* Increased image size from 120px to 150px for better visibility */
-  width: 300px;
-  height: 400px;
-  object-fit: contain;
-  transition: transform 0.5s;
-}
-
-.file-transfer-page .product-info {
-  /* Increased padding for better spacing with taller cards */
-  padding: 1.5rem;
-  height: 200px;
-}
-
-file-transfer-page .product-cat {
-  font-size: 10px;
-  font-weight: 600;
-  letter-spacing: 1px;
-  text-transform: uppercase;
-  color: #71717a;
-  margin-bottom: 6px;
-}
-
-.file-transfer-page .product-title {
-  font-size: 16px;
-  font-weight: 700;
-  color: #18181b;
-  margin: 0 0 10px;
-  letter-spacing: -0.5px;
-}
-
-.file-transfer-page .product-desc {
-  font-size: 12px;
-  color: #52525b;
-  line-height: 1.5;
-  margin-bottom: 15px;
-  display: -webkit-box;
-  -webkit-line-clamp: 3;
-  -webkit-box-orient: vertical;
-  overflow: hidden;
-}
-
-.file-transfer-page .product-bottom {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 10px;
-}
-
-.file-transfer-page .product-price {
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-}
-
-.file-transfer-page .price-old {
-  font-size: 18px;
-  text-decoration: line-through;
-  color: #e23c33;
-  margin-right: 8px;
-}
-
-.file-transfer-page .price-new {
-  font-size: 25px;
-  font-weight: 700;
-  color: #18181b;
-}
-
-.file-transfer-page .product-btn {
-  background: linear-gradient(45deg, #18181b, #27272a);
-  color: #fff;
-  border: none;
-  border-radius: 8px;
-  padding: 8px 16px;
-  font-size: 18px;
-  font-weight: 600;
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  transition: 0.3s;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-  position: relative;
-  overflow: hidden;
-}
-
-.file-transfer-page .product-btn:hover {
-  background: linear-gradient(45deg, #27272a, #3f3f46);
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-}
-
-.file-transfer-page .product-btn:before {
-  content: "";
-  position: absolute;
-  top: 0;
-  left: -100%;
-  width: 100%;
-  height: 100%;
-  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1), transparent);
-  transition: 0.5s;
-}
-
-.file-transfer-page .product-btn:hover:before {
-  left: 100%;
-}
-
-.file-transfer-page .cart-icon {
-  transition: transform 0.3s;
-}
-
-.file-transfer-page .product-btn:hover .cart-icon {
-  transform: rotate(-10deg) scale(1.1);
-}
-
-.file-transfer-page .product-meta {
-  display: flex;
-  justify-content: flex-end;
-  align-items: center;
-  padding-top: 8px;
-}
-
-.file-transfer-page .product-stock {
-  font-size: 15px;
-  font-weight: 600;
-  color: #22c55e;
-  margin-top: -12px;
-}
-
-/* Responsive adjustments for smaller 25% space */
-@media (max-width: 1200px) {
-  .file-transfer-page .product-card {
-    margin-bottom: 0.75rem;
-  }
-
-  .file-transfer-page .product-title {
-    font-size: 13px;
-  }
-
-  .file-transfer-page .product-img {
-    height: 100px;
-  }
-
-  .file-transfer-page .product-img img {
-    width: 70px;
-    height: 70px;
-  }
-
-  .file-transfer-page .product-info {
-    padding: 0.75rem;
-  }
-}
-
-/* 3D Folder Animation Styles */
-.file-transfer-page .storage-box-blur section {
-  position: relative;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  width: 100%;
-  height: 100%;
-}
-
-.file-transfer-page .storage-box-blur .file {
-  position: relative;
-  width: 100px; /* reduced from 120px to 100px */
-  height: 67px; /* reduced from 80px to 67px */
-  cursor: pointer;
-  transform-origin: bottom;
-  perspective: 1500px;
-  z-index: 50;
-}
-
-.file-transfer-page .storage-box-blur .work-5 {
-  background-color: #d97706;
-  width: 100%;
-  height: 100%;
-  transform-origin: top;
-  border-radius: 16px;
-  border-top-left-radius: 0;
-  transition: all 0.3s ease;
-  position: relative;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-}
-
-.file-transfer-page .storage-box-blur .work-5::after {
-  content: "";
-  position: absolute;
-  bottom: 99%;
-  left: 0;
-  width: 33px; /* reduced from 40px to 33px */
-  height: 7px; /* reduced from 8px to 7px */
-  background-color: #d97706;
-  border-top-left-radius: 16px;
-  border-top-right-radius: 16px;
-}
-
-.file-transfer-page .storage-box-blur .work-5::before {
-  content: "";
-  position: absolute;
-  top: -6px; /* reduced from -7px to -6px */
-  left: 31px; /* adjusted from 37.5px to 31px */
-  width: 7px; /* reduced from 8px to 7px */
-  height: 7px; /* reduced from 8px to 7px */
-  background-color: #d97706;
-  clip-path: polygon(0 35%, 0% 100%, 50% 100%);
-}
-
-.file-transfer-page .storage-box-blur .work-4 {
-  position: absolute;
-  top: 3px; /* reduced from 4px to 3px */
-  left: 3px; /* reduced from 4px to 3px */
-  right: 3px; /* reduced from 4px to 3px */
-  bottom: 3px; /* reduced from 4px to 3px */
-  background-color: #a1a1aa;
-  border-radius: 16px;
-  transition: all 0.3s ease;
-  transform-origin: bottom;
-}
-
-.file-transfer-page .storage-box-blur .work-3 {
-  position: absolute;
-  top: 3px; /* reduced from 4px to 3px */
-  left: 3px; /* reduced from 4px to 3px */
-  right: 3px; /* reduced from 4px to 3px */
-  bottom: 3px; /* reduced from 4px to 3px */
-  background-color: #d1d5db;
-  border-radius: 16px;
-  transition: all 0.3s ease;
-  transform-origin: bottom;
-}
-
-.file-transfer-page .storage-box-blur .work-2 {
-  position: absolute;
-  top: 3px; /* reduced from 4px to 3px */
-  left: 3px; /* reduced from 4px to 3px */
-  right: 3px; /* reduced from 4px to 3px */
-  bottom: 3px; /* reduced from 4px to 3px */
-  background-color: #e5e7eb;
-  border-radius: 16px;
-  transition: all 0.3s ease;
-  transform-origin: bottom;
-}
-
-.file-transfer-page .storage-box-blur .work-1 {
-  position: absolute;
-  bottom: 0;
-  background: linear-gradient(to top, #f59e0b, #fbbf24);
-  width: 100%;
-  height: 65px; /* reduced from 78px to 65px */
-  border-radius: 16px;
-  border-top-right-radius: 0;
-  transition: all 0.3s ease;
-  transform-origin: bottom;
-  display: flex;
-  align-items: flex-end;
-}
-
-.file-transfer-page .storage-box-blur .work-1::after {
-  content: "";
-  position: absolute;
-  bottom: 99%;
-  right: 0;
-  width: 61px; /* reduced from 73px to 61px */
-  height: 7px; /* reduced from 8px to 7px */
-  background-color: #fbbf24;
-  border-top-left-radius: 16px;
-  border-top-right-radius: 16px;
-}
-
-.file-transfer-page .storage-box-blur .work-1::before {
-  content: "";
-  position: absolute;
-  top: -4px; /* reduced from -5px to -4px */
-  right: 59px; /* adjusted from 71px to 59px */
-  width: 5px; /* reduced from 6px to 5px */
-  height: 5px; /* reduced from 6px to 5px */
-  background-color: #fbbf24;
-  clip-path: polygon(100% 14%, 50% 100%, 100% 100%);
-}
-
-.file-transfer-page .storage-box-blur p {
-  font-size: 1rem; /* reduced from 1.25rem to 1rem */
-  padding-top: 0.75rem; /* reduced from 1rem to 0.75rem */
-  opacity: 2.2;
-  margin: 0;
-  font-weight: 600;
-  color: #374151;
-}
-
-/* Fixed hover animations to trigger on storage-box-blur instead of .file */
-.file-transfer-page .storage-box-blur:hover .work-5 {
-  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
-}
-
-.file-transfer-page .storage-box-blur:hover .work-4 {
-  transform: rotateX(-20deg);
-}
-
-.file-transfer-page .storage-box-blur:hover .work-3 {
-  transform: rotateX(-30deg);
-}
-
-.file-transfer-page .storage-box-blur:hover .work-2 {
-  transform: rotateX(-38deg);
-}
-
-.file-transfer-page .storage-box-blur:hover .work-1 {
-  transform: rotateX(-46deg) translateY(1px);
-  box-shadow: inset 0 20px 40px #fbbf24, inset 0 -20px 40px #d97706;
-}
-
-/* Added cart basket button and counter styles */
-.file-transfer-page .cart-container {
-  display: flex;
-  align-items: center;
-  margin-left: 1rem;
-}
-
-.file-transfer-page .cart-basket-btn {
-  position: relative;
-  background: rgba(255, 255, 255, 0.1);
-  border: 1px solid rgba(255, 255, 255, 0.2);
-  border-radius: 8px;
-  padding: 0.75rem;
-  cursor: pointer;
-  transition: all 0.3s ease;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.file-transfer-page .cart-basket-btn:hover {
-  background: rgba(255, 255, 255, 0.2);
-  transform: translateY(-1px);
-}
-
-.file-transfer-page .basket-icon {
-  width: 32px; /* Increased size from 28px to 32px for better visibility */
-  height: 32px;
-  color: white;
-  stroke-width: 2;
-}
-
-.file-transfer-page .cart-counter {
-  position: absolute;
-  top: -8px;
-  right: -8px;
-  background: #e74c3c;
-  color: white;
-  border-radius: 50%;
-  width: 24px;
-  height: 24px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 12px;
-  font-weight: 600;
-  border: 2px solid white;
-  animation: bounce 0.3s ease;
-}
-
-@keyframes bounce {
-  0%,
-  20%,
-  60%,
-  100% {
-    transform: translateY(0);
-  }
-  40% {
-    transform: translateY(-4px);
-  }
-  80% {
-    transform: translateY(-2px);
-  }
-}
-
-/* Added cart sidebar styles */
-.file-transfer-page .cart-overlay {
+.file-transfer-page .integrated-files-section {
   position: fixed;
-  top: 100;
-  left: 100;
   right: 0;
-  bottom: 0;
-  background: rgba(0, 0, 0, 0.5);
-  z-index: 2000;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  padding: -20px;
-}
-
-.file-transfer-page .modern-cart-container {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  max-height: 90vh;
-  overflow-y: auto;
-}
-
-.cart-logo {
-  height: 40px;
-  width: 146px;
-}
-
-.file-transfer-page .cart-sidebar {
-  width: 420px;
-  height: 55vh;
-  background: rgb(255, 255, 255);
-  box-shadow: -4px 0 20px rgba(0, 0, 0, 0.1);
-  display: flex;
-  flex-direction: column;
-  animation: slideIn 0.3s ease;
-  border-radius: 24px;
-}
-
-@keyframes slideIn {
-  from {
-    transform: translateY(100%);
-  }
-  to {
-    transform: translateY(0);
-  }
-}
-
-.file-transfer-page .cart-header {
-  padding: 1.5rem;
-  border-bottom: 1px solid #e0e0e0;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  background: #f8f9fa;
-  border-radius: 10px;
-  border-width: 5px;
-  border-color: #000000;
-  padding: 3px;
-}
-
-.file-transfer-page .cart-header h3 {
-  margin: 0;
-  font-size: 1.5rem;
-  font-weight: 600;
-  color: #2c3e50;
-}
-
-.file-transfer-page .cart-close-btn {
-  background: none;
-  border: none;
-  cursor: pointer;
-  padding: 0.5rem;
-  border-radius: 4px;
-  transition: background 0.2s ease;
-}
-
-.file-transfer-page .cart-close-btn:hover {
-  background: rgba(0, 0, 0, 0.1);
-}
-
-.file-transfer-page .cart-content {
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-  overflow: hidden;
-}
-
-.file-transfer-page .cart-empty {
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  color: #7f8c8d;
-  gap: 1rem;
-}
-
-.file-transfer-page .empty-cart-icon {
-  width: 64px;
-  height: 64px;
-  opacity: 0.5;
-}
-
-.file-transfer-page .cart-items {
-  flex: 1;
-  overflow-y: auto;
-  padding: 1rem;
-}
-
-.file-transfer-page .cart-item {
-  display: flex;
-  align-items: center;
-  gap: 1rem;
-  padding: 1rem;
-  border: 1px solid #e0e0e0;
-  border-radius: 8px;
-  margin-bottom: 0.75rem;
-  background: #f8f9fa;
-}
-
-.file-transfer-page .cart-item-info {
-  flex: 1;
-}
-
-.file-transfer-page .cart-item-info h4 {
-  margin: 0 0 0.25rem 0;
-  font-size: 0.9rem;
-  font-weight: 600;
-  color: #2c3e50;
-}
-
-.file-transfer-page .cart-item-price {
-  margin: 0;
-  font-size: 0.8rem;
-  color: #7f8c8d;
-}
-
-.file-transfer-page .cart-item-controls {
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-  background: white;
-  border: 1px solid #e0e0e0;
-  border-radius: 6px;
-  padding: 0.25rem;
-}
-
-.file-transfer-page .quantity-btn {
-  background: #3498db;
-  color: white;
-  border: none;
-  width: 28px;
-  height: 28px;
-  border-radius: 4px;
-  cursor: pointer;
-  font-weight: 600;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  transition: background 0.2s ease;
-}
-
-.file-transfer-page .quantity-btn:hover {
-  background: #2980b9;
-}
-
-.file-transfer-page .quantity {
-  min-width: 30px;
-  text-align: center;
-  font-weight: 600;
-  color: #2c3e50;
-}
-
-.file-transfer-page .cart-item-total {
-  font-weight: 600;
-  color: #2c3e50;
-  min-width: 60px;
-  text-align: right;
-}
-
-.file-transfer-page .cart-summary {
-  border-top: 1px solid #e0e0e0;
-  padding: 1.5rem;
-  background: #f8f9fa;
-}
-
-.file-transfer-page .cart-total {
-  margin-bottom: 1.5rem;
-}
-
-.file-transfer-page .total-row {
-  display: flex;
-  justify-content: space-between;
-  margin-bottom: 0.5rem;
-  font-size: 0.9rem;
-  color: #2c3e50;
-}
-
-.file-transfer-page .total-row.final-total {
-  font-size: 1.1rem;
-  font-weight: 600;
-  padding-top: 0.5rem;
-  border-top: 1px solid #e0e0e0;
-  margin-bottom: 0;
-}
-
-.file-transfer-page .cart-actions {
-  display: flex;
-  gap: 0.75rem;
-}
-
-.file-transfer-page .clear-cart-btn {
-  flex: 1;
-  background: #e74c3c;
-  color: white;
-  border: none;
-  padding: 0.75rem;
-  border-radius: 6px;
-  cursor: pointer;
-  font-weight: 600;
-  transition: background 0.2s ease;
-}
-
-.file-transfer-page .clear-cart-btn:hover {
-  background: #c0392b;
-}
-
-.file-transfer-page .pay-now-btn {
-  flex: 2;
-  background: #27ae60;
-  color: white;
-  border: none;
-  padding: 0.75rem;
-  border-radius: 6px;
-  cursor: pointer;
-  font-weight: 600;
-  font-size: 1rem;
-  transition: background 0.2s ease;
-}
-
-.file-transfer-page .pay-now-btn:hover {
-  background: #229954;
-}
-
-/* Adding floating cart icon styles for content area positioning */
-.file-transfer-page .floating-cart-container {
-  position: fixed;
-  top: 18px;
-  right: 10px;
-  z-index: 1500;
-}
-
-.file-transfer-page .floating-cart-btn {
-  position: relative;
-  background: rgba(255, 255, 255, 0.95);
-  border: 2px solid rgba(0, 0, 0, 0.1);
-  border-radius: 50%;
-  width: 60px;
-  height: 60px;
-  cursor: pointer;
-  transition: all 0.3s ease;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
-  backdrop-filter: blur(10px);
-}
-
-.file-transfer-page .floating-cart-btn:hover {
-  background: rgba(255, 255, 255, 1);
-  box-shadow: 0 6px 25px rgba(0, 0, 0, 0.2);
-}
-
-.file-transfer-page .floating-cart-btn .basket-icon {
-  width: 32px;
-  height: 32px;
-  color: #2c3e50;
-}
-
-.file-transfer-page .floating-cart-counter {
-  position: absolute;
-  top: -5px;
-  right: -8px;
-  background: #e74c3c;
-  color: white;
-  border-radius: 50%;
-  width: 24px;
-  height: 24px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 12px;
-  font-weight: 600;
-  border: 2px solid white;
-  animation: bounce 0.3s ease;
-}
-
-.file-transfer-page .nav-logo {
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-  order: 2;
-}
-
-.file-transfer-page .app-logo {
-  height: 50px;
-  margin-top: -10px;
-}
-
-.file-transfer-page .navi_moto {
-  width: 5px;
-  height: 20px;
-  filter: brightness(0) invert(1);
-}
-
-/* Unified cart styling instead of separate cards */
-.file-transfer-page .unified-cart {
-  width: 460px;
+  top: 62px;
+  width: 1560px;
+  height: 100vh;
   background: #ffffff;
-  border-radius: 16px;
-  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+  color: #000000;
   overflow: hidden;
-}
-
-.file-transfer-page .cart-header-modern {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 20px 20px 15px 20px;
-  border-bottom: 1px solid #f1f5f9;
-}
-
-.file-transfer-page .cart-title {
-  font-size: 18px;
-  font-weight: 600;
-  color: #1e293b;
-  margin: 0;
-}
-
-.file-transfer-page .cart-close-btn-modern {
-  background: none;
-  border: none;
-  cursor: pointer;
-  padding: 8px;
-  border-radius: 8px;
-  transition: background 0.2s ease;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.file-transfer-page .cart-close-btn-modern:hover {
-  background: rgba(0, 0, 0, 0.05);
-}
-
-.file-transfer-page .cart-items-section {
-  padding: 0 20px;
-  max-height: 300px;
-  overflow-y: auto;
-  background-color: #111111;
-}
-
-.file-transfer-page .cart-item {
-  display: flex;
-  align-items: center;
-  padding: 15px 0;
-  border-bottom: 1px solid #f8fafc;
-  gap: 12px;
-}
-
-.file-transfer-page .cart-item:last-child {
-  border-bottom: none;
-}
-
-.file-transfer-page .item-icon {
-  flex-shrink: 0;
-}
-
-.file-transfer-page .item-details {
-  flex: 1;
-  min-width: 0;
-}
-
-.file-transfer-page .item-name {
-  font-size: 14px;
-  font-weight: 600;
-  color: #1e293b;
-  margin-bottom: 2px;
-}
-
-.file-transfer-page .item-category {
-  font-size: 12px;
-  color: #64748b;
-  margin-bottom: 2px;
-}
-
-.file-transfer-page .item-price {
-  font-size: 12px;
-  color: #64748b;
-}
-
-.file-transfer-page .item-quantity {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  background: #f8fafc;
-  border-radius: 8px;
-  padding: 4px;
-}
-
-.file-transfer-page .qty-btn {
-  background: #ffffff;
-  border: 1px solid #e2e8f0;
-  border-radius: 6px;
-  width: 40px;
-  height: 40px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  cursor: pointer;
-  transition: all 0.2s ease;
-}
-
-.file-transfer-page .qty-btn:hover {
-  background: #f1f5f9;
-  border-color: #cbd5e1;
-}
-
-.file-transfer-page .qty-number {
-  font-size: 14px;
-  font-weight: 500;
-  color: #1e293b;
-  min-width: 20px;
-  text-align: center;
-}
-
-.file-transfer-page .item-total {
-  font-size: 14px;
-  font-weight: 600;
-  color: #1e293b;
-  min-width: 60px;
-  text-align: right;
-}
-
-.file-transfer-page .mobile-input-section {
-  padding: 15px 20px;
-}
-
-.file-transfer-page .mobile-input {
-  width: 100%;
-  padding: 12px 16px;
-  border: 1px solid #e2e8f0;
-  border-radius: 8px;
-  font-size: 20px;
-  transition: border-color 0.2s ease;
+  margin-left: 474px;
+  padding: 0px;
   box-sizing: border-box;
 }
 
-.file-transfer-page .mobile-input:focus {
-  outline: none;
-  border-color: #3b82f6;
-  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
-}
-
-.file-transfer-page .mobile-error {
-  color: #ef4444;
-  font-size: 12px;
-  margin-top: 6px;
-}
-
-.file-transfer-page .printing-progress-section {
-  padding: 15px 20px;
-  border-top: 1px solid #f1f5f9;
-  background: #f8f9fa;
-}
-
-.file-transfer-page .progress-title {
-  font-size: 14px;
-  font-weight: 600;
-  color: #1e293b;
-  margin-bottom: 8px;
-}
-
-.file-transfer-page .progress-job {
-  font-size: 12px;
-  color: #64748b;
-  margin-bottom: 8px;
-}
-
-.file-transfer-page .progress-bar {
-  width: 100%;
-  height: 6px;
-  background: #e2e8f0;
-  border-radius: 3px;
-  overflow: hidden;
-  margin-bottom: 6px;
-}
-
-.file-transfer-page .progress-fill {
-  height: 100%;
-  transition: width 0.3s ease;
-  border-radius: 3px;
-}
-
-.file-transfer-page .progress-status {
-  font-size: 12px;
-  color: #64748b;
-}
-
-.file-transfer-page .checkout-section {
-  padding: 20px;
-  border-top: 1px solid #f1f5f9;
-  background: #f8f9fa;
-}
-
-.file-transfer-page .checkout-details {
-  margin-bottom: 15px;
-}
-
-.file-transfer-page .detail-row {
+.file-transfer-page .paper-shop-content {
   display: flex;
-  justify-content: space-between;
   align-items: center;
-  margin-bottom: 8px;
-  font-size: 14px;
-  color: #64748b;
-}
-
-.file-transfer-page .total-price {
-  font-size: 24px;
-  font-weight: 700;
-  color: #1e293b;
-  text-align: center;
-  margin-bottom: 20px;
-}
-
-.file-transfer-page .checkout-buttons {
-  display: flex;
-  gap: 12px;
-}
-
-.file-transfer-page .clear-btn {
-  flex: 1;
-  padding: 12px 16px;
-  background: #ef4444;
-  color: white;
-  border: none;
-  border-radius: 8px;
-  font-size: 14px;
+  justify-content: center;
+  height: 140%;
+  color: #7f8c8d;
+  font-size: 1.2rem;
   font-weight: 500;
-  cursor: pointer;
-  transition: background 0.2s ease;
+  margin-top: 30px;
 }
 
-.file-transfer-page .clear-btn:hover {
-  background: #dc2626;
-}
-
-.file-transfer-page .pay-btn {
-  flex: 2;
-  padding: 12px 16px;
-  background: #22c55e;
-  color: white;
-  border: none;
-  border-radius: 8px;
-  font-size: 14px;
-  font-weight: 500;
-  cursor: pointer;
-  transition: background 0.2s ease;
-}
-
-.file-transfer-page .pay-btn:hover {
-  background: #16a34a;
-}
-
-.file-transfer-page .cart-empty-modern {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  padding: 40px 20px;
-  color: #64748b;
-  gap: 12px;
-}
-
-.file-transfer-page .empty-cart-icon-modern {
-  width: 48px;
-  height: 48px;
-  opacity: 0.5;
-}
-
-/* Responsive adjustments for smaller screens */
-@media (max-width: 480px) {
-  .file-transfer-page .card {
-    width: 300px; /* Reduced from 350px */
-  }
-
-  .file-transfer-page .input_field {
-    width: 270px; /* Reduced from 320px */
-  }
-
-  .file-transfer-page .checkout--footer {
-    flex-direction: column;
-    align-items: stretch;
-  }
-
-  .file-transfer-page .checkout-buttons {
-    width: 100%;
-    justify-content: space-between;
-  }
-
-  .file-transfer-page .clear-cart-btn-modern,
-  .file-transfer-page .checkout-btn {
-    flex: 1;
-  }
-}
-
-.file-transfer-page .video_ad {
-  display: flex;
-  flex-direction: column;
-  width: 1600px;
-  height: 1570px;
-  margin-top: 61px;
-  margin-left: 460px;
-  background-color: #ffffff;
-}
-
-.file-transfer-page .video_ad_player {
-  position: absolute;
-  width: 1660px;
-  height: 1100px;
-  border-radius: 20px;
-  margin-left: 5px;
-}
-
-/* Added video scroll indicator overlay */
-.file-transfer-page .video-scroll-indicator {
-  position: absolute;
-  bottom: 100px;
-  left: 50%;
-  transform: translateX(-50%);
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  z-index: 15;
-  background: rgba(0, 0, 0, 0.4);
-  padding: 20px 25px;
-  border-radius: 30px;
-  backdrop-filter: blur(15px);
-  animation: pulse-indicator 2s infinite;
-  border: 2px solid rgba(255, 255, 255, 0.2);
-}
-
-.file-transfer-page .video-scroll-arrow {
-  margin-bottom: 10px;
-}
-
-.file-transfer-page .video-scroll-text {
-  color: rgba(255, 255, 255, 0.95);
-  font-size: 14px;
-  font-weight: 600;
-  text-align: center;
-  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
-}
-
-/* Modified image container for side-by-side image display */
-.file-transfer-page .img_container {
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  justify-content: center;
-  gap: 0px;
-  background-color: #ffffff;
-  width: 100%;
-  max-width: 1570px;
-  height: 480px;
-  margin-top: 1100px;
-  margin-left: 11px;
-  position: relative;
-  overflow: hidden;
-  padding: 20px;
-}
-
-/* Updated image styling to remove scroll effects and add hover effects */
-.file-transfer-page .img_container img {
-  margin-top: -30px;
-  width: 520px;
-  height: 400px;
-  object-fit: cover;
-  transition: all 0.3s cubic-bezier(0.4, 0.2, 0.2, 1);
-  opacity: 1;
-  transform: scale(1);
-  border-radius: 8px;
-  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
-  cursor: pointer;
-}
-
-/* Added hover effect to make images rise up and scale */
-.file-transfer-page .img_container img:hover {
-  transform: scale(1.05) translateY(-10px);
-  box-shadow: 0 15px 35px rgba(0, 0, 0, 0.3);
-  z-index: 10;
-}
-
-/* Updated navigation indicators positioning */
-
-.file-transfer-page .nav-dot {
-  width: 12px;
-  height: 12px;
-  border-radius: 50%;
-  background: rgba(255, 255, 255, 0.5);
-  transition: all 0.3s ease;
-  cursor: pointer;
-}
-
-/* Added active dot styling */
-.file-transfer-page .nav-dot.active {
-  background: #007bff;
-  transform: scale(1.2);
-}
-
-/* Added image scroll indicator for vertical scrolling */
-.file-transfer-page .image-scroll-indicator {
-  position: absolute;
-  top: 1050px;
-  right: 700px;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  z-index: 15;
-  background: rgba(0, 0, 0, 0.4);
-  padding: 15px 20px;
-  border-radius: 25px;
-  backdrop-filter: blur(1px);
-  border: 2px solid rgba(255, 255, 255, 0.2);
-}
-
-.file-transfer-page .vertical-scroll-arrow {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  margin-bottom: 8px;
-}
-
-.file-transfer-page .arrow-up,
-.file-transfer-page .arrow-down {
-  width: 0;
-  height: 0;
-  margin: 2px 0;
-}
-
-.file-transfer-page .arrow-up {
-  border-left: 6px solid transparent;
-  border-right: 6px solid transparent;
-  border-bottom: 8px solid rgba(255, 255, 255, 0.8);
-  animation: bounce-up 1.5s infinite;
-}
-
-.file-transfer-page .arrow-down {
-  border-left: 6px solid transparent;
-  border-right: 6px solid transparent;
-  border-top: 8px solid rgba(255, 255, 255, 0.8);
-  animation: bounce-down 1.5s infinite;
-}
-
-.file-transfer-page .vertical-scroll-text {
-  color: rgba(255, 255, 255, 0.95);
-  font-size: 12px;
-  font-weight: 600;
-  text-align: center;
-  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
-}
-
-/* Added bounce animations for scroll arrows */
-@keyframes bounce-up {
-  0%,
-  20%,
-  50%,
-  80%,
-  100% {
-    transform: translateY(0);
-  }
-  40% {
-    transform: translateY(-4px);
-  }
-  60% {
-    transform: translateY(-2px);
-  }
-}
-
-@keyframes bounce-down {
-  0%,
-  20%,
-  50%,
-  80%,
-  100% {
-    transform: translateY(0);
-  }
-  40% {
-    transform: translateY(4px);
-  }
-  60% {
-    transform: translateY(2px);
-  }
-}
-
-/* Enhanced pulse animation for video scroll indicator */
-@keyframes pulse-indicator {
-  0% {
-    transform: translateX(-50%) scale(1);
-    opacity: 0.8;
-  }
-  50% {
-    transform: translateX(-50%) scale(1.05);
-    opacity: 1;
-  }
-  100% {
-    transform: translateX(-50%) scale(1);
-    opacity: 0.8;
-  }
-}
-
-/* Added coupon card overlay styles based on the provided HTML */
-.file-transfer-page .coupon-overlay {
-  position: fixed;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  top: 0;
-  background: rgba(0, 0, 0, 0.6);
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  z-index: 1000;
-  animation: fadeIn 0.3s ease-out;
-}
-
-/* Updated coupon card to appear in center with rotation and swipe-up animation */
-.file-transfer-page .coupon-card {
-  background: linear-gradient(135deg, #ff6b35 0%, #f7931e 100%);
-  border-radius: 16px;
-  padding: 20px 24px;
-  width: 100%;
-  max-width: 500px;
-  position: relative;
-  overflow: hidden;
-  animation: swipeUpRotate 0.6s cubic-bezier(0.4, 0.2, 0.2, 1);
-  margin: 0 20px;
-  transform: rotate(-3deg);
-  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
-}
-
-/* Added new animation for swipe up to center with rotation */
-@keyframes swipeUpRotate {
-  0% {
-    transform: translateY(100vh) rotate(-8deg) scale(0.8);
-    opacity: 0;
-  }
-  60% {
-    transform: translateY(-20px) rotate(-1deg) scale(1.05);
-    opacity: 1;
-  }
-  100% {
-    transform: translateY(0) rotate(-3deg) scale(1);
-    opacity: 1;
-  }
-}
-
-@keyframes fadeIn {
-  from {
-    opacity: 0;
-  }
-  to {
-    opacity: 1;
-  }
-}
-
-.file-transfer-page .close-btn {
-  position: absolute;
-  top: 12px;
-  right: 16px;
-  color: white;
-  font-size: 24px;
-  font-weight: 300;
-  cursor: pointer;
-  z-index: 4;
-  line-height: 1;
-  padding: 4px 8px;
-  border-radius: 50%;
-  transition: all 0.2s ease;
-}
-
-/* Added hover effect for close button */
-.file-transfer-page .close-btn:hover {
-  background: rgba(255, 255, 255, 0.2);
-  transform: scale(1.1);
-}
-
-/* Responsive design for coupon card */
-@media (max-width: 480px) {
-  .file-transfer-page .coupon-card {
-    padding: 16px 20px;
-    margin: 0 10px;
-  }
-
-  .file-transfer-page .offer-text {
-    font-size: 20px;
-  }
-
-  .file-transfer-page .promo-codes {
-    flex-direction: column;
-  }
-
-  .file-transfer-page .promo-code {
-    text-align: center;
-  }
-}
-
-/* Added semi-circular cutouts on left and right sides */
-.file-transfer-page .coupon-card::before {
-  content: "";
-  position: absolute;
-  left: -15px;
-  top: 50%;
-  transform: translateY(-50%);
-  width: 30px;
-  height: 30px;
-  background: rgba(0, 0, 0, 0.6);
-  border-radius: 50%;
-  z-index: 3;
-}
-
-.file-transfer-page .coupon-card::after {
-  content: "";
-  position: absolute;
-  right: -15px;
-  top: 50%;
-  transform: translateY(-50%);
-  width: 30px;
-  height: 30px;
-  background: rgba(0, 0, 0, 0.6);
-  border-radius: 50%;
-  z-index: 3;
-}
-
-.file-transfer-page .uber-logo {
-  background: #000;
-  color: white;
-  padding: 8px 16px;
-  border-radius: 8px;
-  font-weight: bold;
-  font-size: 18px;
-  display: inline-block;
-  margin-bottom: 16px;
-  position: relative;
-  z-index: 2;
-}
-
-.file-transfer-page .offer-text {
-  color: white;
-  font-size: 24px;
-  font-weight: 600;
-  line-height: 1.3;
-  margin-bottom: 20px;
-  position: relative;
-  z-index: 2;
-  text-align: left;
-}
-
-.file-transfer-page .promo-codes {
-  display: flex;
-  gap: 12px;
-  margin-bottom: 16px;
-  position: relative;
-  z-index: 2;
-}
-
-.file-transfer-page .promo-code {
-  background: rgba(255, 255, 255, 0.2);
-  border: 1px solid rgba(255, 255, 255, 0.3);
-  color: white;
-  padding: 8px 16px;
-  border-radius: 6px;
-  font-size: 14px;
-  font-weight: 500;
-  backdrop-filter: blur(10px);
-  cursor: pointer;
-  transition: all 0.2s ease;
-}
-
-.file-transfer-page .promo-code:hover {
-  background: rgba(255, 255, 255, 0.3);
-  transform: translateY(-1px);
-}
-
-.file-transfer-page .validity {
-  color: rgba(255, 255, 255, 0.8);
-  font-size: 12px;
-  position: relative;
-  z-index: 2;
-}
-
-/* Added loading animation styles with unique class names to avoid conflicts */
-.file-transfer-page .loading-animation-card {
-  /* color used to softly clip top and bottom of the .rotating-words container */
-  --bg-color: #ffffff;
-  background-color: var(--bg-color);
-  padding: 1rem 2rem;
-  border-radius: 1.25rem;
-}
-
-.file-transfer-page .text-loader {
-  color: rgb(0, 0, 0);
-  font-family: "Poppins", sans-serif;
-  font-weight: 500;
-  font-size: 25px;
-  -webkit-box-sizing: content-box;
-  box-sizing: content-box;
-  height: 40px;
-  padding: 10px 10px;
-  display: -webkit-box;
-  display: -ms-flexbox;
-  display: flex;
-  border-radius: 8px;
-  margin-top: 100px;
-  margin-left: 40px;
-}
-
-.file-transfer-page .rotating-words {
-  overflow: hidden;
-  position: relative;
-}
-
-.file-transfer-page .rotating-words::after {
-  content: "";
-  position: absolute;
-  inset: 0;
-  background: linear-gradient(var(--bg-color) 10%, transparent 30%, transparent 70%, var(--bg-color) 90%);
-  z-index: 20;
-}
-
-.file-transfer-page .animated-word {
-  display: block;
-  height: 100%;
-  padding-left: 6px;
-  color: #6836dc;
-  animation: word_spin_animation 4s infinite;
-}
-
-@keyframes word_spin_animation {
-  10% {
-    -webkit-transform: translateY(-102%);
-    transform: translateY(-102%);
-  }
-
-  25% {
-    -webkit-transform: translateY(-100%);
-    transform: translateY(-100%);
-  }
-
-  35% {
-    -webkit-transform: translateY(-202%);
-    transform: translateY(-202%);
-  }
-
-  50% {
-    -webkit-transform: translateY(-200%);
-    transform: translateY(-200%);
-  }
-
-  60% {
-    -webkit-transform: translateY(-302%);
-    transform: translateY(-302%);
-  }
-
-  75% {
-    -webkit-transform: translateY(-300%);
-    transform: translateY(-300%);
-  }
-
-  85% {
-    -webkit-transform: translateY(-402%);
-    transform: translateY(-402%);
-  }
-
-  100% {
-    -webkit-transform: translateY(-400%);
-    transform: translateY(-400%);
-  }
-}
-.Btn-Container {
-  display: flex;
-  width: 134px;
-  height: fit-content;
-  background-color: #1d2129;
-  border-radius: 40px;
-  box-shadow: 0px 5px 10px #bebebe;
-  justify-content: space-between;
-  align-items: center;
-  border: none;
-  cursor: pointer;
-  margin-left: 100px;
-  margin-top: 40px;
-}
-
-.icon-Container {
-  width: 75px;
-  height: 47px;
-  background-color: #ffffff;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  border-radius: 50%;
-  border: 3px solid #1d2129;
-}
-.text {
-  width: calc(170px - 45px);
-  height: 100%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  color: white;
-  font-size: 1.1em;
-  letter-spacing: 1.2px;
-}
-.icon-Container svg {
-  transition-duration: 1.5s;
-}
-.Btn-Container:hover .icon-Container svg {
-  transition-duration: 1.5s;
-  animation: arrow 1s linear infinite;
-}
-@keyframes arrow {
-  0% {
-    opacity: 0;
-    margin-left: 0px;
-  }
-  100% {
-    opacity: 1;
-    margin-left: 10px;
-  }
-}
-
-/* Removed unused starting section styles since it's now hidden */
-.file-transfer-page .starting-section {
-  display: none;
-}
-
-/* Removed unused QR code styles since QR is now in hero section */
-.file-transfer-page .qr-code,
-.file-transfer-page .qr-placeholder,
-.file-transfer-page .qr-section,
-.file-transfer-page .qr-container {
-  display: none;
-}
-
-/* Removed unused session info styles since it's handled in hero */
-.file-transfer-page .session-info,
-.file-transfer-page .session-icon,
-.file-transfer-page .session-id {
-  display: none;
-}
-
-/* Removed unused start button styles */
-.file-transfer-page .start-btn {
-  display: none;
-}
-
-/* Removed upload status styles as they're no longer needed */
-.file-transfer-page .upload-status {
-  display: none;
-}
-
-.file-transfer-page .upload-status .status-text {
-  display: none;
-}
-
-.file-transfer-page .upload-status .check-icon {
-  display: none;
-}
-
-/* Modern Next button styling */
-.file-transfer-page .next-button-container {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  margin: 2rem 0;
-}
-
-.file-transfer-page .next-button {
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-  color: white;
-  border: none;
-  padding: 1rem 2rem;
-  border-radius: 50px;
-  font-size: 1.1rem;
-  font-weight: 600;
-  cursor: pointer;
-  transition: all 0.3s ease;
-  box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
-  min-width: 200px;
-  position: relative;
-  overflow: hidden;
-}
-
-.file-transfer-page .next-button:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 8px 25px rgba(102, 126, 234, 0.6);
-}
-
-.file-transfer-page .next-button:active {
-  transform: translateY(0);
-}
-
-.file-transfer-page .next-button:disabled {
-  background: #cccccc;
-  cursor: not-allowed;
-  transform: none;
-  box-shadow: none;
-}
-
-.file-transfer-page .next-button::before {
-  content: "";
-  position: absolute;
-  top: 0;
-  left: -100%;
-  width: 100%;
-  height: 100%;
-  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
-  transition: left 0.5s;
-}
-
-.file-transfer-page .next-button:hover::before {
-  left: 100%;
-}
+/* ========================================
+   STORAGE SECTION
+   ======================================== */
 
-/* Storage Section - Below QR code */
 .file-transfer-page .storage-section {
   flex: 1;
   display: flex;
@@ -2281,7 +304,172 @@ file-transfer-page .product-cat {
   border: 1px solid rgba(102, 126, 234, 0.3);
 }
 
-/* Files Display Section */
+/* ========================================
+   3D FOLDER ANIMATION
+   ======================================== */
+
+.file-transfer-page .storage-box-blur section {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 100%;
+}
+
+.file-transfer-page .storage-box-blur .file {
+  position: relative;
+  width: 100px;
+  height: 67px;
+  cursor: pointer;
+  transform-origin: bottom;
+  perspective: 1500px;
+  z-index: 50;
+}
+
+.file-transfer-page .storage-box-blur .work-5 {
+  background-color: #d97706;
+  width: 100%;
+  height: 100%;
+  transform-origin: top;
+  border-radius: 16px;
+  border-top-left-radius: 0;
+  transition: all 0.3s ease;
+  position: relative;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.file-transfer-page .storage-box-blur .work-5::after {
+  content: "";
+  position: absolute;
+  bottom: 99%;
+  left: 0;
+  width: 33px;
+  height: 7px;
+  background-color: #d97706;
+  border-top-left-radius: 16px;
+  border-top-right-radius: 16px;
+}
+
+.file-transfer-page .storage-box-blur .work-5::before {
+  content: "";
+  position: absolute;
+  top: -6px;
+  left: 31px;
+  width: 7px;
+  height: 7px;
+  background-color: #d97706;
+  clip-path: polygon(0 35%, 0% 100%, 50% 100%);
+}
+
+.file-transfer-page .storage-box-blur .work-4 {
+  position: absolute;
+  top: 3px;
+  left: 3px;
+  right: 3px;
+  bottom: 3px;
+  background-color: #a1a1aa;
+  border-radius: 16px;
+  transition: all 0.3s ease;
+  transform-origin: bottom;
+}
+
+.file-transfer-page .storage-box-blur .work-3 {
+  position: absolute;
+  top: 3px;
+  left: 3px;
+  right: 3px;
+  bottom: 3px;
+  background-color: #d1d5db;
+  border-radius: 16px;
+  transition: all 0.3s ease;
+  transform-origin: bottom;
+}
+
+.file-transfer-page .storage-box-blur .work-2 {
+  position: absolute;
+  top: 3px;
+  left: 3px;
+  right: 3px;
+  bottom: 3px;
+  background-color: #e5e7eb;
+  border-radius: 16px;
+  transition: all 0.3s ease;
+  transform-origin: bottom;
+}
+
+.file-transfer-page .storage-box-blur .work-1 {
+  position: absolute;
+  bottom: 0;
+  background: linear-gradient(to top, #f59e0b, #fbbf24);
+  width: 100%;
+  height: 65px;
+  border-radius: 16px;
+  border-top-right-radius: 0;
+  transition: all 0.3s ease;
+  transform-origin: bottom;
+  display: flex;
+  align-items: flex-end;
+}
+
+.file-transfer-page .storage-box-blur .work-1::after {
+  content: "";
+  position: absolute;
+  bottom: 99%;
+  right: 0;
+  width: 61px;
+  height: 7px;
+  background-color: #fbbf24;
+  border-top-left-radius: 16px;
+  border-top-right-radius: 16px;
+}
+
+.file-transfer-page .storage-box-blur .work-1::before {
+  content: "";
+  position: absolute;
+  top: -4px;
+  right: 59px;
+  width: 5px;
+  height: 5px;
+  background-color: #fbbf24;
+  clip-path: polygon(100% 14%, 50% 100%, 100% 100%);
+}
+
+.file-transfer-page .storage-box-blur p {
+  font-size: 1rem;
+  padding-top: 0.75rem;
+  opacity: 2.2;
+  margin: 0;
+  font-weight: 600;
+  color: #374151;
+}
+
+.file-transfer-page .storage-box-blur:hover .work-5 {
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
+}
+
+.file-transfer-page .storage-box-blur:hover .work-4 {
+  transform: rotateX(-20deg);
+}
+
+.file-transfer-page .storage-box-blur:hover .work-3 {
+  transform: rotateX(-30deg);
+}
+
+.file-transfer-page .storage-box-blur:hover .work-2 {
+  transform: rotateX(-38deg);
+}
+
+.file-transfer-page .storage-box-blur:hover .work-1 {
+  transform: rotateX(-46deg) translateY(1px);
+  box-shadow: inset 0 20px 40px #fbbf24, inset 0 -20px 40px #d97706;
+}
+
+/* ========================================
+   FILES DISPLAY
+   ======================================== */
+
 .file-transfer-page .files-display {
   margin-top: 2rem;
   background: rgba(255, 255, 255, 0.05);
@@ -2339,6 +527,34 @@ file-transfer-page .product-cat {
   border-color: rgba(102, 126, 234, 0.3);
 }
 
+.file-transfer-page .file-item.pdf-file {
+  background: #fff3e0;
+  border-color: #ff9800;
+  position: relative;
+}
+
+.file-transfer-page .file-item.pdf-file:hover {
+  background: #ffe0b2;
+  border-color: #f57c00;
+  box-shadow: 0 4px 12px rgba(255, 152, 0, 0.2);
+}
+
+.file-transfer-page .file-item.selectable {
+  cursor: pointer;
+  position: relative;
+}
+
+.file-transfer-page .file-item.selectable:hover {
+  background: #e8f4fd;
+  border-color: #2196f3;
+}
+
+.file-transfer-page .file-item.selected {
+  background: #e3f2fd;
+  border-color: #1976d2;
+  box-shadow: 0 2px 8px rgba(25, 118, 210, 0.3);
+}
+
 .file-transfer-page .file-header {
   display: flex;
   align-items: center;
@@ -2370,6 +586,17 @@ file-transfer-page .product-cat {
   color: rgba(255, 255, 255, 0.7);
 }
 
+.file-transfer-page .file-details .file-name {
+  font-size: 0.95rem;
+  font-weight: 500;
+  color: #2c3e50;
+  margin: 0;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 100%;
+}
+
 .file-transfer-page .file-size {
   font-weight: 500;
 }
@@ -2384,7 +611,1294 @@ file-transfer-page .product-cat {
   font-size: 0.7rem;
 }
 
-/* Loading States */
+.file-transfer-page .file-checkbox {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  width: 20px;
+  height: 20px;
+  accent-color: #1976d2;
+}
+
+.file-transfer-page .pdf-badge {
+  background: #ff5722;
+  color: white;
+  padding: 2px 6px;
+  border-radius: 4px;
+  font-size: 0.7rem;
+  font-weight: 600;
+  margin-left: 8px;
+  text-transform: uppercase;
+}
+
+.file-transfer-page .pdf-hint {
+  color: #ff5722 !important;
+  font-weight: 500;
+  font-size: 0.75rem;
+  margin-top: 4px;
+  font-style: italic;
+}
+
+/* ========================================
+   MODERN FILE CARDS
+   ======================================== */
+
+.file-transfer-page .modern-files-list {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+}
+
+.file-transfer-page .modern-file-card {
+  background: #ffffff;
+  border: 1px solid #e0e0e0;
+  border-radius: 8px;
+  padding: 0.75rem 1rem;
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  transition: all 0.3s ease;
+  color: #2c3e50;
+  height: 60px;
+  box-sizing: border-box;
+}
+
+.file-transfer-page .modern-file-card:hover {
+  background: #f8f9fa;
+  border-color: #3498db;
+  transform: translateY(-1px);
+  box-shadow: 0 2px 8px rgba(52, 152, 219, 0.15);
+}
+
+.file-transfer-page .file-icon-container {
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.file-transfer-page .pdf-icon {
+  color: #e74c3c;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.file-transfer-page .image-icon {
+  color: #3498db;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* ========================================
+   SELECTION & CONTROLS
+   ======================================== */
+
+.file-transfer-page .selection-controls {
+  padding: 1rem;
+  border-top: 2px solid #e0e0e0;
+  background: #f8f9fa;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 1rem;
+}
+
+.file-transfer-page .selected-count {
+  font-size: 0.9rem;
+  color: #666;
+  font-weight: 500;
+}
+
+.file-transfer-page .next-btn {
+  background: #1976d2;
+  color: white;
+  border: none;
+  padding: 0.75rem 1.5rem;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: 600;
+  transition: all 0.3s ease;
+}
+
+.file-transfer-page .next-btn:hover:not(:disabled) {
+  background: #1565c0;
+}
+
+.file-transfer-page .next-btn:disabled {
+  background: #ccc;
+  cursor: not-allowed;
+  transform: none;
+}
+
+.file-transfer-page .clear-selection-btn {
+  background: transparent;
+  color: #666;
+  border: 1px solid #ddd;
+  padding: 0.5rem 1rem;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 0.85rem;
+}
+
+.file-transfer-page .clear-selection-btn:hover {
+  background: #f5f5f5;
+}
+
+/* ========================================
+   NEXT BUTTON
+   ======================================== */
+
+.file-transfer-page .next-button-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 1rem 0;
+  border-top: 1px solid #e0e0e0;
+  background: #f8f9fa;
+  margin: 2rem 0;
+}
+
+.file-transfer-page .modern-next-btn {
+  --main-color: rgb(46, 213, 115);
+  --main-bg-color: rgba(46, 213, 116, 0.36);
+  --pattern-color: rgba(46, 213, 116, 0.073);
+  filter: hue-rotate(0deg);
+  cursor: pointer;
+  text-transform: uppercase;
+  letter-spacing: 0.5rem;
+  background: radial-gradient(circle, var(--main-bg-color) 0%, rgba(0, 0, 0, 0) 95%),
+    linear-gradient(var(--pattern-color) 1px, transparent 1px),
+    linear-gradient(to right, var(--pattern-color) 1px, transparent 1px);
+  background-size: cover, 15px 15px, 15px 15px;
+  background-position: center center, center center, center center;
+  border-image: radial-gradient(circle, var(--main-color) 0%, rgba(0, 0, 0, 0) 100%) 1;
+  border-width: 1px 0 1px 0;
+  color: var(--main-color);
+  padding: 1rem 3rem;
+  font-weight: 700;
+  font-size: 1.5rem;
+  transition: background-size 0.2s ease-in-out;
+  border-radius: 0;
+  min-width: 120px;
+}
+
+.file-transfer-page .modern-next-btn:hover:not(:disabled) {
+  background-size: cover, 10px 10px, 10px 10px;
+}
+
+.file-transfer-page .modern-next-btn:active {
+  filter: hue-rotate(250deg);
+}
+
+.file-transfer-page .modern-next-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.file-transfer-page .next-button {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  border: none;
+  padding: 1rem 2rem;
+  border-radius: 50px;
+  font-size: 1.1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
+  min-width: 200px;
+  position: relative;
+  overflow: hidden;
+}
+
+.file-transfer-page .next-button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 25px rgba(102, 126, 234, 0.6);
+}
+
+.file-transfer-page .next-button:active {
+  transform: translateY(0);
+}
+
+.file-transfer-page .next-button:disabled {
+  background: #cccccc;
+  cursor: not-allowed;
+  transform: none;
+  box-shadow: none;
+}
+
+.file-transfer-page .next-button::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+  transition: left 0.5s;
+}
+
+.file-transfer-page .next-button:hover::before {
+  left: 100%;
+}
+
+/* ========================================
+   PAPER SHOP / PRODUCT CARDS
+   ======================================== */
+
+.file-transfer-page .paper-shop-content {
+  margin-top: 50px;
+  height: 650px;
+  background-color: #111111;
+}
+
+.file-transfer-page .product-cards-container {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 2rem;
+  max-width: 2200px;
+  margin: 0 auto;
+  padding: 13px 1rem;
+  margin-bottom: 100px;
+  height: 100%;
+  overflow-y: auto;
+  max-height: calc(100vh - 200px);
+}
+
+.file-transfer-page .product-cards-container::-webkit-scrollbar {
+  width: 0px;
+}
+
+.file-transfer-page .product-cards-container::-webkit-scrollbar-track {
+  background: #ffffff;
+}
+
+.file-transfer-page .product-cards-container::-webkit-scrollbar-thumb {
+  background: #ffffff;
+  border-radius: 4px;
+}
+
+.file-transfer-page .product-cards-container::-webkit-scrollbar-thumb:hover {
+  background: #ffffff;
+}
+
+.file-transfer-page .product-card {
+  width: 493px;
+  height: 493px;
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 40px;
+  transition: 0.3s;
+  font-family: "Segoe UI", sans-serif;
+  overflow: hidden;
+  position: relative;
+  cursor: pointer;
+  min-height: 480px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(10px);
+  margin-top: 40px;
+}
+
+.file-transfer-page .product-card:hover {
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+  border-color: rgba(102, 126, 234, 0.3);
+}
+
+.file-transfer-page .product-badge {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  background: linear-gradient(to right, rgba(169, 3, 41, 1) 0%, rgba(196, 72, 72, 1) 44%, rgba(170, 34, 56, 1) 100%);
+  color: #fff;
+  padding: 6px 12px;
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  border-radius: 8px;
+  z-index: 10;
+}
+
+.file-transfer-page .product-tilt {
+  overflow: hidden;
+  height: 290px;
+  display: flex;
+  justify-content: center;
+}
+
+.file-transfer-page .product-img {
+  width: 520px;
+  height: 420px;
+  border-radius: 15px;
+  overflow: hidden;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+  transition: transform 0.3s ease;
+  background: #ffffff;
+  padding: 1rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.file-transfer-page .product-img img {
+  width: 300px;
+  height: 400px;
+  object-fit: contain;
+  transition: transform 0.5s;
+}
+
+.file-transfer-page .product-info {
+  padding: 1.5rem 2rem 2rem;
+  background-color: #353738;
+  border-radius: 0px 0px 40px 40px;
+  height: 200px;
+}
+
+.file-transfer-page .product-cat {
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.6);
+  margin-bottom: 6px;
+}
+
+.file-transfer-page .product-title {
+  font-size: 16px;
+  font-weight: 700;
+  color: #ffffff;
+  margin: 0 0 10px;
+  letter-spacing: -0.5px;
+}
+
+.file-transfer-page .product-desc {
+  font-size: 12px;
+  color: #52525b;
+  line-height: 1.5;
+  margin-bottom: 15px;
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.file-transfer-page .product-bottom {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 10px;
+}
+
+.file-transfer-page .product-price {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.file-transfer-page .price-old {
+  font-size: 18px;
+  text-decoration: line-through;
+  color: rgba(255, 255, 255, 0.5);
+  margin-right: 8px;
+}
+
+.file-transfer-page .price-new {
+  font-size: 25px;
+  font-weight: 700;
+  color: #667eea;
+}
+
+.file-transfer-page .product-btn {
+  background: #000000;
+  color: rgb(255, 255, 255);
+  border: none;
+  border-radius: 25px;
+  padding: 8px 16px;
+  font-size: 18px;
+  font-weight: 600;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  transition: all 0.3s ease;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  position: relative;
+  overflow: hidden;
+}
+
+.file-transfer-page .product-btn:hover {
+  background: #ffffff;
+  color: rgb(0, 0, 0);
+  box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
+}
+
+.file-transfer-page .product-btn:disabled {
+  background: #666;
+  cursor: not-allowed;
+  transform: none;
+  box-shadow: none;
+}
+
+.file-transfer-page .product-btn:before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+  transition: 0.5s;
+}
+
+.file-transfer-page .product-btn:hover:before {
+  left: 100%;
+}
+
+.file-transfer-page .cart-icon {
+  width: 16px;
+  height: 16px;
+  transition: transform 0.3s;
+}
+
+.file-transfer-page .product-btn:hover .cart-icon {
+  transform: rotate(-10deg) scale(1.1);
+}
+
+.file-transfer-page .product-meta {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding-top: 8px;
+}
+
+.file-transfer-page .product-stock {
+  font-size: 15px;
+  font-weight: 600;
+  color: #4caf50;
+  margin-top: -12px;
+}
+
+/* ========================================
+   CART FUNCTIONALITY
+   ======================================== */
+
+.file-transfer-page .cart-container {
+  display: flex;
+  align-items: center;
+  margin-left: 1rem;
+}
+
+.file-transfer-page .cart-basket-btn {
+  position: relative;
+  background: rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 8px;
+  padding: 0.75rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.file-transfer-page .cart-basket-btn:hover {
+  background: rgba(255, 255, 255, 0.2);
+  transform: translateY(-1px);
+}
+
+.file-transfer-page .basket-icon {
+  width: 32px;
+  height: 32px;
+  color: white;
+  stroke-width: 2;
+  filter: brightness(0) invert(1);
+}
+
+.file-transfer-page .cart-counter {
+  position: absolute;
+  top: -8px;
+  right: -8px;
+  background: #e74c3c;
+  color: white;
+  border-radius: 50%;
+  width: 24px;
+  height: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 12px;
+  font-weight: 600;
+  border: 2px solid white;
+  animation: bounce 0.3s ease;
+}
+
+.file-transfer-page .floating-cart-container {
+  position: fixed;
+  top: 20px;
+  right: 200px;
+  z-index: 1500;
+}
+
+.file-transfer-page .floating-cart-btn {
+  position: relative;
+  background: #7A7FEE;
+  border: 2px solid rgba(0, 0, 0, 0.1);
+  border-radius: 50%;
+  width: 64px;
+  height: 64px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+}
+
+.file-transfer-page .floating-cart-btn:hover {
+  background: rgb(0, 0, 0);
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.2);
+}
+
+.file-transfer-page .floating-cart-counter {
+  position: absolute;
+  top: -8px;
+  right: -8px;
+  background: #e74c3c;
+  color: white;
+  border-radius: 50%;
+  width: 28px;
+  height: 28px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.8rem;
+  font-weight: 700;
+  border: 3px solid white;
+  animation: bounce 0.3s ease;
+}
+
+/* ========================================
+   CART OVERLAY & SIDEBAR
+   ======================================== */
+
+.file-transfer-page .cart-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.8);
+  backdrop-filter: blur(10px);
+  z-index: 2000;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 1rem;
+}
+
+.file-transfer-page .modern-cart-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  max-height: 90vh;
+  overflow-y: auto;
+  background: #1a1a1a;
+  border-radius: 16px;
+  width: 100%;
+  max-width: 480px;
+  max-height: 85vh;
+  overflow: hidden;
+  border: 1px solid #333;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+}
+
+.file-transfer-page .unified-cart {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  width: 500px;
+  background: #ffffff;
+  border-radius: 16px;
+  overflow: hidden;
+}
+
+.file-transfer-page .cart-logo {
+  height: 40px;
+  width: 146px;
+}
+
+.file-transfer-page .cart-header-modern {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 20px 20px 15px 20px;
+  border-bottom: 1px solid #f1f5f9;
+  background: #1a1a1a;
+}
+
+.file-transfer-page .cart-title {
+  font-size: 18px;
+  font-weight: 600;
+  color: #ffffff;
+  margin: 0;
+  flex: 1;
+  text-align: center;
+}
+
+.file-transfer-page .cart-close-btn-modern {
+  background: #333;
+  border: none;
+  cursor: pointer;
+  padding: 8px;
+  border-radius: 8px;
+  transition: background 0.2s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  color: #fff;
+}
+
+.file-transfer-page .cart-close-btn-modern:hover {
+  background: #444;
+}
+
+.file-transfer-page .cart-content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.file-transfer-page .cart-empty-modern {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 3rem 2rem;
+  color: #888;
+  gap: 1rem;
+  text-align: center;
+}
+
+.file-transfer-page .empty-cart-icon-modern {
+  width: 64px;
+  height: 64px;
+  opacity: 0.5;
+  color: #555;
+  margin-bottom: 1rem;
+}
+
+.file-transfer-page .cart-empty-modern p {
+  font-size: 1.1rem;
+  margin: 0;
+}
+
+.file-transfer-page .cart-items-section {
+  flex: 1;
+  overflow-y: auto;
+  padding: 0 20px;
+  max-height: 390px;
+  background-color: #1a1a1a;
+}
+
+.file-transfer-page .cart-item {
+  display: flex;
+  align-items: center;
+  padding: 15px 0;
+  gap: 12px;
+  background: #1a1a1a;
+  transition: background 0.2s ease;
+}
+
+.file-transfer-page .cart-item:hover {
+  background: #222;
+}
+
+.file-transfer-page .cart-item:last-child {
+  border-bottom: none;
+}
+
+.file-transfer-page .item-icon {
+  flex-shrink: 0;
+  width: 48px;
+  height: 48px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #333;
+  border-radius: 8px;
+}
+
+.file-transfer-page .item-details {
+  flex: 1;
+  min-width: 0;
+}
+
+.file-transfer-page .item-name {
+  font-size: 14px;
+  font-weight: 600;
+  color: #fff;
+  margin-bottom: 2px;
+  line-height: 1.2;
+}
+
+.file-transfer-page .item-category {
+  font-size: 12px;
+  color: #888;
+  margin-bottom: 2px;
+}
+
+.file-transfer-page .item-price {
+  font-size: 12px;
+  color: #aaa;
+}
+
+.file-transfer-page .item-quantity {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: #333;
+  border-radius: 8px;
+  padding: 4px;
+}
+
+.file-transfer-page .qty-btn {
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-radius: 6px;
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  color: #fff;
+}
+
+.file-transfer-page .qty-btn:hover {
+  background: #bababa;
+  transform: scale(1.05);
+  border-color: #cbd5e1;
+}
+
+.file-transfer-page .qty-btn:active {
+  transform: scale(0.95);
+}
+
+.file-transfer-page .qty-number {
+  font-size: 14px;
+  font-weight: 500;
+  color: #fff;
+  min-width: 20px;
+  text-align: center;
+}
+
+.file-transfer-page .item-total {
+  font-size: 14px;
+  font-weight: 600;
+  color: #fff;
+  min-width: 60px;
+  text-align: right;
+}
+
+.file-transfer-page .mobile-input-section {
+  padding: 15px 20px;
+  border-bottom: 1px solid #333;
+  background: #1a1a1a;
+}
+
+.file-transfer-page .mobile-input {
+  width: 100%;
+  padding: 12px 16px;
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+  font-size: 20px;
+  transition: border-color 0.2s ease;
+  box-sizing: border-box;
+  background: #333;
+  color: #fff;
+}
+
+.file-transfer-page .mobile-input:focus {
+  outline: none;
+  border-color: #666;
+  background: #3a3a3a;
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+}
+
+.file-transfer-page .mobile-input::placeholder {
+  color: #888;
+}
+
+.file-transfer-page .mobile-error {
+  color: #ef4444;
+  font-size: 12px;
+  margin-top: 6px;
+}
+
+.file-transfer-page .printing-progress-section {
+  padding: 15px 20px;
+  border-top: 1px solid #f1f5f9;
+  background: #1a1a1a;
+  border-bottom: 1px solid #333;
+}
+
+.file-transfer-page .progress-title {
+  font-size: 14px;
+  font-weight: 600;
+  color: #fff;
+  margin-bottom: 8px;
+}
+
+.file-transfer-page .progress-job {
+  font-size: 12px;
+  color: #ccc;
+  margin-bottom: 8px;
+}
+
+.file-transfer-page .progress-bar {
+  width: 100%;
+  height: 6px;
+  background: #333;
+  border-radius: 3px;
+  overflow: hidden;
+  margin-bottom: 6px;
+}
+
+.file-transfer-page .progress-fill {
+  height: 100%;
+  transition: width 0.3s ease;
+  border-radius: 3px;
+  background: #28a745;
+}
+
+.file-transfer-page .progress-status {
+  font-size: 12px;
+  color: #aaa;
+  text-align: center;
+}
+
+.file-transfer-page .checkout-section {
+  padding: 20px;
+  border-top: 1px solid #f1f5f9;
+  background: #1a1a1a;
+}
+
+.file-transfer-page .checkout-details {
+  margin-bottom: 15px;
+}
+
+.file-transfer-page .detail-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 8px;
+  font-size: 14px;
+  color: #ccc;
+}
+
+.file-transfer-page .detail-row:last-child {
+  margin-bottom: 0;
+  font-weight: 600;
+  color: #fff;
+}
+
+.file-transfer-page .total-price {
+  font-size: 24px;
+  font-weight: 700;
+  color: #fff;
+  text-align: center;
+  margin-bottom: 20px;
+  padding: 1rem;
+  background: #333;
+  border-radius: 8px;
+}
+
+.file-transfer-page .checkout-buttons {
+  display: flex;
+  gap: 12px;
+}
+
+.file-transfer-page .clear-btn {
+  flex: 1;
+  padding: 12px 16px;
+  background: #444;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background 0.2s ease;
+}
+
+.file-transfer-page .clear-btn:hover {
+  background: #555;
+}
+
+.file-transfer-page .pay-btn {
+  flex: 2;
+  padding: 12px 16px;
+  background: linear-gradient(135deg, #0af664, #03a716);
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.file-transfer-page .pay-btn:hover {
+  background: linear-gradient(135deg, #7c3aed, #6d28d9);
+}
+
+.file-transfer-page .pay-btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  transform: none;
+}
+
+/* ========================================
+   VIDEO & IMAGE SECTIONS
+   ======================================== */
+
+.file-transfer-page .video_ad {
+  display: flex;
+  flex-direction: column;
+  width: 1600px;
+  height: 1570px;
+  margin-top: 61px;
+  margin-left: 460px;
+  background-color: #ffffff;
+}
+
+.file-transfer-page .video_ad_player {
+  position: absolute;
+  width: 1660px;
+  height: 1100px;
+  border-radius: 20px;
+  margin-left: 5px;
+}
+
+.file-transfer-page .video-scroll-indicator {
+  position: absolute;
+  bottom: 100px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  z-index: 15;
+  background: rgba(0, 0, 0, 0.4);
+  padding: 20px 25px;
+  border-radius: 30px;
+  backdrop-filter: blur(15px);
+  animation: pulse-indicator 2s infinite;
+  border: 2px solid rgba(255, 255, 255, 0.2);
+}
+
+.file-transfer-page .video-scroll-arrow {
+  margin-bottom: 10px;
+}
+
+.file-transfer-page .video-scroll-text {
+  color: rgba(255, 255, 255, 0.95);
+  font-size: 14px;
+  font-weight: 600;
+  text-align: center;
+  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
+}
+
+.file-transfer-page .img_container {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  gap: 0px;
+  background-color: #ffffff;
+  width: 100%;
+  max-width: 1570px;
+  height: 480px;
+  margin-top: 1100px;
+  margin-left: 11px;
+  position: relative;
+  overflow: hidden;
+  padding: 20px;
+}
+
+.file-transfer-page .img_container img {
+  margin-top: -30px;
+  width: 520px;
+  height: 400px;
+  object-fit: cover;
+  transition: all 0.3s cubic-bezier(0.4, 0.2, 0.2, 1);
+  opacity: 1;
+  transform: scale(1);
+  border-radius: 8px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+  cursor: pointer;
+}
+
+.file-transfer-page .img_container img:hover {
+  transform: scale(1.05) translateY(-10px);
+  box-shadow: 0 15px 35px rgba(0, 0, 0, 0.3);
+  z-index: 10;
+}
+
+.file-transfer-page .nav-dot {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.5);
+  transition: all 0.3s ease;
+  cursor: pointer;
+}
+
+.file-transfer-page .nav-dot.active {
+  background: #007bff;
+  transform: scale(1.2);
+}
+
+.file-transfer-page .image-scroll-indicator {
+  position: absolute;
+  top: 1050px;
+  right: 700px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  z-index: 15;
+  background: rgba(0, 0, 0, 0.4);
+  padding: 15px 20px;
+  border-radius: 25px;
+  backdrop-filter: blur(1px);
+  border: 2px solid rgba(255, 255, 255, 0.2);
+}
+
+.file-transfer-page .vertical-scroll-arrow {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-bottom: 8px;
+}
+
+.file-transfer-page .arrow-up,
+.file-transfer-page .arrow-down {
+  width: 0;
+  height: 0;
+  margin: 2px 0;
+}
+
+.file-transfer-page .arrow-up {
+  border-left: 6px solid transparent;
+  border-right: 6px solid transparent;
+  border-bottom: 8px solid rgba(255, 255, 255, 0.8);
+  animation: bounce-up 1.5s infinite;
+}
+
+.file-transfer-page .arrow-down {
+  border-left: 6px solid transparent;
+  border-right: 6px solid transparent;
+  border-top: 8px solid rgba(255, 255, 255, 0.8);
+  animation: bounce-down 1.5s infinite;
+}
+
+.file-transfer-page .vertical-scroll-text {
+  color: rgba(255, 255, 255, 0.95);
+  font-size: 12px;
+  font-weight: 600;
+  text-align: center;
+  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
+}
+
+/* ========================================
+   COUPON CARD
+   ======================================== */
+
+.file-transfer-page .coupon-overlay {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  top: 0;
+  background: rgba(0, 0, 0, 0.6);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+  animation: fadeIn 0.3s ease-out;
+}
+
+.file-transfer-page .coupon-card {
+  background: linear-gradient(135deg, #ff6b35 0%, #f7931e 100%);
+  border-radius: 16px;
+  padding: 20px 24px;
+  width: 100%;
+  max-width: 500px;
+  position: relative;
+  overflow: hidden;
+  animation: swipeUpRotate 0.6s cubic-bezier(0.4, 0.2, 0.2, 1);
+  margin: 0 20px;
+  transform: rotate(-3deg);
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+}
+
+.file-transfer-page .coupon-card::before {
+  content: "";
+  position: absolute;
+  left: -15px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 30px;
+  height: 30px;
+  background: rgba(0, 0, 0, 0.6);
+  border-radius: 50%;
+  z-index: 3;
+}
+
+.file-transfer-page .coupon-card::after {
+  content: "";
+  position: absolute;
+  right: -15px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 30px;
+  height: 30px;
+  background: rgba(0, 0, 0, 0.6);
+  border-radius: 50%;
+  z-index: 3;
+}
+
+.file-transfer-page .close-btn {
+  position: absolute;
+  top: 12px;
+  right: 16px;
+  color: white;
+  font-size: 24px;
+  font-weight: 300;
+  cursor: pointer;
+  z-index: 4;
+  line-height: 1;
+  padding: 4px 8px;
+  border-radius: 50%;
+  transition: all 0.2s ease;
+}
+
+.file-transfer-page .close-btn:hover {
+  background: rgba(255, 255, 255, 0.2);
+  transform: scale(1.1);
+}
+
+.file-transfer-page .uber-logo {
+  background: #000;
+  color: white;
+  padding: 8px 16px;
+  border-radius: 8px;
+  font-weight: bold;
+  font-size: 18px;
+  display: inline-block;
+  margin-bottom: 16px;
+  position: relative;
+  z-index: 2;
+}
+
+.file-transfer-page .offer-text {
+  color: white;
+  font-size: 24px;
+  font-weight: 600;
+  line-height: 1.3;
+  margin-bottom: 20px;
+  position: relative;
+  z-index: 2;
+  text-align: left;
+}
+
+.file-transfer-page .promo-codes {
+  display: flex;
+  gap: 12px;
+  margin-bottom: 16px;
+  position: relative;
+  z-index: 2;
+}
+
+.file-transfer-page .promo-code {
+  background: rgba(255, 255, 255, 0.2);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  color: white;
+  padding: 8px 16px;
+  border-radius: 6px;
+  font-size: 14px;
+  font-weight: 500;
+  backdrop-filter: blur(10px);
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.file-transfer-page .promo-code:hover {
+  background: rgba(255, 255, 255, 0.3);
+  transform: translateY(-1px);
+}
+
+.file-transfer-page .validity {
+  color: rgba(255, 255, 255, 0.8);
+  font-size: 12px;
+  position: relative;
+  z-index: 2;
+}
+
+/* ========================================
+   LOADING ANIMATIONS
+   ======================================== */
+
+.file-transfer-page .loading-animation-card {
+  --bg-color: #ffffff;
+  background-color: var(--bg-color);
+  padding: 1rem 2rem;
+  border-radius: 1.25rem;
+}
+
+.file-transfer-page .text-loader {
+  color: rgb(0, 0, 0);
+  font-family: "Poppins", sans-serif;
+  font-weight: 500;
+  font-size: 25px;
+  box-sizing: content-box;
+  height: 40px;
+  padding: 10px 10px;
+  display: flex;
+  border-radius: 8px;
+  margin-top: 100px;
+  margin-left: 40px;
+}
+
+.file-transfer-page .rotating-words {
+  overflow: hidden;
+  position: relative;
+}
+
+.file-transfer-page .rotating-words::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(var(--bg-color) 10%, transparent 30%, transparent 70%, var(--bg-color) 90%);
+  z-index: 20;
+}
+
+.file-transfer-page .animated-word {
+  display: block;
+  height: 100%;
+  padding-left: 6px;
+  color: #6836dc;
+  animation: word_spin_animation 4s infinite;
+}
+
 .file-transfer-page .loading-spinner {
   width: 40px;
   height: 40px;
@@ -2395,22 +1909,12 @@ file-transfer-page .product-cat {
   margin: 0 auto 1rem;
 }
 
-@keyframes spin {
-  0% {
-    transform: rotate(0deg);
-  }
-  100% {
-    transform: rotate(360deg);
-  }
-}
-
 .file-transfer-page .loading-text {
   color: rgba(255, 255, 255, 0.8);
   text-align: center;
   font-size: 0.9rem;
 }
 
-/* Empty State */
 .file-transfer-page .empty-state {
   text-align: center;
   padding: 2rem;
@@ -2435,7 +1939,291 @@ file-transfer-page .product-cat {
   opacity: 0.8;
 }
 
-/* Responsive Design */
+/* ========================================
+   BUTTON ANIMATIONS
+   ======================================== */
+
+.Btn-Container {
+  display: flex;
+  width: 134px;
+  height: fit-content;
+  background-color: #1d2129;
+  border-radius: 40px;
+  box-shadow: 0px 5px 10px #bebebe;
+  justify-content: space-between;
+  align-items: center;
+  border: none;
+  cursor: pointer;
+  margin-left: 100px;
+  margin-top: 40px;
+}
+
+.icon-Container {
+  width: 75px;
+  height: 47px;
+  background-color: #ffffff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  border: 3px solid #1d2129;
+}
+
+.text {
+  width: calc(170px - 45px);
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  font-size: 1.1em;
+  letter-spacing: 1.2px;
+}
+
+.icon-Container svg {
+  transition-duration: 1.5s;
+}
+
+.Btn-Container:hover .icon-Container svg {
+  transition-duration: 1.5s;
+  animation: arrow 1s linear infinite;
+}
+
+/* ========================================
+   FOOTER
+   ======================================== */
+
+.site-footer {
+  position: absolute;
+  left: 50%;
+  bottom: 18px;
+  transform: translateX(-50%);
+  z-index: 9999;
+  pointer-events: auto;
+  width: auto;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  -webkit-font-smoothing: antialiased;
+}
+
+.site-footer nav {
+  display: flex;
+  gap: 32px;
+  align-items: center;
+  padding: 14px 34px;
+  border-radius: 999px;
+  background: rgba(0, 0, 0, 0.9);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.55), inset 0 1px 0 rgba(255, 255, 255, 0.03);
+  backdrop-filter: blur(6px);
+}
+
+.site-footer nav a {
+  color: #ffffff;
+  text-decoration: none;
+  font-weight: 600;
+  font-size: 15px;
+  letter-spacing: 0.2px;
+  padding: 6px 6px;
+  transition: opacity 150ms ease, transform 150ms ease;
+}
+
+.site-footer nav a:not(:last-child)::after {
+  content: "";
+  display: inline-block;
+  width: 1px;
+  height: 20px;
+  background: rgba(255, 255, 255, 0.14);
+  margin-left: 22px;
+  vertical-align: middle;
+}
+
+.site-footer nav a:hover {
+  opacity: 0.95;
+  transform: translateY(-2px);
+}
+
+/* ========================================
+   UTILITY CLASSES
+   ======================================== */
+
+.above5 {
+  color: white;
+}
+
+/* ========================================
+   ANIMATIONS
+   ======================================== */
+
+@keyframes spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes bounce {
+  0%,
+  20%,
+  60%,
+  100% {
+    transform: translateY(0);
+  }
+  40% {
+    transform: translateY(-4px);
+  }
+  80% {
+    transform: translateY(-2px);
+  }
+}
+
+@keyframes slideIn {
+  from {
+    transform: translateY(100%);
+  }
+  to {
+    transform: translateY(0);
+  }
+}
+
+@keyframes swipeUpRotate {
+  0% {
+    transform: translateY(100vh) rotate(-8deg) scale(0.8);
+    opacity: 0;
+  }
+  60% {
+    transform: translateY(-20px) rotate(-1deg) scale(1.05);
+    opacity: 1;
+  }
+  100% {
+    transform: translateY(0) rotate(-3deg) scale(1);
+    opacity: 1;
+  }
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes bounce-up {
+  0%,
+  20%,
+  50%,
+  80%,
+  100% {
+    transform: translateY(0);
+  }
+  40% {
+    transform: translateY(-4px);
+  }
+  60% {
+    transform: translateY(-2px);
+  }
+}
+
+@keyframes bounce-down {
+  0%,
+  20%,
+  50%,
+  80%,
+  100% {
+    transform: translateY(0);
+  }
+  40% {
+    transform: translateY(4px);
+  }
+  60% {
+    transform: translateY(2px);
+  }
+}
+
+@keyframes pulse-indicator {
+  0% {
+    transform: translateX(-50%) scale(1);
+    opacity: 0.8;
+  }
+  50% {
+    transform: translateX(-50%) scale(1.05);
+    opacity: 1;
+  }
+  100% {
+    transform: translateX(-50%) scale(1);
+    opacity: 0.8;
+  }
+}
+
+@keyframes arrow {
+  0% {
+    opacity: 0;
+    margin-left: 0px;
+  }
+  100% {
+    opacity: 1;
+    margin-left: 10px;
+  }
+}
+
+@keyframes word_spin_animation {
+  10% {
+    transform: translateY(-102%);
+  }
+  25% {
+    transform: translateY(-100%);
+  }
+  35% {
+    transform: translateY(-202%);
+  }
+  50% {
+    transform: translateY(-200%);
+  }
+  60% {
+    transform: translateY(-302%);
+  }
+  75% {
+    transform: translateY(-300%);
+  }
+  85% {
+    transform: translateY(-402%);
+  }
+  100% {
+    transform: translateY(-400%);
+  }
+}
+
+/* ========================================
+   RESPONSIVE DESIGN
+   ======================================== */
+
+@media (max-width: 1200px) {
+  .file-transfer-page .product-card {
+    margin-bottom: 0.75rem;
+  }
+
+  .file-transfer-page .product-title {
+    font-size: 13px;
+  }
+
+  .file-transfer-page .product-img {
+    height: 100px;
+  }
+
+  .file-transfer-page .product-img img {
+    width: 70px;
+    height: 70px;
+  }
+
+  .file-transfer-page .product-info {
+    padding: 0.75rem;
+  }
+}
+
 @media (max-width: 768px) {
   .file-transfer-page .container {
     padding: 1rem;
@@ -2464,954 +2252,7 @@ file-transfer-page .product-cat {
   .file-transfer-page .storage-title {
     font-size: 1.3rem;
   }
-}
 
-@media (max-width: 480px) {
-  .file-transfer-page .files-display {
-    padding: 1rem;
-  }
-
-  .file-transfer-page .file-item {
-    padding: 0.75rem;
-  }
-
-  .file-transfer-page .next-button {
-    min-width: 150px;
-    padding: 0.75rem 1.5rem;
-    font-size: 1rem;
-  }
-}
-
-/* Paper Shop Styles */
-.file-transfer-page .paper-shop-content {
-  margin-top: 3rem;
-  height: 650px;
-
-  background-color: #111111;
-  margin-top: 50px;
-}
-
-.file-transfer-page .product-cards-container {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-  gap: 2rem;
-  max-width: 2200px;
-  margin: 0 auto;
-  padding: 13 1rem;
-  margin-bottom: 100px;
-}
-
-.file-transfer-page .product-card {
-  background: rgba(255, 255, 255, 0.05);
-  border-radius: 40px;
-  overflow: hidden;
-  transition: all 0.3s ease;
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  backdrop-filter: blur(10px);
-  width: 493px;
-  margin-top: 40px;
-  height: 493px;
-}
-
-.file-transfer-page .product-card:hover {
-  border-color: rgba(102, 126, 234, 0.3);
-  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
-}
-
-.file-transfer-page .product-tilt {
-  display: flex;
-  justify-content: center;
-  height: 290px;
-}
-
-.file-transfer-page .product-img {
-  width: 520px;
-  height: 420px;
-  border-radius: 15px;
-  overflow: hidden;
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
-  transition: transform 0.3s ease;
-}
-
-.file-transfer-page .product-img img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-}
-
-.file-transfer-page .product-info {
-  padding: 1.5rem 2rem 2rem;
-  background-color: #353738;
-  border-radius: 0px 0px 40px 40px;
-}
-
-.file-transfer-page .product-cat {
-  color: rgba(255, 255, 255, 0.6);
-  font-size: 0.8rem;
-  font-weight: 500;
-  text-transform: uppercase;
-  letter-spacing: 0.5px;
-  margin-bottom: 0.5rem;
-}
-
-.file-transfer-page .product-title {
-  color: #ffffff;
-  font-size: 1.3rem;
-  font-weight: 700;
-  margin-bottom: 1rem;
-  letter-spacing: -0.5px;
-}
-
-.file-transfer-page .product-bottom {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 1rem;
-}
-
-.file-transfer-page .product-price {
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-}
-
-.file-transfer-page .price-old {
-  color: rgba(255, 255, 255, 0.5);
-  text-decoration: line-through;
-  font-size: 1.4rem;
-}
-
-.file-transfer-page .price-new {
-  color: #667eea;
-  font-size: 1.9rem;
-  font-weight: 700;
-}
-
-.file-transfer-page .product-btn {
-  background:#000000;
-  color: rgb(255, 255, 255);
-  border: none;
-  padding: 0.6rem 1.2rem;
-  border-radius: 25px;
-  font-size: 0.85rem;
-  font-weight: 600;
-  cursor: pointer;
-  transition: all 0.3s ease;
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-  box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
-}
-
-.file-transfer-page .product-btn:hover {
-  background:#ffffff;
-  color: rgb(0, 0, 0);
-}
-
-.file-transfer-page .product-btn:disabled {
-  background: #666;
-  cursor: not-allowed;
-  transform: none;
-  box-shadow: none;
-}
-
-.file-transfer-page .cart-icon {
-  width: 16px;
-  height: 16px;
-}
-
-.file-transfer-page .product-meta {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
-
-.file-transfer-page .product-stock {
-  font-size: 0.8rem;
-  color: #4caf50;
-  font-weight: 500;
-}
-
-/* Floating Cart */
-.file-transfer-page .floating-cart-container {
-  position: fixed;
-  bottom: 2rem;
-  right: 2rem;
-  z-index: 1000;
-}
-
-.file-transfer-page .floating-cart-btn {
-  width: 60px;
-  height: 60px;
-  border-radius: 50%;
-  background: #7A7FEE;
-  border: none;
-  cursor: pointer;
-  box-shadow: 0 8px 25px rgba(102, 126, 234, 0.4);
-  transition: all 0.3s ease;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  position: relative;
-}
-
-.file-transfer-page .floating-cart-btn:hover {
-  box-shadow: 0 12px 35px rgba(102, 126, 234, 0.5);
-}
-
-.file-transfer-page .floating-cart-counter {
-  position: absolute;
-  top: -5px;
-  right: -5px;
-  background: #ff4757;
-  color: white;
-  border-radius: 50%;
-  width: 24px;
-  height: 24px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 0.8rem;
-  font-weight: 700;
-  border: 2px solid white;
-}
-
-.file-transfer-page .basket-icon {
-  filter: brightness(0) invert(1);
-}
-
-/* Cart Overlay */
-.file-transfer-page .cart-overlay {
-  position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background: rgba(0, 0, 0, 0.8);
-  backdrop-filter: blur(10px);
-  z-index: 2000;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 1rem;
-}
-
-.file-transfer-page .modern-cart-container {
-  background: #1a1a1a;
-  border-radius: 16px;
-  width: 100%;
-  max-width: 580px;
-  max-height: 85vh;
-  overflow: hidden;
-  border: 1px solid #333;
-  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
-}
-
-.file-transfer-page .unified-cart {
-  display: flex;
-  flex-direction: column;
-  height: 100%;
-  width: 500px;
-}
-
-.file-transfer-page .cart-header-modern {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 1.5rem;
-  background: #1a1a1a;
-}
-
-.file-transfer-page .cart-logo {
-  width: 32px;
-  height: 32px;
-  border-radius: 6px;
-}
-
-.file-transfer-page .cart-title {
-  font-size: 1.25rem;
-  font-weight: 600;
-  color: #ffffff;
-  flex: 1;
-  text-align: center;
-  margin: 0;
-}
-
-.file-transfer-page .cart-close-btn-modern {
-  background: #333;
-  border: none;
-  border-radius: 8px;
-  width: 36px;
-  height: 36px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  cursor: pointer;
-  transition: all 0.2s ease;
-  color: #fff;
-}
-
-.file-transfer-page .cart-close-btn-modern:hover {
-  background: #444;
-}
-
-.file-transfer-page .cart-empty-modern {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  padding: 3rem 2rem;
-  color: #888;
-  text-align: center;
-}
-
-.file-transfer-page .empty-cart-icon-modern {
-  width: 64px;
-  height: 64px;
-  margin-bottom: 1rem;
-  color: #555;
-}
-
-.file-transfer-page .cart-empty-modern p {
-  font-size: 1.1rem;
-  margin: 0;
-}
-
-.file-transfer-page .cart-items-section {
-  flex: 1;
-  overflow-y: auto;
-  padding: 0;
-  max-height: 300px;
-}
-
-.file-transfer-page .cart-item {
-  display: flex;
-  align-items: center;
-  padding: 1rem 1.5rem;
-  gap: 1rem;
-  background: #1a1a1a;
-  transition: background 0.2s ease;
-}
-
-.file-transfer-page .cart-item:hover {
-  background: #222;
-}
-
-.file-transfer-page .cart-item:last-child {
-  border-bottom: none;
-}
-
-.file-transfer-page .item-icon {
-  flex-shrink: 0;
-  width: 48px;
-  height: 48px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background: #333;
-  border-radius: 8px;
-}
-
-.file-transfer-page .item-details {
-  flex: 1;
-  min-width: 0;
-}
-
-.file-transfer-page .item-name {
-  font-size: 0.95rem;
-  font-weight: 600;
-  color: #fff;
-  margin-bottom: 0.25rem;
-  line-height: 1.2;
-}
-
-.file-transfer-page .item-category {
-  font-size: 0.8rem;
-  color: #888;
-  margin-bottom: 0.25rem;
-}
-
-.file-transfer-page .item-price {
-  font-size: 0.85rem;
-  color: #aaa;
-}
-
-.file-transfer-page .item-quantity {
-  display: flex;
-  align-items: center;
-  gap: 0.75rem;
-  background: #333;
-  border-radius: 8px;
-  padding: 0.5rem;
-}
-
-.file-transfer-page .qty-btn {
-  background: #ffffff;
-  border: none;
-  border-radius: 6px;
-  width: 40px;
-  height: 40px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  cursor: pointer;
-  transition: all 0.2s ease;
-  color: #fff;
-}
-
-.file-transfer-page .qty-btn:hover {
-  background: #bababa;
-  transform: scale(1.05);
-}
-
-.file-transfer-page .qty-btn:active {
-  transform: scale(0.95);
-}
-
-.file-transfer-page .qty-number {
-  font-size: 0.95rem;
-  font-weight: 600;
-  color: #fff;
-  min-width: 24px;
-  text-align: center;
-}
-
-.file-transfer-page .item-total {
-  font-size: 0.95rem;
-  font-weight: 600;
-  color: #fff;
-  min-width: 60px;
-  text-align: right;
-}
-
-.file-transfer-page .mobile-input-section {
-  padding: 1rem 1.5rem;
-  border-bottom: 1px solid #333;
-  background: #1a1a1a;
-}
-
-.file-transfer-page .mobile-input {
-  width: 100%;
-  padding: 0.75rem 1rem;
-  background: #333;
-  border: 1px solid #444;
-  border-radius: 8px;
-  color: #fff;
-  font-size: 0.95rem;
-  transition: all 0.2s ease;
-}
-
-.file-transfer-page .mobile-input:focus {
-  outline: none;
-  border-color: #666;
-  background: #3a3a3a;
-}
-
-.file-transfer-page .mobile-input::placeholder {
-  color: #888;
-}
-
-.file-transfer-page .mobile-error {
-  color: #ff6b6b;
-  font-size: 0.85rem;
-  margin-top: 0.5rem;
-}
-
-.file-transfer-page .checkout-section {
-  padding: 1.5rem;
-  background: #1a1a1a;
-  border-top: 1px solid #333;
-}
-
-.file-transfer-page .checkout-details {
-  margin-bottom: 1rem;
-}
-
-.file-transfer-page .detail-row {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 0.5rem;
-  font-size: 0.9rem;
-  color: #ccc;
-}
-
-.file-transfer-page .detail-row:last-child {
-  margin-bottom: 0;
-  font-weight: 600;
-  color: #fff;
-}
-
-.file-transfer-page .total-price {
-  font-size: 1.5rem;
-  font-weight: 700;
-  color: #fff;
-  text-align: center;
-  margin-bottom: 1.5rem;
-  padding: 1rem;
-  background: #333;
-  border-radius: 8px;
-}
-
-.file-transfer-page .checkout-buttons {
-  display: flex;
-  gap: 1rem;
-}
-
-.file-transfer-page .clear-btn {
-  flex: 1;
-  padding: 0.875rem 1.5rem;
-  background: #444;
-  color: #fff;
-  border: none;
-  border-radius: 8px;
-  font-size: 0.95rem;
-  font-weight: 600;
-  cursor: pointer;
-  transition: all 0.2s ease;
-}
-
-.file-transfer-page .clear-btn:hover {
-  background: #555;
-}
-
-.file-transfer-page .pay-btn {
-  flex: 2;
-  padding: 0.875rem 1.5rem;
-  background: linear-gradient(135deg, #8b5cf6, #7c3aed);
-  color: #fff;
-  border: none;
-  border-radius: 8px;
-  font-size: 0.95rem;
-  font-weight: 600;
-  cursor: pointer;
-  transition: all 0.2s ease;
-}
-
-.file-transfer-page .pay-btn:hover {
-  background: linear-gradient(135deg, #7c3aed, #6d28d9);
-  transform: translateY(-1px);
-}
-
-.file-transfer-page .pay-btn:disabled {
-  opacity: 0.6;
-  cursor: not-allowed;
-  transform: none;
-}
-
-/* Updated cart overlay and container to match the provided screenshot design */
-.file-transfer-page .cart-overlay {
-  position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background: rgba(0, 0, 0, 0.8);
-  backdrop-filter: blur(10px);
-  z-index: 2000;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 1rem;
-}
-
-.file-transfer-page .modern-cart-container {
-  background: #1a1a1a;
-  border-radius: 16px;
-  width: 100%;
-  max-width: 480px;
-  max-height: 85vh;
-  overflow: hidden;
-  border: 1px solid #333;
-  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
-}
-
-.file-transfer-page .unified-cart {
-  display: flex;
-  flex-direction: column;
-  height: 100%;
-}
-
-.file-transfer-page .cart-header-modern {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 1.5rem;
-  border-bottom: 1px solid #333;
-  background: #1a1a1a;
-}
-
-.file-transfer-page .cart-logo {
-  width: 32px;
-  height: 32px;
-  border-radius: 6px;
-}
-
-.file-transfer-page .cart-title {
-  font-size: 1.25rem;
-  font-weight: 600;
-  color: #ffffff;
-  flex: 1;
-  text-align: center;
-  margin: 0;
-}
-
-.file-transfer-page .cart-close-btn-modern {
-  background: #333;
-  border: none;
-  border-radius: 8px;
-  width: 36px;
-  height: 36px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  cursor: pointer;
-  transition: all 0.2s ease;
-  color: #fff;
-}
-
-.file-transfer-page .cart-close-btn-modern:hover {
-  background: #444;
-}
-
-/* Updated cart empty state to match dark theme */
-.file-transfer-page .cart-empty-modern {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  padding: 3rem 2rem;
-  color: #888;
-  text-align: center;
-}
-
-.file-transfer-page .empty-cart-icon-modern {
-  width: 64px;
-  height: 64px;
-  margin-bottom: 1rem;
-  color: #555;
-}
-
-.file-transfer-page .cart-empty-modern p {
-  font-size: 1.1rem;
-  margin: 0;
-}
-
-/* Redesigned cart items section to match the screenshot */
-.file-transfer-page .cart-items-section {
-  flex: 1;
-  overflow-y: auto;
-  padding: 0;
-  max-height: 390px;
-}
-
-.file-transfer-page .cart-item {
-  display: flex;
-  align-items: center;
-  padding: 1rem 1.5rem;
-  gap: 1rem;
-  background: #1a1a1a;
-  transition: background 0.2s ease;
-}
-
-.file-transfer-page .cart-item:hover {
-  background: #222;
-}
-
-.file-transfer-page .cart-item:last-child {
-  border-bottom: none;
-}
-
-.file-transfer-page .item-icon {
-  flex-shrink: 0;
-  width: 48px;
-  height: 48px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background: #333;
-  border-radius: 8px;
-}
-
-.file-transfer-page .item-details {
-  flex: 1;
-  min-width: 0;
-}
-
-.file-transfer-page .item-name {
-  font-size: 0.95rem;
-  font-weight: 600;
-  color: #fff;
-  margin-bottom: 0.25rem;
-  line-height: 1.2;
-}
-
-.file-transfer-page .item-category {
-  font-size: 0.8rem;
-  color: #888;
-  margin-bottom: 0.25rem;
-}
-
-.file-transfer-page .item-price {
-  font-size: 0.85rem;
-  color: #aaa;
-}
-
-/* Enhanced quantity controls with better +/- buttons */
-.file-transfer-page .item-quantity {
-  display: flex;
-  align-items: center;
-  gap: 0.75rem;
-  background: #333;
-  border-radius: 8px;
-  padding: 0.5rem;
-}
-
-.file-transfer-page .qty-btn {
-  background: #ffffff;
-  border: none;
-  border-radius: 6px;
-  width: 40px;
-  height: 40px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  cursor: pointer;
-  transition: all 0.2s ease;
-  color: #fff;
-}
-
-.file-transfer-page .qty-btn:hover {
-  background: #555;
-  transform: scale(1.05);
-}
-
-.file-transfer-page .qty-btn:active {
-  transform: scale(0.95);
-}
-
-.file-transfer-page .qty-number {
-  font-size: 0.95rem;
-  font-weight: 600;
-  color: #fff;
-  min-width: 24px;
-  text-align: center;
-}
-
-.file-transfer-page .item-total {
-  font-size: 0.95rem;
-  font-weight: 600;
-  color: #fff;
-  min-width: 60px;
-  text-align: right;
-}
-
-/* Updated mobile input section styling */
-.file-transfer-page .mobile-input-section {
-  padding: 1rem 1.5rem;
-  border-bottom: 1px solid #333;
-  background: #1a1a1a;
-}
-
-.file-transfer-page .mobile-input {
-  width: 100%;
-  padding: 0.75rem 1rem;
-  background: #333;
-  border: 1px solid #444;
-  border-radius: 8px;
-  color: #fff;
-  font-size: 0.95rem;
-  transition: all 0.2s ease;
-}
-
-.file-transfer-page .mobile-input:focus {
-  outline: none;
-  border-color: #666;
-  background: #3a3a3a;
-}
-
-.file-transfer-page .mobile-input::placeholder {
-  color: #888;
-}
-
-.file-transfer-page .mobile-error {
-  color: #ff6b6b;
-  font-size: 0.85rem;
-  margin-top: 0.5rem;
-}
-
-/* Updated checkout section to match the dark theme */
-.file-transfer-page .checkout-section {
-  padding: 1.5rem;
-  background: #1a1a1a;
-  border-top: 1px solid #333;
-}
-
-.file-transfer-page .checkout-details {
-  margin-bottom: 1rem;
-}
-
-.file-transfer-page .detail-row {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 0.5rem;
-  font-size: 1.4rem;
-  color: #ccc;
-}
-
-.file-transfer-page .detail-row:last-child {
-  margin-bottom: 0;
-  font-weight: 600;
-  color: #fff;
-}
-
-.file-transfer-page .total-price {
-  font-size: 1.5rem;
-  font-weight: 700;
-  color: #fff;
-  text-align: center;
-  margin-bottom: 1.5rem;
-  padding: 1rem;
-  background: #333;
-  border-radius: 8px;
-}
-
-.file-transfer-page .checkout-buttons {
-  display: flex;
-  gap: 1rem;
-}
-
-.file-transfer-page .clear-btn {
-  flex: 1;
-  padding: 0.875rem 1.5rem;
-  background: #444;
-  color: #fff;
-  border: none;
-  border-radius: 8px;
-  font-size: 0.95rem;
-  font-weight: 600;
-  cursor: pointer;
-  transition: all 0.2s ease;
-}
-
-.file-transfer-page .clear-btn:hover {
-  background: #555;
-}
-
-.file-transfer-page .pay-btn {
-  flex: 2;
-  padding: 0.875rem 1.5rem;
-  background: linear-gradient(135deg, #8b5cf6, #7c3aed);
-  color: #fff;
-  border: none;
-  border-radius: 8px;
-  font-size: 0.95rem;
-  font-weight: 600;
-  cursor: pointer;
-  transition: all 0.2s ease;
-}
-
-.file-transfer-page .pay-btn:hover {
-  background: linear-gradient(135deg, #7c3aed, #6d28d9);
-}
-
-.file-transfer-page .pay-btn:disabled {
-  opacity: 0.6;
-  cursor: not-allowed;
-  transform: none;
-}
-
-/* Updated floating cart button styles */
-.file-transfer-page .floating-cart-container {
-  position: fixed;
-  top: 20px;
-  right: 200px;
-  z-index: 1500;
-}
-
-.file-transfer-page .floating-cart-btn {
-  position: relative;
-  background:#7A7FEE;
-  border: 2px solid rgba(0, 0, 0, 0.1);
-  border-radius: 50%;
-  width: 64px;
-  height: 64px;
-  cursor: pointer;
-  transition: all 0.3s ease;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
-}
-
-.file-transfer-page .floating-cart-btn:hover {
-  background: rgba(255, 255, 255, 1);
-  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.2);
-}
-
-.file-transfer-page .floating-cart-counter {
-  position: absolute;
-  top: -8px;
-  right: -8px;
-  background: #e74c3c;
-  color: white;
-  border-radius: 50%;
-  width: 28px;
-  height: 28px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 0.8rem;
-  font-weight: 700;
-  border: 3px solid white;
-  animation: bounce 0.3s ease;
-}
-
-/* Added printing progress section styles */
-.file-transfer-page .printing-progress-section {
-  padding: 1.5rem;
-  background: #1a1a1a;
-  border-bottom: 1px solid #333;
-}
-
-.file-transfer-page .progress-title {
-  font-size: 1rem;
-  font-weight: 600;
-  color: #fff;
-  margin-bottom: 0.5rem;
-}
-
-.file-transfer-page .progress-job {
-  font-size: 0.9rem;
-  color: #ccc;
-  margin-bottom: 1rem;
-}
-
-.file-transfer-page .progress-bar {
-  width: 100%;
-  height: 8px;
-  background: #333;
-  border-radius: 4px;
-  overflow: hidden;
-  margin-bottom: 0.5rem;
-}
-
-.file-transfer-page .progress-fill {
-  height: 100%;
-  background: #28a745;
-  transition: width 0.3s ease;
-  border-radius: 4px;
-}
-
-.file-transfer-page .progress-status {
-  font-size: 0.85rem;
-  color: #aaa;
-  text-align: center;
-}
-
-/* Responsive adjustments */
-@media (max-width: 768px) {
   .file-transfer-page .modern-cart-container {
     margin: 0.5rem;
     max-width: none;
@@ -3443,68 +2284,11 @@ file-transfer-page .product-cat {
   }
 }
 
-
-
-/* Footer: centered rounded pill with separators */
-.site-footer {
-  position: absolute;
-  left: 50%;
-  bottom: 18px;
-  transform: translateX(-50%);
-  z-index: 9999;
-  pointer-events: auto;
-  width: auto;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  -webkit-font-smoothing: antialiased;
-}
-
-/* pill container */
-.site-footer nav {
-  display: flex;
-  gap: 32px;
-  align-items: center;
-  padding: 14px 34px;
-  border-radius: 999px;
-  background: rgba(0, 0, 0, 0.9);
-  box-shadow: 0 10px 30px rgba(0,0,0,0.55), inset 0 1px 0 rgba(255,255,255,0.03);
-  backdrop-filter: blur(6px);
-}
-
-/* links */
-.site-footer nav a {
-  color: #ffffff;
-  text-decoration: none;
-  font-weight: 600;
-  font-size: 15px;
-  letter-spacing: 0.2px;
-  padding: 6px 6px;
-  transition: opacity 150ms ease, transform 150ms ease;
-}
-
-/* thin vertical separators between links */
-.site-footer nav a:not(:last-child)::after {
-  content: "";
-  display: inline-block;
-  width: 1px;
-  height: 20px;
-  background: rgba(255,255,255,0.14);
-  margin-left: 22px;
-  vertical-align: middle;
-}
-
-/* hover */
-.site-footer nav a:hover {
-  opacity: 0.95;
-  transform: translateY(-2px);
-}
-
-/* smaller screens: stack / reduce padding */
 @media (max-width: 640px) {
   .site-footer {
     bottom: 12px;
   }
+
   .site-footer nav {
     gap: 12px;
     padding: 10px 14px;
@@ -3512,19 +2296,50 @@ file-transfer-page .product-cat {
     max-width: 640px;
     box-sizing: border-box;
   }
+
   .site-footer nav a {
     font-size: 14px;
   }
+
   .site-footer nav a:not(:last-child)::after {
     height: 16px;
     margin-left: 12px;
   }
 }
 
+@media (max-width: 480px) {
+  .file-transfer-page .files-display {
+    padding: 1rem;
+  }
 
+  .file-transfer-page .file-item {
+    padding: 0.75rem;
+  }
 
+  .file-transfer-page .next-button {
+    min-width: 150px;
+    padding: 0.75rem 1.5rem;
+    font-size: 1rem;
+  }
 
+  .file-transfer-page .coupon-card {
+    padding: 16px 20px;
+    margin: 0 10px;
+  }
 
-.above5{
-  color:white;
+  .file-transfer-page .offer-text {
+    font-size: 20px;
+  }
+
+  .file-transfer-page .promo-codes {
+    flex-direction: column;
+  }
+
+  .file-transfer-page .promo-code {
+    text-align: center;
+  }
 }
+
+
+
+
