@@ -1370,7 +1370,7 @@ function IntegratedFilePage() {
                         <div className="cost-display">₹{item.cost}</div>
                       </div>
                       <button className="remove-button" onClick={() => removeFromQueue(item.id)}>
-                        <Trash size={14} />
+                        <Trash size={50} />
                       </button>
                     </li>
                   ))}

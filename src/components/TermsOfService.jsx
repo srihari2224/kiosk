@@ -33,12 +33,19 @@ const TermsOfService = () => {
         >
           Back
         </button>
+        
+        <h1>INNVERA TECHNOLOGY PRIVATE LIMITED</h1>
+
+        <h1>Business Adress:</h1>
+        <h2>22-8-152/A3 upadhyaya nagar 4th cross, Grand World Road, Tirupati,517501</h2>
+        
         <p className="effective-date">Effective Date: September 13, 2025</p>
 
         <p>
           Welcome to <strong>INNVERA</strong>. These Terms of Service govern your use of our file upload and
           self-printing platform. By using our service, you agree to these terms.
         </p>
+
 
         <h2>1. Use of Service</h2>
         <ul>

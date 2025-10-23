@@ -100,7 +100,7 @@
 }
 
 .hero-button {
-  background: #7A7FEE;
+  background: #008000;
   color: white;
   border: none;
   padding: 1rem 1.5rem;
@@ -186,7 +186,7 @@
   display: flex;
   align-items: center;
   gap: 0.375rem;
-  background: green;
+  background: #787DE9;
   color: white;
   border: none;
   padding: 0.5rem 0.75rem;

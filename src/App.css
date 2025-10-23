@@ -25,10 +25,6 @@ body > div[style*="position: fixed"] {
   visibility: visible !important;
 }
 
-
-
-
-
 /* Add this to your App.css file */
 
 /* IMPORTANT: Apply cursor globally to ALL elements */
@@ -109,24 +105,46 @@ button:disabled {
   cursor: url("data:image/svg+xml,%3Csvg width='32' height='32' viewBox='0 0 32 32' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M4 4L28 16L16 18L12 28L4 4Z' fill='%23ffffff' stroke='%23000000' stroke-width='1'/%3E%3C/svg%3E") 0 0, crosshair !important;
 }
 
-/* Resize handles */
-.resize-handle {
-  cursor: url("data:image/svg+xml,%3Csvg width='32' height='32' viewBox='0 0 32 32' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M4 4L28 16L16 18L12 28L4 4Z' fill='%23ffffff' stroke='%23000000' stroke-width='1'/%3E%3C/svg%3E") 0 0, nwse-resize !important;
+/* Resize handles - Directional cursors */
+
+/* Northwest corner - diagonal arrow top-left */
+.resize-handle.nw {
+  cursor: url("data:image/svg+xml,%3Csvg width='45' height='45' viewBox='0 0 32 32' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M8 8L16 8L16 10L11.5 10L20 18.5L18.5 20L10 11.5L10 16L8 16Z' fill='%23ffffff' stroke='%23000000' stroke-width='1'/%3E%3C/svg%3E") 16 16, nwse-resize !important;
 }
 
-.resize-handle.ne,
+/* Northeast corner - diagonal arrow top-right */
+.resize-handle.ne {
+  cursor: url("data:image/svg+xml,%3Csvg width='45' height='45' viewBox='0 0 32 32' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M24 8L16 8L16 10L20.5 10L12 18.5L13.5 20L22 11.5L22 16L24 16Z' fill='%23ffffff' stroke='%23000000' stroke-width='1'/%3E%3C/svg%3E") 16 16, nesw-resize !important;
+}
+
+/* Southwest corner - diagonal arrow bottom-left */
 .resize-handle.sw {
-  cursor: url("data:image/svg+xml,%3Csvg width='32' height='32' viewBox='0 0 32 32' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M4 4L28 16L16 18L12 28L4 4Z' fill='%23ffffff' stroke='%23000000' stroke-width='1'/%3E%3C/svg%3E") 0 0, nesw-resize !important;
+  cursor: url("data:image/svg+xml,%3Csvg width='45' height='45' viewBox='0 0 32 32' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M8 24L16 24L16 22L11.5 22L20 13.5L18.5 12L10 20.5L10 16L8 16Z' fill='%23ffffff' stroke='%23000000' stroke-width='1'/%3E%3C/svg%3E") 16 16, nesw-resize !important;
 }
 
-.resize-handle.n,
+/* Southeast corner - diagonal arrow bottom-right */
+.resize-handle.se {
+  cursor: url("data:image/svg+xml,%3Csvg width='45' height='45' viewBox='0 0 32 32' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M24 24L16 24L16 22L20.5 22L12 13.5L13.5 12L22 20.5L22 16L24 16Z' fill='%23ffffff' stroke='%23000000' stroke-width='1'/%3E%3C/svg%3E") 16 16, nwse-resize !important;
+}
+
+/* North side - vertical arrow up */
+.resize-handle.n {
+  cursor: url("data:image/svg+xml,%3Csvg width='45' height='45' viewBox='0 0 32 32' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M16 8L12 14L14 14L14 24L18 24L18 14L20 14Z' fill='%23ffffff' stroke='%23000000' stroke-width='1'/%3E%3C/svg%3E") 16 16, ns-resize !important;
+}
+
+/* South side - vertical arrow down */
 .resize-handle.s {
-  cursor: url("data:image/svg+xml,%3Csvg width='32' height='32' viewBox='0 0 32 32' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M4 4L28 16L16 18L12 28L4 4Z' fill='%23ffffff' stroke='%23000000' stroke-width='1'/%3E%3C/svg%3E") 0 0, ns-resize !important;
+  cursor: url("data:image/svg+xml,%3Csvg width='45' height='45' viewBox='0 0 32 32' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M16 24L12 18L14 18L14 8L18 8L18 18L20 18Z' fill='%23ffffff' stroke='%23000000' stroke-width='1'/%3E%3C/svg%3E") 16 16, ns-resize !important;
 }
 
-.resize-handle.w,
+/* West side - horizontal arrow left */
+.resize-handle.w {
+  cursor: url("data:image/svg+xml,%3Csvg width='45' height='45' viewBox='0 0 32 32' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M8 16L14 12L14 14L24 14L24 18L14 18L14 20Z' fill='%23ffffff' stroke='%23000000' stroke-width='1'/%3E%3C/svg%3E") 16 16, ew-resize !important;
+}
+
+/* East side - horizontal arrow right */
 .resize-handle.e {
-  cursor: url("data:image/svg+xml,%3Csvg width='32' height='32' viewBox='0 0 32 32' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M4 4L28 16L16 18L12 28L4 4Z' fill='%23ffffff' stroke='%23000000' stroke-width='1'/%3E%3C/svg%3E") 0 0, ew-resize !important;
+  cursor: url("data:image/svg+xml,%3Csvg width='45' height='45' viewBox='0 0 32 32' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M24 16L18 12L18 14L8 14L8 18L18 18L18 20Z' fill='%23ffffff' stroke='%23000000' stroke-width='1'/%3E%3C/svg%3E") 16 16, ew-resize !important;
 }
 
 /* Ensure Razorpay iframe keeps default cursor */

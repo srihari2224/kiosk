@@ -53,7 +53,7 @@ const RefundPolicy = () => {
         <h2>Refund Conditions</h2>
         <p>
           If a user is charged but the print does not happen due to any of the following reasons, the amount will be
-          refunded within 7 working days to the original payment method:
+          Credited within 2 working days to the original payment method:
         </p>
         <ul>
           <li>Technical failure of our printing system</li>
@@ -76,9 +76,8 @@ const RefundPolicy = () => {
 
         <h2>Refund Timeline</h2>
         <p>
-          Approved refunds will be processed within 7 working days. The actual credit to your account may take
-          additional time depending on your bank or payment method. Razorpay's standard refund timelines apply for all
-          transactions.
+          Approved refunds will be credited within 2 working days. The actual credit to your account may take
+          additional time depending on your bank or payment method. 
         </p>
 
         <h2>Non-Refundable Situations</h2>
@@ -94,7 +93,6 @@ const RefundPolicy = () => {
         <p>
           For any questions regarding refunds or cancellations, please contact our support team at{" "}
           <h3>support@innvera.com</h3> or{" "}
-          <h2>msrihari2224@gmail.com</h2>.
         </p>
 
         <p className="policy-note">
