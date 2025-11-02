@@ -11,6 +11,13 @@ import lines from "../assets/lines.svg"
 import print from "../assets/print.svg"
 import canvas from "../assets/canvas.png"
 import addpage from "../assets/add page.svg"
+import custom from "../assets/custom.png"
+
+import color from "../assets/color-wheel.png"
+import bnw from "../assets/black-and-white.png"
+import single from "../assets/file.png"
+import  duplix from "../assets/two.png"
+
 
 
 function IntegratedFilePage() {
@@ -692,8 +699,8 @@ function IntegratedFilePage() {
         const freshBuffer = cachedData.createFreshBuffer()
         const pdf = await window.pdfjsLib.getDocument({ data: freshBuffer }).promise
         const pages = []
-        const maxPreviewPages = Math.min(5, pdf.numPages)
-
+        const maxPreviewPages = pdf.numPages // Show all pages
+        
         for (let i = 1; i <= maxPreviewPages; i++) {
           const page = await pdf.getPage(i)
           const scale = 1.2
@@ -1957,15 +1964,20 @@ function IntegratedFilePage() {
           <div className="edge-print-dialog">
             <div className="print-dialog-left">
               <div className="print-dialog-header">
-                <h2>PDF Print Settings</h2>
-                <button className="close-dialog" onClick={() => setShowEdgePrintDialog(false)}>
-                  <X size={18} />
-                </button>
+                <img class="custom-icon" src={custom}></img>
+
+                <div class="custom-header">
+                  <div>
+                    <h2>PDF Print Settings</h2>
+                  </div>
+                  <div className="print-info">
+                    <p className="total-sheets">Total: {pdfPageCount} pages</p>
+                  </div>
+                </div>
+                
               </div>
 
-              <div className="print-info">
-                <p className="total-sheets">Total: {pdfPageCount} pages</p>
-              </div>
+              
 
               <div className="print-options-section">
                 <div className="print-option-group">
@@ -2019,34 +2031,51 @@ function IntegratedFilePage() {
 
                 <div className="print-option-group">
                   <label className="print-option-label">Color Mode</label>
-                  <select
-                    value={edgePrintSettings.colorMode}
-                    onChange={(e) => setEdgePrintSettings({ ...edgePrintSettings, colorMode: e.target.value })}
-                    className="print-select"
-                  >
-                    <option value="bw">Black & White</option>
-                    <option value="color">Color</option>
-                  </select>
+                  <div className="button-options">
+                    <button
+                      className={`option-button ${edgePrintSettings.colorMode === 'color' ? 'active' : ''}`}
+                      onClick={() => setEdgePrintSettings({ ...edgePrintSettings, colorMode: 'color' })}
+                    >
+                      <img class="options-icons" src={color}></img>
+                      Color
+                    </button>
+                    <button
+                      className={`option-button ${edgePrintSettings.colorMode === 'bw' ? 'active' : ''}`}
+                      onClick={() => setEdgePrintSettings({ ...edgePrintSettings, colorMode: 'bw' })}
+                    >
+                      <img class="options-icons" src={bnw}></img>
+
+                      Black & White
+                    </button>
+                  </div>
                 </div>
 
                 <div className="print-option-group">
                   <label className="print-option-label">Duplex</label>
-                  <select
-                    value={edgePrintSettings.doubleSided}
-                    onChange={(e) => setEdgePrintSettings({ ...edgePrintSettings, doubleSided: e.target.value })}
-                    className="print-select"
-                  >
-                    <option value="one-side">Print one-sided</option>
-                    <option value="both-sides">Print on both sides</option>
-                  </select>
+                  <div className="button-options">
+                    <button
+                      className={`option-button ${edgePrintSettings.doubleSided === 'one-side' ? 'active' : ''}`}
+                      onClick={() => setEdgePrintSettings({ ...edgePrintSettings, doubleSided: 'one-side' })}
+                    >
+                      <img class="options-icons" src={single}></img>
+
+                      One-Sided
+                    </button>
+                    <button
+                      className={`option-button ${edgePrintSettings.doubleSided === 'both-sides' ? 'active' : ''}`}
+                      onClick={() => setEdgePrintSettings({ ...edgePrintSettings, doubleSided: 'both-sides' })}
+                    >
+                    <img class="options-icons" src={duplix}></img>
+
+                      Double-Sided
+                    </button>
+                  </div>
                 </div>
 
                 <div className="cost-display-section">
                   <div className="cost-breakdown">
                     <h4>Cost: ₹{calculateEdgePrintCost()}</h4>
-                    <div style={{ fontSize: "22px", color: "#666", marginTop: "4px" }}>
-                      Do Not pull the papers until it prints the double side , Be patience while printing !
-                    </div>
+                    
                   </div>
                 </div>
               </div>
@@ -2063,35 +2092,38 @@ function IntegratedFilePage() {
 
             <div className="print-dialog-right">
               <div className="pdf-preview-section">
-                <h3>Preview</h3>
+                <div className="preview-header">
+                  <h3>Preview</h3>
+                  <span className="page-count">{allPdfPages.length} {allPdfPages.length === 1 ? 'page' : 'pages'}</span>
+                </div>
                 <div className="pdf-preview-container">
                   {allPdfPages.length > 0 ? (
                     <div className="pdf-pages-preview">
-                      {allPdfPages.slice(0, 2).map((page, index) => (
+                      {allPdfPages.map((page, index) => (
                         <div key={index} className="pdf-page-preview">
                           <div className="page-number">Page {page.pageNumber}</div>
-                          <canvas
-                            ref={(canvas) => {
-                              if (canvas && page.canvas) {
-                                const ctx = canvas.getContext("2d")
-                                canvas.width = page.canvas.width * 0.8
-                                canvas.height = page.canvas.height * 0.8
-                                ctx.scale(0.8, 0.8)
-                                ctx.drawImage(page.canvas, 0, 0)
-                                if (edgePrintSettings.colorMode === "bw") canvas.style.filter = "grayscale(100%)"
-                                else canvas.style.filter = "none"
-                              }
-                            }}
-                            className="preview-canvas"
-                          />
+                          <div className="canvas-wrapper">
+                            <canvas
+                              ref={(canvas) => {
+                                if (canvas && page.canvas) {
+                                  const ctx = canvas.getContext("2d")
+                                  canvas.width = page.canvas.width * 0.5
+                                  canvas.height = page.canvas.height * 0.5
+                                  ctx.scale(0.5, 0.5)
+                                  ctx.drawImage(page.canvas, 0, 0)
+                                  if (edgePrintSettings.colorMode === "bw") canvas.style.filter = "grayscale(100%)"
+                                  else canvas.style.filter = "none"
+                                }
+                              }}
+                              className="preview-canvas"
+                            />
+                          </div>
                         </div>
                       ))}
-                      {allPdfPages.length > 2 && (
-                        <div className="more-pages-indicator">+{allPdfPages.length - 2} more pages</div>
-                      )}
                     </div>
                   ) : (
                     <div className="loading-preview">
+                      <div className="loading-spinner"></div>
                       <p>Loading PDF preview...</p>
                     </div>
                   )}

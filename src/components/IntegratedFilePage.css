@@ -1657,8 +1657,8 @@
 .integrated-files-page .edge-print-dialog {
   display: flex;
   width: 85vw;
-  max-width: 1000px;
-  height: 75vh;
+  max-width: 1200px;
+  height: 80vh;
   background: #ffffff;
   border-radius: 8px;
   overflow: hidden;
@@ -1666,8 +1666,8 @@
 }
 
 .integrated-files-page .print-dialog-left {
-  width: 45%;
-  padding: 20px;
+  width: 55%;
+  padding: 40px;
   border-right: 1px solid rgba(0, 0, 0, 0.1);
   overflow-y: auto;
   background-color: #ffffff;
@@ -1682,14 +1682,14 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 16px;
 }
 
 .integrated-files-page .print-dialog-header h2 {
   margin: 0;
-  font-size: 20px;
-  font-weight: 600;
-  color: #000000;
+    font-size: 27px;
+    font-weight: 600;
+    color: #000;
+    margin-left: -400px;
 }
 
 .integrated-files-page .close-dialog {
@@ -1713,9 +1713,11 @@
 }
 
 .integrated-files-page .total-sheets {
-  margin: 0;
   font-weight: 500;
-  color: #000000;
+    color: #000;
+    margin-left: -408px;
+    margin-top: -16px;
+    font-size: 24px;
 }
 
 .integrated-files-page .print-options-section {
@@ -1727,13 +1729,88 @@
 .integrated-files-page .print-option-group {
   display: flex;
   flex-direction: column;
-  gap: 6px;
+  gap: 12px;
+  margin-bottom: 24px;
 }
 
 .integrated-files-page .print-option-label {
-  font-weight: 500;
+  font-weight: 670;
   color: #000000;
-  font-size: 22px;
+  font-size: 18px;
+  margin-bottom: 8px;
+}
+
+.integrated-files-page .print-select,
+.integrated-files-page .print-input {
+  padding: 6px 10px;
+  border: 1px solid rgba(0, 0, 0, 0.2);
+  border-radius: 4px;
+  font-size: 33px;
+  background-color: #ffffff;
+  color: #000000;
+}
+
+.integrated-files-page .button-options {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.integrated-files-page .option-button {
+  flex: 1;
+  min-width: 140px;
+  padding: 14px 20px;
+  border: 2px solid rgba(0, 0, 0, 0.15);
+  border-radius: 10px;
+  background-color: #ffffff;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  font-size: 16px;
+  font-weight: 700;
+  color: #333;
+}
+
+.integrated-files-page .option-button:hover {
+  border-color: #1976d2;
+  background-color: #f5f9ff;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(25, 118, 210, 0.15);
+}
+
+.integrated-files-page .option-button.active {
+  border-color: #1976d2;
+  background-color: #1976d2;
+  color: #ffffff;
+  box-shadow: 0 4px 16px rgba(25, 118, 210, 0.3);
+}
+
+.integrated-files-page .option-button svg {
+  width: 20px;
+  height: 20px;
+}
+
+.integrated-files-page .radio-options {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.integrated-files-page .radio-option {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  cursor: pointer;
+  color: #000000;
+  font-size: 21px;
+}
+
+.integrated-files-page .radio-option input[type="radio"] {
+  margin: 0;
+  accent-color: #1976d2;
 }
 
 .integrated-files-page .print-select,
@@ -1781,7 +1858,7 @@
 }
 
 .integrated-files-page .cost-breakdown h4 {
-  margin: 0 0 10px 0;
+  margin: 0 0 -8px 0;
   font-size: 28px;
   font-weight: 600;
   color: #000000;
@@ -1807,6 +1884,7 @@
 .integrated-files-page .cancel-btn {
   background: #000000;
   color: #ffffff;
+  font-size:24px;
 }
 
 .integrated-files-page .cancel-btn:hover {
@@ -1814,8 +1892,10 @@
 }
 
 .integrated-files-page .add-to-queue-btn {
-  background: #007bff;
+  background: #0ba200fc;
   color: white;
+  font-size:24px;
+
 }
 
 .integrated-files-page .add-to-queue-btn:hover:not(:disabled) {
@@ -1827,45 +1907,143 @@
   cursor: not-allowed;
 }
 
+/* Classic PDF Preview Styles */
 .integrated-files-page .pdf-preview-section {
-  padding: 20px;
+  display: flex;
+  flex-direction: column;
   height: 100%;
-  overflow-y: auto;
-  background-color: #f8f9fa;
+  background: #f5f5f5;
+  border-radius: 8px;
+  overflow: hidden;
 }
 
-.integrated-files-page .pdf-preview-section h3 {
-  margin: 0 0 12px 0;
-  font-size: 16px;
+.integrated-files-page .preview-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 16px 20px;
+  background: #fff;
+  border-bottom: 1px solid #e0e0e0;
+}
+
+.integrated-files-page .preview-header h3 {
+  margin: 0;
+  font-size: 18px;
   font-weight: 600;
-  color: #000000;
+  color: #333;
+}
+
+.integrated-files-page .page-count {
+  font-size: 14px;
+  color: #666;
+  background: #f0f0f0;
+  padding: 4px 12px;
+  border-radius: 12px;
+}
+
+.integrated-files-page .pdf-preview-container {
+  flex: 1;
+  overflow-y: auto;
+  overflow-x: hidden;
+  padding: 20px;
+  background: #212020;
+}
+
+/* Custom scrollbar for classic look */
+.integrated-files-page .pdf-preview-container::-webkit-scrollbar {
+  width: 12px;
+}
+
+.integrated-files-page .pdf-preview-container::-webkit-scrollbar-track {
+  background: #d0d0d0;
+  border-radius: 0;
+}
+
+.integrated-files-page .pdf-preview-container::-webkit-scrollbar-thumb {
+  background: #888;
+  border-radius: 0;
+  border: 2px solid #d0d0d0;
+}
+
+.integrated-files-page .pdf-preview-container::-webkit-scrollbar-thumb:hover {
+  background: #555;
 }
 
 .integrated-files-page .pdf-pages-preview {
   display: flex;
   flex-direction: column;
-  gap: 12px;
+  gap: 20px;
+  align-items: center;
 }
 
 .integrated-files-page .pdf-page-preview {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 6px;
+  background: #fff;
+  border: 1px solid #ccc;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  padding: 16px;
+  border-radius: 4px;
+  width: 97%;
+  max-width: 600px;
 }
 
 .integrated-files-page .page-number {
-  font-size: 11px;
-  color: #666666;
-  font-weight: 500;
+  font-size: 12px;
+  font-weight: 600;
+  color: #000000;
+  text-align: center;
+  margin-bottom: 12px;
+  padding: 6px;
+  background: #f8f8f8;
+  border-radius: 4px;
 }
 
+.integrated-files-page .canvas-wrapper {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: #fff;
+  border: 1px solid #e0e0e0;
+  border-radius: 2px;
+  overflow: hidden;
+}
+
+
+
+.integrated-files-page .loading-preview {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+  gap: 16px;
+}
+
+.integrated-files-page .loading-spinner {
+  width: 40px;
+  height: 40px;
+  border: 4px solid #f0f0f0;
+  border-top: 4px solid #333;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+.integrated-files-page .loading-preview p {
+  color: #666;
+  font-size: 14px;
+}
+
+
+
 .integrated-files-page .preview-canvas {
-  max-width: 100%;
-  height: auto;
-  border: 1px solid rgba(0, 0, 0, 0.2);
-  border-radius: 4px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  display: block;
+  max-width: 146%;
+  height: 717px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.05);
 }
 
 .integrated-files-page .more-pages-indicator {
@@ -2488,3 +2666,22 @@
 }
 
 
+
+.custom-icon{
+  width:50px;
+  margin-top: -37px;
+}
+
+
+
+.custom-header{
+
+  display:flex;
+  flex-direction:column;
+
+}
+
+
+.options-icons{
+  width:60px;
+}
