@@ -1,16 +1,20 @@
 import "./Navbar.css"
-import logo from "../assets/logo.png"
+import stars from "../assets/stars.mp4"
 
 const Navbar = () => {
   return (
     <nav className="navbar">
       <div className="navbar-container">
         <div className="navbar-brand">
-          <img src={logo}></img>
-          
+          <video 
+            src={stars} 
+            autoPlay 
+            loop 
+            muted 
+            playsInline 
+            className="navbar-video"
+          ></video>
         </div>
-
-      
       </div>
     </nav>
   )

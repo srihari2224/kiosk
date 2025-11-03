@@ -20,7 +20,7 @@ import imgAd7 from "../assets/ad/3.1.png"
 import imgAd8 from "../assets/ad/3.2.png"
 import imgAd9 from "../assets/ad/3.3.png"
 
-import graph from "../assets/graph.png"
+import graph from "../assets/graph.jpg"
 import plane from "../assets/plane.png"
 
 import shop from "../assets/shop.svg"
@@ -798,6 +798,12 @@ const FileTransferPage = () => {
           />
           {getTotalItems() > 0 && <span className="floating-cart-counter">{getTotalItems()}</span>}
         </button>
+<h3 
+  className="cart-text" 
+  onClick={() => setShowCart(!showCart)}
+>
+  CART
+</h3>
       </div>
 
       <div className="paper-shop-content">

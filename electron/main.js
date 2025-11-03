@@ -468,9 +468,12 @@ async function killAllSumatraPDF() {
   }
 }
 
-// Helper function to wait for printer queue to be ready
-async function waitForPrinterReady(maxWaitMs = 5000) {
+// IMPROVED Helper function to wait for printer queue to be ready
+async function waitForPrinterReady(maxWaitMs = 8000) {
   const startTime = Date.now()
+  let lastQueueCount = -1
+  let stableCount = 0
+  
   while (Date.now() - startTime < maxWaitMs) {
     try {
       const { stdout } = await execAsync(
@@ -478,13 +481,27 @@ async function waitForPrinterReady(maxWaitMs = 5000) {
       )
       const queueCount = parseInt(stdout.trim()) || 0
       
+      // Check if queue is empty
       if (queueCount === 0) {
         logPrint(`✅ Printer queue is ready (empty)`)
         return true
       }
       
+      // Check if queue count is stable (printer is processing)
+      if (queueCount === lastQueueCount) {
+        stableCount++
+        if (stableCount >= 3) {
+          // Queue hasn't changed for 3 checks, printer might be stuck
+          logPrint(`⚠️ Queue stable at ${queueCount} jobs - continuing anyway`)
+          return true
+        }
+      } else {
+        stableCount = 0
+      }
+      
+      lastQueueCount = queueCount
       logPrint(`⏳ Waiting for printer... (${queueCount} jobs in queue)`)
-      await new Promise((resolve) => setTimeout(resolve, 500))
+      await new Promise((resolve) => setTimeout(resolve, 1000))
     } catch (error) {
       // Queue might be inaccessible, continue anyway
       logPrint(`⚠️ Could not check queue: ${error.message}`)
@@ -495,7 +512,7 @@ async function waitForPrinterReady(maxWaitMs = 5000) {
   return false
 }
 
-// PDF PRINTING - IMPROVED HYBRID WITH BETTER QUEUE MANAGEMENT
+// PDF PRINTING - IMPROVED WITH BETTER QUEUE MANAGEMENT
 ipcMain.handle("print-pdf", async (event, printOptions) => {
   try {
     const {
@@ -530,6 +547,56 @@ ipcMain.handle("print-pdf", async (event, printOptions) => {
       duplexMode = "both-sides"
     }
 
+    // APPLY PRINTER SETTINGS FIRST (BEFORE PRINTING)
+    try {
+      logPrint(`\n🎨 Applying printer settings BEFORE printing (${colorMode}, ${duplexMode})...`)
+
+      if (colorMode === "bw") {
+        try {
+          await execAsync(
+            `powershell -Command "Set-PrintConfiguration -PrinterName '${TARGET_PRINTER_NAME}' -Color $false"`,
+          )
+          logPrint("✅ B&W mode applied")
+        } catch (e) {
+          logPrint(`⚠️ Color setting failed: ${e.message}`)
+        }
+      } else {
+        try {
+          await execAsync(
+            `powershell -Command "Set-PrintConfiguration -PrinterName '${TARGET_PRINTER_NAME}' -Color $true"`,
+          )
+          logPrint("✅ Color mode applied")
+        } catch (e) {
+          logPrint(`⚠️ Color setting failed: ${e.message}`)
+        }
+      }
+
+      if (duplexMode === "both-sides") {
+        try {
+          await execAsync(
+            `powershell -Command "Set-PrintConfiguration -PrinterName '${TARGET_PRINTER_NAME}' -DuplexingMode TwoSidedLongEdge"`,
+          )
+          logPrint("✅ Duplex mode applied")
+        } catch (e) {
+          logPrint(`⚠️ Duplex setting failed: ${e.message}`)
+        }
+      } else {
+        try {
+          await execAsync(
+            `powershell -Command "Set-PrintConfiguration -PrinterName '${TARGET_PRINTER_NAME}' -DuplexingMode OneSided"`,
+          )
+          logPrint("✅ Single-sided mode applied")
+        } catch (e) {
+          logPrint(`⚠️ Single-sided setting failed: ${e.message}`)
+        }
+      }
+
+      // Wait for settings to take effect
+      await new Promise((resolve) => setTimeout(resolve, 500))
+    } catch (e) {
+      logPrint(`⚠️ Overall printer configuration failed: ${e.message}`)
+    }
+
     let printSuccess = false
     let methodUsed = ""
     const tempFiles = []
@@ -547,11 +614,14 @@ ipcMain.handle("print-pdf", async (event, printOptions) => {
     // Kill any existing SumatraPDF instances before starting
     await killAllSumatraPDF()
 
-    // Method 1: SumatraPDF with IMPROVED HYBRID approach
+    // Wait for printer to be completely ready
+    await waitForPrinterReady(5000)
+
+    // Method 1: SumatraPDF with SEQUENTIAL PRINTING
     const sumatraPath = findSumatraPDF()
     if (sumatraPath && !printSuccess) {
       try {
-        logPrint("\n🔄 Using SumatraPDF with improved queue management...")
+        logPrint("\n🔄 Using SumatraPDF with sequential queue management...")
 
         let sumatraCmd = `"${sumatraPath}" -silent -print-to "${TARGET_PRINTER_NAME}" "${targetPath}"`
 
@@ -580,17 +650,21 @@ ipcMain.handle("print-pdf", async (event, printOptions) => {
             logPrint(`✅ Copy ${copy}/${copies} command executed`)
             console.log(`✅ Copy ${copy}/${copies} sent to queue`)
             
-            // Wait for the job to start spooling (shorter wait)
-            await new Promise((resolve) => setTimeout(resolve, 400))
+            // Wait longer for job to be fully spooled
+            await new Promise((resolve) => setTimeout(resolve, 800))
             
-            // Kill SumatraPDF to release lock immediately
+            // Kill SumatraPDF to release lock
             await killAllSumatraPDF()
             
-            // Wait for printer to be ready before next job (if not last copy)
+            // Wait additional time for the printer to process
+            await new Promise((resolve) => setTimeout(resolve, 500))
+            
+            // Wait for printer to be ready before next copy
             if (copy < copies) {
               logPrint(`⏳ Waiting for printer to be ready for next copy...`)
-              await waitForPrinterReady(3000)
-              await new Promise((resolve) => setTimeout(resolve, 500))
+              await waitForPrinterReady(8000) // Increased timeout
+              // Additional buffer time between jobs
+              await new Promise((resolve) => setTimeout(resolve, 1000))
             }
           } catch (execError) {
             logPrint(`❌ Error spooling copy ${copy}: ${execError.message}`)
@@ -598,10 +672,10 @@ ipcMain.handle("print-pdf", async (event, printOptions) => {
           }
         }
 
-        // Final wait to ensure all jobs are in queue
-        await new Promise((resolve) => setTimeout(resolve, 1000))
+        // Final wait to ensure all jobs are processed
+        await new Promise((resolve) => setTimeout(resolve, 2000))
         printSuccess = true
-        methodUsed = "SumatraPDF (Improved Hybrid)"
+        methodUsed = "SumatraPDF (Sequential)"
         logPrint("\n✅ All copies successfully sent to print queue")
         console.log(`\n✅ All ${copies} copies queued successfully!\n`)
       } catch (error) {
@@ -628,8 +702,10 @@ ipcMain.handle("print-pdf", async (event, printOptions) => {
             console.log(`✅ Copy ${copy}/${copies} queued`)
             if (stderr) logPrint(`⚠️ stderr: ${stderr}`)
             
+            // Longer wait between copies for ShellExecute
             if (copy < copies) {
-              await new Promise((resolve) => setTimeout(resolve, 1500))
+              await new Promise((resolve) => setTimeout(resolve, 3000))
+              await waitForPrinterReady(8000)
             }
           } catch (execError) {
             logPrint(`❌ Error spooling copy ${copy}: ${execError.message}`)
@@ -637,62 +713,13 @@ ipcMain.handle("print-pdf", async (event, printOptions) => {
           }
         }
 
-        await new Promise((resolve) => setTimeout(resolve, 1500))
+        await new Promise((resolve) => setTimeout(resolve, 2000))
         printSuccess = true
         methodUsed = "Windows ShellExecute"
         logPrint("✅ Windows ShellExecute print successful")
         console.log(`\n✅ All ${copies} copies queued successfully!\n`)
       } catch (error) {
         logPrint(`⚠️ Windows ShellExecute failed: ${error.message}`)
-      }
-    }
-
-    // APPLY COLOR/DUPLEX SETTINGS AFTER PRINTING
-    if (printSuccess) {
-      try {
-        logPrint(`\n🎨 Applying printer settings (${colorMode}, ${duplexMode})...`)
-
-        if (colorMode === "bw") {
-          try {
-            await execAsync(
-              `powershell -Command "Set-PrintConfiguration -PrinterName '${TARGET_PRINTER_NAME}' -Color $false"`,
-            )
-            logPrint("✅ B&W mode applied")
-          } catch (e) {
-            logPrint(`⚠️ Color setting failed: ${e.message}`)
-          }
-        } else {
-          try {
-            await execAsync(
-              `powershell -Command "Set-PrintConfiguration -PrinterName '${TARGET_PRINTER_NAME}' -Color $true"`,
-            )
-            logPrint("✅ Color mode applied")
-          } catch (e) {
-            logPrint(`⚠️ Color setting failed: ${e.message}`)
-          }
-        }
-
-        if (duplexMode === "both-sides") {
-          try {
-            await execAsync(
-              `powershell -Command "Set-PrintConfiguration -PrinterName '${TARGET_PRINTER_NAME}' -DuplexingMode TwoSidedLongEdge"`,
-            )
-            logPrint("✅ Duplex mode applied")
-          } catch (e) {
-            logPrint(`⚠️ Duplex setting failed: ${e.message}`)
-          }
-        } else {
-          try {
-            await execAsync(
-              `powershell -Command "Set-PrintConfiguration -PrinterName '${TARGET_PRINTER_NAME}' -DuplexingMode OneSided"`,
-            )
-            logPrint("✅ Single-sided mode applied")
-          } catch (e) {
-            logPrint(`⚠️ Single-sided setting failed: ${e.message}`)
-          }
-        }
-      } catch (e) {
-        logPrint(`⚠️ Overall printer configuration failed: ${e.message}`)
       }
     }
 
@@ -992,7 +1019,10 @@ ipcMain.handle("print-canvas", async (event, canvasData) => {
     // Kill any existing SumatraPDF instances before printing
     await killAllSumatraPDF()
 
-    // Print the generated PDF using improved hybrid approach
+    // Wait for printer to be ready
+    await waitForPrinterReady(5000)
+
+    // Print the generated PDF using improved approach
     let printSuccess = false
     let methodUsed = ""
 
@@ -1011,12 +1041,12 @@ ipcMain.handle("print-canvas", async (event, canvasData) => {
         await execAsync(sumatraCmd)
         
         // Wait for job to start spooling
-        await new Promise((resolve) => setTimeout(resolve, 400))
+        await new Promise((resolve) => setTimeout(resolve, 800))
         
         // Kill SumatraPDF to release printer lock
         await killAllSumatraPDF()
         
-        await new Promise((resolve) => setTimeout(resolve, 500))
+        await new Promise((resolve) => setTimeout(resolve, 1000))
         printSuccess = true
         methodUsed = "SumatraPDF"
         logPrint("✅ Canvas printed via SumatraPDF")
@@ -1036,7 +1066,7 @@ ipcMain.handle("print-canvas", async (event, canvasData) => {
         
         logPrint(`🖨️ Executing: ${shellCmd}`)
         await execAsync(shellCmd)
-        await new Promise((resolve) => setTimeout(resolve, 1500))
+        await new Promise((resolve) => setTimeout(resolve, 2000))
         printSuccess = true
         methodUsed = "Windows ShellExecute"
         logPrint("✅ Canvas printed via Windows ShellExecute")
@@ -1081,6 +1111,5 @@ ipcMain.handle("print-canvas", async (event, canvasData) => {
     }
   }
 })
-
 
 

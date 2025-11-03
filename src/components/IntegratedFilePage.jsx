@@ -5,9 +5,9 @@ import { useLocation, useNavigate } from "react-router-dom"
 import { Plus, Trash, ImageIcon, FileText, X, ArrowLeft } from "lucide-react"
 import "./IntegratedFilePage.css"
 import india from "../assets/india-flag-icon.svg"
-import categ from "../assets/categ.svg"
+import categ from "../assets/categories.png"
 import upi from "../assets/upi.svg"
-import lines from "../assets/lines.svg"
+import lines from "../assets/queue.png"
 import print from "../assets/print.svg"
 import canvas from "../assets/canvas.png"
 import addpage from "../assets/add page.svg"
@@ -1278,7 +1278,7 @@ function IntegratedFilePage() {
                 </button>
             </div>
             <div className="category-header">
-              <img src={categ}></img>
+              <img class="right-logo" src={categ}></img>
               <h3>Categories</h3>
             </div>
 
@@ -1356,7 +1356,7 @@ function IntegratedFilePage() {
             {printQueue.length > 0 && (
               <div className="print-queue">
                 <div className="category-header">
-                  <img src={lines}></img>
+                  <img class="right-logo"src={lines}></img>
                   <h3>Print Queue ({printQueue.length})</h3>
                 </div>
                 <ul className="queue-list">
@@ -1818,7 +1818,7 @@ function IntegratedFilePage() {
             </div>
           </div>
 
-          <div className="coupon-section">
+          {/* <div className="coupon-section">
             <div className="coupon-input-container">
               <input
                 type="text"
@@ -1846,7 +1846,7 @@ function IntegratedFilePage() {
               {couponError && <div className="coupon-error">{couponError}</div>}
               {appliedCoupon && <div className="coupon-success">Coupon applied successfully 🎉🎊</div>}
             </div>
-          </div>
+          </div> */}
 
           <div className="payment-floating-container">
             <div className="payment-box">
