@@ -512,6 +512,7 @@ const FileTransferPage = () => {
       amount: amountInPaise,
       currency: "INR",
       name: "Print Shop",
+      payment_capture: 1,
       description: `Paper Print Order - Session ${sessionId}`,
       handler: (response) => {
         paymentSuccessful = true

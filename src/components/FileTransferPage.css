@@ -93,7 +93,7 @@
   letter-spacing: 1px;
   cursor: pointer;
   transition: color 0.3s ease, transform 0.2s ease;
-  margin-left:-10px;
+  margin-left:6px;
 }
 
 .file-transfer-page .cart-text:hover {
@@ -236,7 +236,7 @@
   align-items: center;
   justify-content: center;
   height: 140%;
-  color: #7f8c8d;
+  color: #000000;
   font-size: 1.2rem;
   font-weight: 500;
   margin-top: 30px;
@@ -868,7 +868,7 @@
 .file-transfer-page .paper-shop-content {
   margin-top: 50px;
   height: 650px;
-  background-color: #111111;
+  background-color: #000000;
 }
 
 .file-transfer-page .product-cards-container {
