@@ -17,6 +17,7 @@ import color from "../assets/color-wheel.png"
 import bnw from "../assets/black-and-white.png"
 import single from "../assets/file.png"
 import  duplix from "../assets/two.png"
+import inn from "../assets/inn.png"
 
 
 
@@ -1264,19 +1265,35 @@ function IntegratedFilePage() {
 
   return (
     <div className="integrated-files-page">
+
+      <div class="navbar-2">
+
+        <div class="header-items">
+          <div className="page-header">
+                <button className="back-button" onClick={handleBackToFileTransfer}>
+                  <ArrowLeft size={20} />
+                  HOME
+                </button>
+            </div>
+
+            <img class="inn-img"src={inn}></img>
+
+          </div>
+
+
+        </div>
       
 
       <div className="main-content">
+
+        
+
+
         {/* Left Sidebar: Files and Queue */}
           <div className="sidebar">
 
           <div className="file-categories">
-            <div className="page-header">
-                <button className="back-button" onClick={handleBackToFileTransfer}>
-                  <ArrowLeft size={20} />
-                  Back to File Transfer
-                </button>
-            </div>
+            
             <div className="category-header">
               <img class="right-logo" src={categ}></img>
               <h3>Categories</h3>
@@ -1509,7 +1526,7 @@ function IntegratedFilePage() {
           <div className="canvas-container">
             <div 
               className="canvas-background" 
-              style={{ backgroundImage: `url(${canvas})` }}
+              style={{}}
             ></div>
             {pages.length > 0 ? (
               <>
@@ -1767,7 +1784,7 @@ function IntegratedFilePage() {
         {/* Right Sidebar: Cost + Payment + Print Queue */}
         <div className="right-sidebar">
 
-          <div class="print">
+          {/* <div class="print">
             <img src={print}></img>
           </div>
 
@@ -1775,48 +1792,64 @@ function IntegratedFilePage() {
             Print <em>Faster</em>
             <br />
             with <span className="offer-title-acc">Canvas UI Pro</span>
-          </h3>
+          </h3> */}
+
           <div className="cost-summary">
-            <h4>Cost Summary</h4>
-            <div className="cost-details">
-              {pages.length > 0 && (
-                <div className="cost-section">
-                  <h5>Canvas Pages</h5>
-                  {pages.map((page) => {
-                    if (page.items.length === 0) return null
-                    return (
-                      <div key={page.id} className="cost-item">
-                        <span>
-                          Page {page.id} ({page.colorMode === "color" ? "Color" : "B&W"})
-                        </span>
-                        <span>₹{page.colorMode === "color" ? 8 : 2}</span>
-                      </div>
-                    )
-                  })}
-                </div>
-              )}
+            <h4>Order Summary</h4>
 
-              {printQueue.length > 0 && (
-                <div className="cost-section">
-                  <h5>PDF Documents</h5>
-                  {printQueue.map((item) => (
-                    <div key={item.id} className="cost-item">
-                      <span>
-                        {item.fileName.substring(0, 18)}
-                        {item.fileName.length > 18 ? "..." : ""} ({item.printSettings.copies} copies)
-                      </span>
-                      <span>₹{item.cost}</span>
-                    </div>
-                  ))}
-                </div>
-              )}
+            <table className="cost-table">
+              <thead>
+                <tr>
+                  <th>Item</th>
+                  <th>Price (₹)</th>
+                </tr>
+              </thead>
 
-              <div className="total-cost">
-                <span>Total Cost:</span>
-                <span>₹{calculateTotalCost()}</span>
-              </div>
+              <tbody>
+                {pages.length > 0 && (
+                  <>
+                    <tr className="section-row">
+                      <td colSpan="2">Canvas Pages</td>
+                    </tr>
+                    {pages.map((page) => {
+                      if (page.items.length === 0) return null
+                      return (
+                        <tr key={page.id}>
+                          <td>
+                            Page {page.id} ({page.colorMode === "color" ? "Color" : "B&W"})
+                          </td>
+                          <td>{page.colorMode === "color" ? 8 : 2}</td>
+                        </tr>
+                      )
+                    })}
+                  </>
+                )}
+
+                {printQueue.length > 0 && (
+                  <>
+                    <tr className="section-row">
+                      <td colSpan="2">PDF Documents</td>
+                    </tr>
+                    {printQueue.map((item) => (
+                      <tr key={item.id}>
+                        <td>
+                          {item.fileName.substring(0, 18)}
+                          {item.fileName.length > 18 ? "..." : ""} ({item.printSettings.copies} copies)
+                        </td>
+                        <td>{item.cost}</td>
+                      </tr>
+                    ))}
+                  </>
+                )}
+              </tbody>
+            </table>
+
+            <div className="total-cost">
+              <span>Total</span>
+              <span>₹{calculateTotalCost()}</span>
             </div>
           </div>
+
 
           {/* <div className="coupon-section">
             <div className="coupon-input-container">

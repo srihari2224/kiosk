@@ -52,13 +52,13 @@
 /* Sidebar styles - Light Theme - MADE WIDER - FIXED GAPS */
 .integrated-files-page .sidebar {
   width: 450px;
-  background-color: rgba(0, 0, 0, 0.95);
+  background-color:#0d2f41;
   backdrop-filter: blur(20px);
   -webkit-backdrop-filter: blur(20px);
   border-right: 1px solid rgba(0, 0, 0, 0.1);
   overflow-y: auto;
   height: 100%;
-  margin-left: 10px;
+  margin-left: 20px;
   padding: 0;
   position: relative; /* anchor Filters overlay inside sidebar */
 }
@@ -267,13 +267,13 @@
   overflow: hidden;
   margin: 0;
   padding: 0;
-  background-color: #000000;
+  background-color : #ffffffd4;
 }
 
 .integrated-files-page .canvas-toolbar {
   position: relative;
-  top: 0;
-  left: 0;
+  top: 19px;
+  left: 31px;
   right: 0;
   height: 60px;
   background-color: rgba(255, 255, 255, 0.95);
@@ -286,6 +286,8 @@
   gap: 12px;
   z-index: 10;
   margin: 0;
+  width:1150px;
+  border-radius:8px;
 }
 
 /* Button styles - Keep original colors */
@@ -1263,7 +1265,7 @@
 /* Right sidebar - MADE WIDER - FIXED GAPS */
 .integrated-files-page .right-sidebar {
   width: 500px;
-  background-color: rgba(248, 249, 250, 0.95);
+  background-color:#ffffffd4;
   backdrop-filter: blur(20px);
   -webkit-backdrop-filter: blur(20px);
   border-left: 1px solid rgba(0, 0, 0, 0.1);
@@ -1275,96 +1277,69 @@
   flex-direction: column;
   margin-right:55px;
 }
-
-/* Fixed cost-summary div with proper overflow and fixed height */
 .integrated-files-page .cost-summary {
-  background-color: #ffffff;
-  padding: 18px 18px 40px;
-  padding-bottom: 20px;
+  background: #fff;
+  padding: 18px 18px 80px;
   border-radius: 12px;
-  border: 1px solid rgba(0, 0, 0, 0.1);
-  box-shadow: 0 2px 8px rgb(0, 0, 0);
-  margin: 0;
+  border: 1px solid rgba(0,0,0,0.15);
+  box-shadow: 0 2px 8px rgba(0,0,0,0.15);
   height: 413px;
-  max-height: 500px;
   overflow-y: auto;
-  overflow-x: hidden;
   position: relative;
 }
 
+/* Heading */
 .integrated-files-page .cost-summary h4 {
-  font-size: 28px;
-  font-weight: 550;
-  color: #000000;
-  margin-bottom: 14px;
-  letter-spacing: -0.2px;
+  font-size: 26px;
+  font-weight: 600;
+  margin-bottom: 16px;
+  text-align: center;
 }
 
-.integrated-files-page .cost-details {
-  display: flex;
-  flex-direction: column;
-  gap: 0px;
-  margin-top: 14px;
+/* Table */
+.integrated-files-page .cost-table {
+  width: 100%;
+  border-collapse: collapse;
 }
 
-.integrated-files-page .cost-section {
-  margin-bottom: 14px;
+.integrated-files-page .cost-table th {
+  text-align: left;
+  padding: 10px 12px;
+  font-size: 18px;
+  border-bottom: 2px solid #e0e0e0;
+  background-color: #f8f9fa;
 }
 
-.integrated-files-page .cost-section h5 {
-  font-size: 23px;
-  font-weight: 400;
-  margin-bottom: 3px;
-  color: #28a745;
-  letter-spacing: -0.1px;
+.integrated-files-page .cost-table td {
+  padding: 10px 12px;
+  font-size: 18px;
+  border-bottom: 1px solid #ececec;
 }
 
-.integrated-files-page .cost-item {
-      display: flex
-;
-    justify-content: space-between;
-    align-items: flex-start;
-    font-size: 31px;
-    margin-bottom: 8px;
-    color: #000;
-    background-color: #d2d2d269;
-    border-radius: 15px;
-    padding: 5px;
-    font-weight: 500;
-}
-
-.integrated-files-page .cost-item span:first-child {
-  flex: 1;
-  margin-right: 12px;
-  line-height: 1.4;
-}
-
-.integrated-files-page .cost-item span:last-child {
-  font-size: 27px;
+/* Section headers inside table */
+.integrated-files-page .section-row td {
+  background-color: #e8f7ee;
   font-weight: 600;
   color: #28a745;
-  white-space: nowrap;
-
+  padding-top: 14px;
+  padding-bottom: 14px;
+  border-bottom: 2px solid #d8eedd;
 }
 
+/* Fixed bottom total bar */
 .integrated-files-page .total-cost {
-      display: flex
-;
-    justify-content: space-between;
-    align-items: center;
-    font-weight: 700;
-    font-size: 27px;
-    margin-top: 283px;
-    padding: 15px 140px;
-    border-top: 2px solid rgba(0, 0, 0, .1);
-    background-color: #000;
-    color: #fff;
-    border-radius: 0 0 12px 12px;
-    letter-spacing: -.3px;
-    position: fixed;
-    margin-left: -19px;
-    height: 56px;
-    width: 462px;
+  position: sticky;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  background: #000;
+  color: #fff;
+  font-size: 22px;
+  font-weight: 700;
+  display: flex;
+  justify-content: space-between;
+  padding: 14px 20px;
+  border-radius: 0 0 12px 12px;
 }
 
 /* Added coupon section styles */
@@ -2621,13 +2596,18 @@
   font-weight: 600;
   display: inline-flex;
   align-items: center;
-  margin-bottom:15px;
+  margin-top: 10px;
+  
+
+  margin-left: 25px;
+    font-size: 24px;
 
 }
 
 
 .print{
   /* margin-left:100px */
+
   
 }
 
@@ -2704,3 +2684,22 @@
 
 
 
+
+.navbar-2{
+  background-color: white;
+  height:75px;
+}
+
+.header-items{
+  display:flex;
+  flex-direction: row;
+}
+
+
+
+.inn-img{
+
+  width: 220px;
+    margin-left: 100px;
+    margin-top: 10px;
+}
