@@ -73,12 +73,27 @@ function createWindow() {
     show: false,
   })
 
+  // Try to load the main website
   mainWindow.loadURL("https://last-and-final.vercel.app").catch((err) => {
-    console.error("Failed to load local React app:", err)
+    console.error("Failed to load React app:", err)
+    // Load the no internet page as fallback (same directory as main.js)
+    const noInternetPath = path.join(__dirname, "NOINTERNET.html")
+    mainWindow.loadFile(noInternetPath)
   })
 
   mainWindow.once("ready-to-show", () => {
     mainWindow.show()
+  })
+
+  // Handle load failures after initial load
+  mainWindow.webContents.on('did-fail-load', (event, errorCode, errorDescription, validatedURL) => {
+    // Check for internet connection errors
+    if (errorCode === -106 || errorCode === -105 || errorCode === -2 || errorCode === -3) {
+      console.log(`Load failed with error ${errorCode}: ${errorDescription}`)
+      // Load the no internet page (same directory as main.js)
+      const noInternetPath = path.join(__dirname, "NOINTERNET.html")
+      mainWindow.loadFile(noInternetPath)
+    }
   })
 
   mainWindow.on("closed", () => {

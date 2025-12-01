@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>No Internet Connection</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background: #f5f5f5;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            color: #333;
+            overflow: hidden;
+        }
+
+        .container {
+            text-align: center;
+            padding: 60px 40px;
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 20px rgba(0, 0, 0, 0.08);
+            max-width: 480px;
+            width: 90%;
+            animation: slideUp 0.6s ease-out;
+            border: 1px solid #e5e5e5;
+        }
+
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .icon-container {
+            margin-bottom: 30px;
+            position: relative;
+        }
+
+        .wifi-icon {
+            width: 100px;
+            height: 100px;
+            margin: 0 auto;
+            position: relative;
+        }
+
+        .wifi-icon svg {
+            width: 100%;
+            height: 100%;
+        }
+
+        h1 {
+            font-size: 26px;
+            color: #1a1a1a;
+            margin-bottom: 16px;
+            font-weight: 600;
+            letter-spacing: -0.5px;
+        }
+
+        p {
+            font-size: 15px;
+            color: #666;
+            line-height: 1.6;
+            margin-bottom: 32px;
+        }
+
+        .retry-button {
+            background: #1a1a1a;
+            color: white;
+            border: none;
+            padding: 12px 36px;
+            font-size: 15px;
+            font-weight: 500;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            letter-spacing: 0.3px;
+        }
+
+        .retry-button:hover {
+            background: #333;
+            transform: translateY(-1px);
+        }
+
+        .retry-button:active {
+            transform: translateY(0);
+            background: #000;
+        }
+
+        .status-text {
+            font-size: 13px;
+            color: #999;
+            margin-top: 24px;
+        }
+
+        .spinner {
+            display: none;
+            width: 18px;
+            height: 18px;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            border-top-color: white;
+            border-radius: 50%;
+            animation: spin 0.6s linear infinite;
+            margin: 0 auto;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        .retry-button.checking .spinner {
+            display: block;
+        }
+
+        .retry-button.checking span {
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="icon-container">
+            <div class="wifi-icon">
+                <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M12 18L12 18.01M2.20164 6.23224C5.06344 3.81095 8.75608 2.5 12.5 2.5C16.2439 2.5 19.9366 3.81095 22.7984 6.23224M5.25738 9.77762C7.39235 8.03575 10.0726 7 13 7C15.9274 7 18.6077 8.03575 20.7426 9.77762M8.68629 13.6863C10.0542 12.5386 11.8321 11.8333 13.75 11.8333C15.6679 11.8333 17.4458 12.5386 18.8137 13.6863" 
+                          stroke="#333" 
+                          stroke-width="2" 
+                          stroke-linecap="round" 
+                          stroke-linejoin="round"/>
+                    <line x1="2" y1="2" x2="22" y2="22" 
+                          stroke="#1a1a1a" 
+                          stroke-width="2.5" 
+                          stroke-linecap="round"/>
+                </svg>
+            </div>
+        </div>
+
+        <h1>No Internet Connection</h1>
+        <p>
+            It looks like kiosk is offline. Will be resolved in 30-60 min.
+        </p>
+
+        <button class="retry-button" onclick="retryConnection()">
+            <span>Retry Connection</span>
+            <div class="spinner"></div>
+        </button>
+
+        <p class="status-text" id="statusText">Waiting for connection...</p>
+    </div>
+
+    <script>
+        function retryConnection() {
+            const button = document.querySelector('.retry-button');
+            const statusText = document.getElementById('statusText');
+            
+            button.classList.add('checking');
+            statusText.textContent = 'Checking connection...';
+            
+            // Try to fetch the main website to check if internet is back
+            fetch('https://last-and-final.vercel.app', { 
+                mode: 'no-cors',
+                cache: 'no-cache'
+            })
+            .then(() => {
+                statusText.textContent = 'Connection restored! Reloading...';
+                // Connection is back, reload to the main website
+                setTimeout(() => {
+                    window.location.href = 'https://last-and-final.vercel.app';
+                }, 500);
+            })
+            .catch(() => {
+                // Still offline
+                button.classList.remove('checking');
+                statusText.textContent = 'Still offline. Please try again.';
+                statusText.style.color = '#e53e3e';
+                
+                // Reset status text color after 3 seconds
+                setTimeout(() => {
+                    statusText.textContent = 'Waiting for connection...';
+                    statusText.style.color = '#999';
+                }, 3000);
+            });
+        }
+
+        // Auto-check connection every 15 seconds
+        setInterval(() => {
+            fetch('https://last-and-final.vercel.app', { 
+                mode: 'no-cors',
+                cache: 'no-cache'
+            })
+            .then(() => {
+                // Connection restored, reload to main website
+                const statusText = document.getElementById('statusText');
+                statusText.textContent = 'Connection restored! Reloading...';
+                statusText.style.color = '#28a745';
+                
+                setTimeout(() => {
+                    window.location.href = 'https://last-and-final.vercel.app';
+                }, 1000);
+            })
+            .catch(() => {
+                // Still offline
+                console.log('Still offline...');
+            });
+        }, 15000);
+
+        // Keyboard shortcut: Press 'R' to retry
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'r' || e.key === 'R') {
+                retryConnection();
+            }
+        });
+    </script>
+</body>
+</html>
+
