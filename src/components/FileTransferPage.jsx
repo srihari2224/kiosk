@@ -463,7 +463,7 @@ const FileTransferPage = () => {
     return mobileRegex.test(number)
   }
 
- const handlePrintShopPayment = async () => {
+const handlePrintShopPayment = async () => {
   const totalAmount = getTotalCost()
   
   if (totalAmount === 0 || cartItems.length === 0) {
@@ -486,6 +486,51 @@ const FileTransferPage = () => {
   setPaymentProcessing(true)
 
   try {
+    const amountInPaise = Math.round(totalAmount * 100)
+
+    console.log('📤 Creating order for print shop with amount:', amountInPaise)
+
+    // STEP 1: Create order via backend API
+    const orderResponse = await fetch('https://razorpay-backend-delta.vercel.app/create-order', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        amount: amountInPaise,
+        currency: 'INR',
+        receipt: `printshop_${sessionId}_${Date.now()}`,
+        notes: {
+          sessionId,
+          totalItems: getTotalItems(),
+          cartItems: JSON.stringify(cartItems.map((item) => ({ name: item.name, quantity: item.quantity }))),
+          timestamp: new Date().toISOString(),
+          mobileNumber,
+        }
+      })
+    })
+
+    console.log('📥 Response status:', orderResponse.status)
+    
+    const responseText = await orderResponse.text()
+    console.log('📥 Response body:', responseText)
+
+    if (!orderResponse.ok) {
+      let errorData
+      try {
+        errorData = JSON.parse(responseText)
+      } catch {
+        errorData = { error: responseText }
+      }
+      console.error('❌ Order creation failed:', errorData)
+      alert(`Order creation failed: ${errorData.error || 'Unknown error'}`)
+      throw new Error('Failed to create order')
+    }
+
+    const orderData = JSON.parse(responseText)
+    console.log('✅ Order created:', orderData)
+
+    // STEP 2: Load Razorpay script
     const loadRazorpayScript = () =>
       new Promise((resolve, reject) => {
         if (window.Razorpay) return resolve(window.Razorpay)
@@ -502,20 +547,18 @@ const FileTransferPage = () => {
       })
 
     const Razorpay = await loadRazorpayScript()
-    
-    const amountInPaise = Math.round(totalAmount * 100)
-    
-    let paymentSuccessful = false
 
+    // STEP 3: Open Razorpay with order_id (AUTO-CAPTURE ENABLED)
     const options = {
       key: import.meta.env.VITE_RAZORPAY_KEY_ID,
+      order_id: orderData.id, // ← THIS ENABLES AUTO-CAPTURE
       amount: amountInPaise,
       currency: "INR",
       name: "Print Shop",
-      payment_capture: 1,
       description: `Paper Print Order - Session ${sessionId}`,
       handler: (response) => {
-        paymentSuccessful = true
+        console.log('✅ Payment successful:', response)
+        // Payment is AUTO-CAPTURED - process order immediately
         processPrintShopOrder(response)
       },
       prefill: {
@@ -523,36 +566,30 @@ const FileTransferPage = () => {
         email: "customer@example.com",
         contact: mobileNumber,
       },
-      notes: {
-        sessionId,
-        totalItems: getTotalItems(),
-        cartItems: JSON.stringify(cartItems.map((item) => ({ name: item.name, quantity: item.quantity }))),
-        timestamp: new Date().toISOString(),
-        mobileNumber,
+      theme: { 
+        color: "#000000" 
       },
-      theme: { color: "#000000" },
       modal: {
         ondismiss: () => {
-          if (paymentSuccessful) {
-            return
-          }
+          setPaymentProcessing(false)
           window.location.reload()
         },
-      },
-      retry: { enabled: true, max_count: 3 },
-      timeout: 300,
-      remember_customer: false,
+      }
     }
 
     const rzp = new Razorpay(options)
     
-    rzp.on("payment.failed", () => {
+    rzp.on("payment.failed", (response) => {
+      console.error('❌ Payment failed:', response.error)
+      setPaymentProcessing(false)
       window.location.reload()
     })
 
     rzp.open()
+
   } catch (error) {
-    console.error("Payment initialization error:", error)
+    console.error("❌ Payment initialization error:", error)
+    alert('Failed to initialize payment. Please try again.')
     setPaymentProcessing(false)
   }
 }

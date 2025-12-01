@@ -915,79 +915,124 @@ function IntegratedFilePage() {
   }
 
   // PAYMENT AND SILENT PRINTING WITH USER OPTIONS
-  const handlePaymentClick = async () => {
-    const totalAmount = calculateDiscountedTotal().finalCost
-    if (totalAmount === 0) return
+const handlePaymentClick = async () => {
+  const totalAmount = calculateDiscountedTotal().finalCost
+  if (totalAmount === 0) return
 
-    if (!mobileNumber) {
-      setMobileError("Mobile number is required")
-      return
-    }
-    if (!validateMobileNumber(mobileNumber)) {
-      setMobileError("Please enter a valid 10-digit mobile number")
-      return
-    }
+  if (!mobileNumber) {
+    setMobileError("Mobile number is required")
+    return
+  }
+  if (!validateMobileNumber(mobileNumber)) {
+    setMobileError("Please enter a valid 10-digit mobile number")
+    return
+  }
 
-    setPaymentProcessing(true)
+  setPaymentProcessing(true)
 
-    try {
-      // Load Razorpay
-      const loadRazorpayScript = () =>
-        new Promise((resolve, reject) => {
-          if (window.Razorpay) return resolve(window.Razorpay)
-          const script = document.createElement("script")
-          script.src = "https://checkout.razorpay.com/v1/checkout.js"
-          script.async = true
-          const timeout = setTimeout(() => reject(new Error("Razorpay script loading timeout")), 10000)
-          script.onload = () => {
-            clearTimeout(timeout)
-            return window.Razorpay ? resolve(window.Razorpay) : reject(new Error("Razorpay object not found"))
-          }
-          script.onerror = () => reject(new Error("Failed to load Razorpay script"))
-          document.head.appendChild(script)
-        })
+  try {
+    console.log('📤 Creating order with amount:', totalAmount * 100)
 
-      const Razorpay = await loadRazorpayScript()
-      const options = {
-        key: import.meta.env.VITE_RAZORPAY_KEY_ID ,
+    const orderResponse = await fetch('https://razorpay-backend-delta.vercel.app/create-order', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
         amount: totalAmount * 100,
-        currency: "INR",
-        name: "Print Shop",
-        description: `Print Job - Session ${sessionId}`,
-        handler: (response) => {
-          // Start printing with user-selected options after payment
-          processAdvancedPrintJobWithUserOptions(response)
-        },
-        prefill: { name: "Customer", email: "customer@example.com", contact: mobileNumber },
+        currency: 'INR',
+        receipt: `receipt_${sessionId}_${Date.now()}`,
         notes: {
           sessionId,
           canvasPages: pages.length,
           pdfJobs: printQueue.length,
           timestamp: new Date().toISOString(),
           mobileNumber,
-        },
-        theme: { color: "#000000" },
-        modal: {
-          ondismiss: () => {
-            window.location.reload()
-          },
-        },
-        retry: { enabled: true, max_count: 3 },
-        timeout: 300,
-        remember_customer: false,
-      }
+        }
+      })
+    })
 
-      const rzp = new Razorpay(options)
-      rzp.on("payment.failed", () => {
-        window.location.reload()
+    console.log('📥 Response status:', orderResponse.status)
+    
+    const responseText = await orderResponse.text()
+    console.log('📥 Response body:', responseText)
+
+    if (!orderResponse.ok) {
+      let errorData
+      try {
+        errorData = JSON.parse(responseText)
+      } catch {
+        errorData = { error: responseText }
+      }
+      console.error('❌ Order creation failed:', errorData)
+      alert(`Order creation failed: ${errorData.error || 'Unknown error'}`)
+      throw new Error('Failed to create order')
+    }
+
+    const orderData = JSON.parse(responseText)
+    console.log('✅ Order created:', orderData)
+
+    // Load Razorpay script
+    const loadRazorpayScript = () =>
+      new Promise((resolve, reject) => {
+        if (window.Razorpay) return resolve(window.Razorpay)
+        const script = document.createElement("script")
+        script.src = "https://checkout.razorpay.com/v1/checkout.js"
+        script.async = true
+        const timeout = setTimeout(() => reject(new Error("Razorpay script loading timeout")), 10000)
+        script.onload = () => {
+          clearTimeout(timeout)
+          return window.Razorpay ? resolve(window.Razorpay) : reject(new Error("Razorpay object not found"))
+        }
+        script.onerror = () => reject(new Error("Failed to load Razorpay script"))
+        document.head.appendChild(script)
       })
 
-      rzp.open()
-    } catch (error) {
-      console.error("Payment init error:", error)
-      setPaymentProcessing(false)
+    const Razorpay = await loadRazorpayScript()
+
+    const options = {
+      key: import.meta.env.VITE_RAZORPAY_KEY_ID,
+      order_id: orderData.id,
+      amount: totalAmount * 100,
+      currency: "INR",
+      name: "Print Shop",
+      description: `Print Job - Session ${sessionId}`,
+      handler: (response) => {
+        console.log('✅ Payment successful:', response)
+        processAdvancedPrintJobWithUserOptions(response)
+      },
+      prefill: {
+        name: "Customer",
+        email: "customer@example.com",
+        contact: mobileNumber
+      },
+      theme: {
+        color: "#000000"
+      },
+      modal: {
+        ondismiss: () => {
+          setPaymentProcessing(false)
+          window.location.reload()
+        }
+      }
     }
+
+    const rzp = new Razorpay(options)
+    
+    rzp.on("payment.failed", (response) => {
+      console.error('❌ Payment failed:', response.error)
+      setPaymentProcessing(false)
+      window.location.reload()
+    })
+
+    rzp.open()
+
+  } catch (error) {
+    console.error("❌ Payment initialization error:", error)
+    alert('Failed to initialize payment. Please try again.')
+    setPaymentProcessing(false)
   }
+}
 
   // PROCESS PRINTING WITH EXACT USER OPTIONS
   const processAdvancedPrintJobWithUserOptions = async (paymentResponse) => {
