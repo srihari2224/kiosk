@@ -50,12 +50,18 @@ if (!fs.existsSync(WRITABLE_LOGS_DIR)) {
 console.log(`📁 Writable Temp Dir: ${WRITABLE_TEMP_DIR}`)
 console.log(`📁 Writable Logs Dir: ${WRITABLE_LOGS_DIR}`)
 
-let PDFDocument
+let PDFDocument, degrees
 try {
-  PDFDocument = require("pdf-lib").PDFDocument
+  const pdfLib = require('pdf-lib')
+  PDFDocument = pdfLib.PDFDocument
+  degrees = pdfLib.degrees
+  console.log('✅ pdf-lib loaded successfully')
 } catch (e) {
-  console.log("ℹ pdf-lib not installed. Custom page range will rely on external tools.")
+  console.log('⚠️ pdf-lib not available:', e.message)
 }
+
+
+
 
 let mainWindow
 
@@ -117,6 +123,8 @@ app.on("activate", () => {
   }
 })
 
+
+
 // UTILITY FUNCTIONS
 const pathExists = (p) => {
   try {
@@ -142,6 +150,167 @@ const logPrint = (message) => {
     console.error("Failed to write to log:", e)
   }
 }
+
+
+
+// ============================================================================
+// PDF ANALYSIS AND NORMALIZATION UTILITIES
+// ============================================================================
+
+async function analyzePDF(pdfPath) {
+  if (!PDFDocument) {
+    logPrint('⚠️ pdf-lib not available, skipping analysis')
+    return {
+      totalPages: 0,
+      pages: [],
+      hasMixedOrientation: false,
+      hasNonA4: false,
+      needsConversion: false,
+      dominantOrientation: 'portrait',
+      error: 'pdf-lib not available'
+    }
+  }
+  
+  try {
+    const existingPdfBytes = fs.readFileSync(pdfPath)
+    const pdfDoc = await PDFDocument.load(existingPdfBytes)
+    const pages = pdfDoc.getPages()
+    
+    const pageAnalysis = pages.map((page, index) => {
+      const { width, height } = page.getSize()
+      const rotation = page.getRotation().angle || 0
+      
+      let actualWidth = width
+      let actualHeight = height
+      if (rotation === 90 || rotation === 270) {
+        actualWidth = height
+        actualHeight = width
+      }
+      
+      const isLandscape = actualWidth > actualHeight
+      let pageSize = 'CUSTOM'
+      const tolerance = 5
+      
+      if (Math.abs(width - 595) < tolerance && Math.abs(height - 842) < tolerance) {
+        pageSize = 'A4'
+      }
+      else if (Math.abs(width - 842) < tolerance && Math.abs(height - 595) < tolerance) {
+        pageSize = 'A4'
+      }
+      else if (Math.abs(width - 612) < tolerance && Math.abs(height - 792) < tolerance) {
+        pageSize = 'LETTER'
+      }
+      else if (Math.abs(width - 792) < tolerance && Math.abs(height - 612) < tolerance) {
+        pageSize = 'LETTER'
+      }
+      else if (Math.abs(width - 612) < tolerance && Math.abs(height - 1008) < tolerance) {
+        pageSize = 'LEGAL'
+      }
+      
+      return {
+        pageNumber: index + 1,
+        width: actualWidth,
+        height: actualHeight,
+        rotation,
+        isLandscape,
+        pageSize,
+        aspectRatio: actualWidth / actualHeight
+      }
+    })
+    
+    const hasLandscape = pageAnalysis.some(p => p.isLandscape)
+    const hasPortrait = pageAnalysis.some(p => !p.isLandscape)
+    const hasMixedOrientation = hasLandscape && hasPortrait
+    const hasNonA4 = pageAnalysis.some(p => p.pageSize !== 'A4')
+    
+    return {
+      totalPages: pages.length,
+      pages: pageAnalysis,
+      hasMixedOrientation,
+      hasNonA4,
+      needsConversion: hasMixedOrientation || hasNonA4,
+      dominantOrientation: hasLandscape && !hasPortrait ? 'landscape' : 'portrait'
+    }
+  } catch (error) {
+    logPrint(`❌ PDF Analysis Error: ${error.message}`)
+    return {
+      totalPages: 0,
+      pages: [],
+      hasMixedOrientation: false,
+      hasNonA4: false,
+      needsConversion: true,
+      dominantOrientation: 'portrait',
+      error: error.message
+    }
+  }
+}
+
+async function normalizePDFForPrinting(sourcePath, analysis) {
+  if (!PDFDocument) {
+    throw new Error('pdf-lib not available for PDF normalization')
+  }
+  
+  try {
+    logPrint(`🔄 Normalizing PDF for printing...`)
+    
+    const existingPdfBytes = fs.readFileSync(sourcePath)
+    const pdfDoc = await PDFDocument.load(existingPdfBytes)
+    const newPdfDoc = await PDFDocument.create()
+    
+    const pages = pdfDoc.getPages()
+    
+    for (let i = 0; i < pages.length; i++) {
+      const pageInfo = analysis.pages[i]
+      
+      let targetWidth, targetHeight
+      if (pageInfo.isLandscape) {
+        targetWidth = 842
+        targetHeight = 595
+      } else {
+        targetWidth = 595
+        targetHeight = 842
+      }
+      
+      const newPage = newPdfDoc.addPage([targetWidth, targetHeight])
+      const [embeddedPage] = await newPdfDoc.embedPdf(pdfDoc, [i])
+      
+      const scaleX = targetWidth / pageInfo.width
+      const scaleY = targetHeight / pageInfo.height
+      const scale = Math.min(scaleX, scaleY)
+      
+      const scaledWidth = pageInfo.width * scale
+      const scaledHeight = pageInfo.height * scale
+      const x = (targetWidth - scaledWidth) / 2
+      const y = (targetHeight - scaledHeight) / 2
+      
+      newPage.drawPage(embeddedPage, {
+        x,
+        y,
+        width: scaledWidth,
+        height: scaledHeight
+      })
+      
+      logPrint(`✅ Normalized page ${i + 1}: ${pageInfo.pageSize} ${pageInfo.isLandscape ? 'Landscape' : 'Portrait'} → A4 ${pageInfo.isLandscape ? 'Landscape' : 'Portrait'}`)
+    }
+    
+    const normalizedBytes = await newPdfDoc.save()
+    const timestamp = Date.now()
+    const normalizedPath = path.join(WRITABLE_TEMP_DIR, `normalized_${timestamp}.pdf`)
+    
+    fs.writeFileSync(normalizedPath, normalizedBytes)
+    logPrint(`✅ Normalized PDF saved: ${normalizedPath}`)
+    
+    return normalizedPath
+    
+  } catch (error) {
+    logPrint(`❌ PDF Normalization Error: ${error.message}`)
+    throw error
+  }
+}
+
+// ============================================================================
+
+
 
 // CORE FILE HANDLERS
 ipcMain.handle("open-local-file", async (event, filePath) => {
@@ -527,8 +696,13 @@ async function waitForPrinterReady(maxWaitMs = 8000) {
   return false
 }
 
-// PDF PRINTING - IMPROVED WITH BETTER QUEUE MANAGEMENT
+
+
+
+// PDF PRINTING - UNIVERSAL HANDLER WITH ANALYSIS & NORMALIZATION
 ipcMain.handle("print-pdf", async (event, printOptions) => {
+  let normalizedPdfPath = null
+  
   try {
     const {
       filePath,
@@ -539,18 +713,62 @@ ipcMain.handle("print-pdf", async (event, printOptions) => {
       doubleSided = "one-side",
     } = printOptions
 
-    let targetPath = filePath
-
     logPrint(`\n${"=".repeat(60)}`)
     logPrint(`🖨️ NEW PRINT JOB STARTED`)
     logPrint(`${"=".repeat(60)}`)
-    logPrint(`🖨️ Starting PDF print for "${TARGET_PRINTER_NAME}"`)
-    logPrint(`📄 File: ${path.basename(targetPath)}`)
-    logPrint(`📋 Copies: ${copies}`)
-    logPrint(`📄 Pages: ${pageRange}`)
-    logPrint(`🎨 Color: ${colorMode}`)
-    logPrint(`📑 Duplex: ${doubleSided}`)
-
+    logPrint(`📄 Original File: ${path.basename(filePath)}`)
+    
+    // STEP 1: Analyze the PDF
+    logPrint(`\n🔍 STEP 1: Analyzing PDF...`)
+    const analysis = await analyzePDF(filePath)
+    
+    if (analysis.error) {
+      throw new Error(`PDF analysis failed: ${analysis.error}`)
+    }
+    
+    logPrint(`📊 PDF Analysis Results:`)
+    logPrint(`   Total Pages: ${analysis.totalPages}`)
+    logPrint(`   Mixed Orientation: ${analysis.hasMixedOrientation}`)
+    logPrint(`   Non-A4 Pages: ${analysis.hasNonA4}`)
+    logPrint(`   Needs Conversion: ${analysis.needsConversion}`)
+    logPrint(`   Dominant Orientation: ${analysis.dominantOrientation}`)
+    
+    // STEP 2: Normalize if needed
+    let targetPath = filePath
+    
+    if (analysis.needsConversion) {
+      logPrint(`\n🔄 STEP 2: Converting PDF to standard A4 format...`)
+      normalizedPdfPath = await normalizePDFForPrinting(filePath, analysis)
+      targetPath = normalizedPdfPath
+      logPrint(`✅ PDF normalized successfully`)
+    } else {
+      logPrint(`\n✅ STEP 2: PDF is already in standard format, no conversion needed`)
+    }
+    
+    // STEP 3: Handle custom page ranges
+    let printPath = targetPath
+    const tempFiles = []
+    
+    const isCustomRange = pageRange === "custom" && customPages.trim().length > 0
+    if (isCustomRange) {
+      logPrint(`\n📄 STEP 3: Creating subset for custom pages: ${customPages}`)
+      const tempPdf = await createTempPdfWithPages(targetPath, customPages)
+      if (tempPdf) {
+        printPath = tempPdf
+        tempFiles.push(tempPdf)
+        logPrint(`✅ Custom page range PDF created`)
+      }
+    } else {
+      logPrint(`\n✅ STEP 3: Printing all pages`)
+    }
+    
+    // STEP 4: Configure printer settings
+    logPrint(`\n⚙️ STEP 4: Configuring printer settings...`)
+    logPrint(`   Printer: ${TARGET_PRINTER_NAME}`)
+    logPrint(`   Copies: ${copies}`)
+    logPrint(`   Color: ${colorMode}`)
+    logPrint(`   Duplex: ${doubleSided}`)
+    
     let duplexMode = "one-side"
     if (
       doubleSided === true ||
@@ -561,199 +779,152 @@ ipcMain.handle("print-pdf", async (event, printOptions) => {
     ) {
       duplexMode = "both-sides"
     }
-
-    // APPLY PRINTER SETTINGS FIRST (BEFORE PRINTING)
+    
+    // Determine orientation from analysis
+    const orientation = analysis.dominantOrientation === 'landscape' ? 'landscape' : 'portrait'
+    logPrint(`   Orientation: ${orientation}`)
+    
+    // Apply printer settings BEFORE printing
     try {
-      logPrint(`\n🎨 Applying printer settings BEFORE printing (${colorMode}, ${duplexMode})...`)
-
       if (colorMode === "bw") {
-        try {
-          await execAsync(
-            `powershell -Command "Set-PrintConfiguration -PrinterName '${TARGET_PRINTER_NAME}' -Color $false"`,
-          )
-          logPrint("✅ B&W mode applied")
-        } catch (e) {
-          logPrint(`⚠️ Color setting failed: ${e.message}`)
-        }
+        await execAsync(
+          `powershell -Command "Set-PrintConfiguration -PrinterName '${TARGET_PRINTER_NAME}' -Color $false"`
+        )
+        logPrint("✅ B&W mode applied")
       } else {
-        try {
-          await execAsync(
-            `powershell -Command "Set-PrintConfiguration -PrinterName '${TARGET_PRINTER_NAME}' -Color $true"`,
-          )
-          logPrint("✅ Color mode applied")
-        } catch (e) {
-          logPrint(`⚠️ Color setting failed: ${e.message}`)
-        }
+        await execAsync(
+          `powershell -Command "Set-PrintConfiguration -PrinterName '${TARGET_PRINTER_NAME}' -Color $true"`
+        )
+        logPrint("✅ Color mode applied")
       }
 
       if (duplexMode === "both-sides") {
-        try {
-          await execAsync(
-            `powershell -Command "Set-PrintConfiguration -PrinterName '${TARGET_PRINTER_NAME}' -DuplexingMode TwoSidedLongEdge"`,
-          )
-          logPrint("✅ Duplex mode applied")
-        } catch (e) {
-          logPrint(`⚠️ Duplex setting failed: ${e.message}`)
-        }
+        await execAsync(
+          `powershell -Command "Set-PrintConfiguration -PrinterName '${TARGET_PRINTER_NAME}' -DuplexingMode TwoSidedLongEdge"`
+        )
+        logPrint("✅ Duplex mode applied")
       } else {
-        try {
-          await execAsync(
-            `powershell -Command "Set-PrintConfiguration -PrinterName '${TARGET_PRINTER_NAME}' -DuplexingMode OneSided"`,
-          )
-          logPrint("✅ Single-sided mode applied")
-        } catch (e) {
-          logPrint(`⚠️ Single-sided setting failed: ${e.message}`)
-        }
+        await execAsync(
+          `powershell -Command "Set-PrintConfiguration -PrinterName '${TARGET_PRINTER_NAME}' -DuplexingMode OneSided"`
+        )
+        logPrint("✅ Single-sided mode applied")
       }
 
-      // Wait for settings to take effect
       await new Promise((resolve) => setTimeout(resolve, 500))
     } catch (e) {
-      logPrint(`⚠️ Overall printer configuration failed: ${e.message}`)
+      logPrint(`⚠️ Printer configuration warning: ${e.message}`)
     }
-
+    
+    // STEP 5: Print the PDF
+    logPrint(`\n🖨️ STEP 5: Sending to printer...`)
+    
     let printSuccess = false
     let methodUsed = ""
-    const tempFiles = []
-
-    const isCustomRange = pageRange === "custom" && customPages.trim().length > 0
-    if (isCustomRange) {
-      const tempPdf = await createTempPdfWithPages(targetPath, customPages)
-      if (tempPdf) {
-        targetPath = tempPdf
-        tempFiles.push(tempPdf)
-        logPrint(`✅ Using temp PDF for custom pages: ${tempPdf}`)
-      }
-    }
-
-    // Kill any existing SumatraPDF instances before starting
+    
     await killAllSumatraPDF()
-
-    // Wait for printer to be completely ready
     await waitForPrinterReady(5000)
-
-    // Method 1: SumatraPDF with SEQUENTIAL PRINTING
+    
+    // Try SumatraPDF first
     const sumatraPath = findSumatraPDF()
     if (sumatraPath && !printSuccess) {
       try {
-        logPrint("\n🔄 Using SumatraPDF with sequential queue management...")
-
-        let sumatraCmd = `"${sumatraPath}" -silent -print-to "${TARGET_PRINTER_NAME}" "${targetPath}"`
-
+        logPrint("\n🔄 Using SumatraPDF...")
+        
+        let sumatraCmd = `"${sumatraPath}" -silent -print-to "${TARGET_PRINTER_NAME}" "${printPath}"`
+        
         const settings = []
-        if (duplexMode === "both-sides") {
-          settings.push("duplex")
-        }
-        if (colorMode === "bw") {
-          settings.push("monochrome")
-        }
+        if (duplexMode === "both-sides") settings.push("duplex")
+        if (colorMode === "bw") settings.push("monochrome")
+        
         if (settings.length > 0) {
           sumatraCmd += ` -print-settings "${settings.join(",")}"`
         }
-
+        
         logPrint(`🖨️ Command: ${sumatraCmd}`)
         console.log(`\n🚀 Sending ${copies} copy/copies to print queue...\n`)
-
+        
         for (let copy = 1; copy <= copies; copy++) {
-          try {
-            logPrint(`\n--- Copy ${copy}/${copies} ---`)
-            
-            // Execute print command
-            const { stdout, stderr } = await execAsync(sumatraCmd)
-            if (stderr) logPrint(`⚠️ stderr: ${stderr}`)
-            
-            logPrint(`✅ Copy ${copy}/${copies} command executed`)
-            console.log(`✅ Copy ${copy}/${copies} sent to queue`)
-            
-            // Wait longer for job to be fully spooled
-            await new Promise((resolve) => setTimeout(resolve, 800))
-            
-            // Kill SumatraPDF to release lock
-            await killAllSumatraPDF()
-            
-            // Wait additional time for the printer to process
-            await new Promise((resolve) => setTimeout(resolve, 500))
-            
-            // Wait for printer to be ready before next copy
-            if (copy < copies) {
-              logPrint(`⏳ Waiting for printer to be ready for next copy...`)
-              await waitForPrinterReady(8000) // Increased timeout
-              // Additional buffer time between jobs
-              await new Promise((resolve) => setTimeout(resolve, 1000))
-            }
-          } catch (execError) {
-            logPrint(`❌ Error spooling copy ${copy}: ${execError.message}`)
-            throw execError
+          logPrint(`\n--- Copy ${copy}/${copies} ---`)
+          await execAsync(sumatraCmd)
+          logPrint(`✅ Copy ${copy}/${copies} sent`)
+          console.log(`✅ Copy ${copy}/${copies} queued`)
+          
+          await new Promise((resolve) => setTimeout(resolve, 800))
+          await killAllSumatraPDF()
+          await new Promise((resolve) => setTimeout(resolve, 500))
+          
+          if (copy < copies) {
+            await waitForPrinterReady(8000)
+            await new Promise((resolve) => setTimeout(resolve, 1000))
           }
         }
-
-        // Final wait to ensure all jobs are processed
+        
         await new Promise((resolve) => setTimeout(resolve, 2000))
         printSuccess = true
-        methodUsed = "SumatraPDF (Sequential)"
-        logPrint("\n✅ All copies successfully sent to print queue")
+        methodUsed = "SumatraPDF"
+        logPrint("\n✅ All copies sent via SumatraPDF")
         console.log(`\n✅ All ${copies} copies queued successfully!\n`)
       } catch (error) {
         logPrint(`⚠️ SumatraPDF failed: ${error.message}`)
       }
     }
-
-    // Method 2: Windows ShellExecute - FALLBACK
+    
+    // Fallback to Windows ShellExecute
     if (!printSuccess) {
       try {
-        logPrint("\n🔄 Trying Windows ShellExecute as fallback...")
-
-        const escapedTargetPath = targetPath.replace(/'/g, "''")
-        const escapedPrinterName = TARGET_PRINTER_NAME.replace(/'/g, "''")
-
-        const shellCmd = `powershell -Command "Start-Process -FilePath '${escapedTargetPath}' -Verb PrintTo -ArgumentList '${escapedPrinterName}' -WindowStyle Hidden"`
-        logPrint(`🖨️ Command: ${shellCmd}`)
+        logPrint("\n🔄 Using Windows ShellExecute...")
+        const escapedPath = printPath.replace(/'/g, "''")
+        const escapedPrinter = TARGET_PRINTER_NAME.replace(/'/g, "''")
+        const shellCmd = `powershell -Command "Start-Process -FilePath '${escapedPath}' -Verb PrintTo -ArgumentList '${escapedPrinter}' -WindowStyle Hidden"`
+        
         console.log(`\n🚀 Sending ${copies} copy/copies to print queue...\n`)
-
+        
         for (let copy = 1; copy <= copies; copy++) {
-          try {
-            const { stdout, stderr } = await execAsync(shellCmd)
-            logPrint(`✅ ShellExecute copy ${copy}/${copies} sent`)
-            console.log(`✅ Copy ${copy}/${copies} queued`)
-            if (stderr) logPrint(`⚠️ stderr: ${stderr}`)
-            
-            // Longer wait between copies for ShellExecute
-            if (copy < copies) {
-              await new Promise((resolve) => setTimeout(resolve, 3000))
-              await waitForPrinterReady(8000)
-            }
-          } catch (execError) {
-            logPrint(`❌ Error spooling copy ${copy}: ${execError.message}`)
-            throw execError
+          await execAsync(shellCmd)
+          logPrint(`✅ Copy ${copy}/${copies} sent`)
+          console.log(`✅ Copy ${copy}/${copies} queued`)
+          
+          if (copy < copies) {
+            await new Promise((resolve) => setTimeout(resolve, 3000))
+            await waitForPrinterReady(8000)
           }
         }
-
+        
         await new Promise((resolve) => setTimeout(resolve, 2000))
         printSuccess = true
         methodUsed = "Windows ShellExecute"
-        logPrint("✅ Windows ShellExecute print successful")
+        logPrint("\n✅ All copies sent via ShellExecute")
         console.log(`\n✅ All ${copies} copies queued successfully!\n`)
       } catch (error) {
-        logPrint(`⚠️ Windows ShellExecute failed: ${error.message}`)
+        logPrint(`⚠️ ShellExecute failed: ${error.message}`)
       }
     }
-
-    // Cleanup temp files after delay
-    if (tempFiles.length > 0) {
-      setTimeout(() => {
-        tempFiles.forEach((tempFile) => {
-          try {
-            if (fs.existsSync(tempFile)) {
-              fs.unlinkSync(tempFile)
-              logPrint(`🗑️ Cleaned up: ${tempFile}`)
-            }
-          } catch (e) {
-            logPrint(`⚠️ Failed to clean temp file: ${e.message}`)
+    
+    // STEP 6: Cleanup
+    logPrint(`\n🧹 STEP 6: Scheduling cleanup...`)
+    setTimeout(() => {
+      // Clean up temporary files
+      if (normalizedPdfPath && fs.existsSync(normalizedPdfPath)) {
+        try {
+          fs.unlinkSync(normalizedPdfPath)
+          logPrint(`🗑️ Cleaned normalized PDF: ${normalizedPdfPath}`)
+        } catch (e) {
+          logPrint(`⚠️ Cleanup warning: ${e.message}`)
+        }
+      }
+      
+      tempFiles.forEach((tempFile) => {
+        try {
+          if (fs.existsSync(tempFile)) {
+            fs.unlinkSync(tempFile)
+            logPrint(`🗑️ Cleaned temp file: ${tempFile}`)
           }
-        })
-      }, 30000)
-    }
-
+        } catch (e) {
+          logPrint(`⚠️ Cleanup warning: ${e.message}`)
+        }
+      })
+    }, 30000) // Clean up after 30 seconds
+    
     if (printSuccess) {
       logPrint(`\n✅ PRINT JOB COMPLETED using ${methodUsed}`)
       logPrint(`${"=".repeat(60)}\n`)
@@ -761,25 +932,34 @@ ipcMain.handle("print-pdf", async (event, printOptions) => {
         success: true,
         message: `PDF printed successfully using ${methodUsed}`,
         method: methodUsed,
+        normalized: analysis.needsConversion,
+        orientation,
         copies,
-        pageRange,
-        colorMode,
-        doubleSided,
       }
     } else {
-      throw new Error(
-        `All PDF print methods failed for "${TARGET_PRINTER_NAME}"`
-      )
+      throw new Error("All print methods failed")
     }
+    
   } catch (error) {
     logPrint(`\n❌ PRINT JOB FAILED: ${error.message}`)
     logPrint(`${"=".repeat(60)}\n`)
+    
+    // Cleanup on error
+    if (normalizedPdfPath && fs.existsSync(normalizedPdfPath)) {
+      try {
+        fs.unlinkSync(normalizedPdfPath)
+      } catch (e) {
+        // Ignore cleanup errors
+      }
+    }
+    
     return {
       success: false,
       error: error.message,
     }
   }
 })
+  
 
 // CANVAS PRINTING - FIXED WITH PROPER WRITABLE TEMP DIR
 ipcMain.handle("print-canvas", async (event, canvasData) => {

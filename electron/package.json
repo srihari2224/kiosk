@@ -41,7 +41,9 @@
       "target": [
         {
           "target": "nsis",
-          "arch": ["x64"]
+          "arch": [
+            "x64"
+          ]
         }
       ],
       "icon": "assets/rocket.ico",
@@ -78,10 +80,14 @@
     "fs-extra": "^11.3.0",
     "node-printer": "^1.0.4",
     "pdf-lib": "^1.17.1",
-    "pdf-to-printer": "^5.6.0",
+    "pdf-to-printer": "^5.6.1",
     "pdfjs-dist": "^5.4.54"
   },
-  "keywords": ["printing", "desktop", "electron"],
+  "keywords": [
+    "printing",
+    "desktop",
+    "electron"
+  ],
   "author": "Prinit Team",
   "license": "ISC"
 }

@@ -677,20 +677,25 @@ function IntegratedFilePage() {
   }
 
   // PDF dialog handlers
-  const handlePDFClick = async (file) => {
-    const pageCount = await getPDFPageCount(file)
-    setPdfPageCount(pageCount)
-    setCurrentPdfFile(file)
-    setEdgePrintSettings({
-      copies: 1,
-      pageRange: "all",
-      customPages: "",
-      doubleSided: "one-side",
-      colorMode: "bw",
-    })
-    await loadPDFPreview(file)
-    setShowEdgePrintDialog(true)
-  }
+const handlePDFClick = async (file) => {
+  // Show user that analysis is happening
+  console.log("📊 Analyzing PDF properties...")
+  
+  const pageCount = await getPDFPageCount(file)
+  setPdfPageCount(pageCount)
+  setCurrentPdfFile(file)
+  setEdgePrintSettings({
+    copies: 1,
+    pageRange: "all",
+    customPages: "",
+    doubleSided: "one-side",
+    colorMode: "bw",
+  })
+  await loadPDFPreview(file)
+  
+  console.log("✅ PDF ready to configure")
+  setShowEdgePrintDialog(true)
+}
 
   const loadPDFPreview = async (file) => {
     try {
